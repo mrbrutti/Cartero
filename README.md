@@ -198,8 +198,25 @@ end
 ### Mailer Templates
 Emails are simple txt files or limited HTML files, depending on the type of format being used. Cartero allows to build and tempaltes both formats. In order to allow complex templating we use erb ruby gem, also used in many projects like Sinatra, Rails, etc.
 
-Files can be extremely customized given erb allows for programat
+Files can be extremely customized given erb allows for programatically edits on run time. Additionally we add an encrypted self[:payload] to each email template that allows Cartero to indentify each specific entity regardless. Last, but not least, this payload is encrypted using a key that is randomly generated and only exists on the Cartero config directory, allowing attackers to keep data secure and away from detection. 
 
+**SAMPLE DATA FILE**
+```json
+[{
+    "email": "matiasbrutti@gmail.com",
+    "name": "Matias Brutti"
+}, {
+    "email": "gauchitohill@gmail.com",
+    "name": "Gauchito Hill"
+}, {
+    "email": "matias@section9labs.com",
+    "name": "Matias Brutti - section9labs"
+}, {
+    "email": "matiasbrutti@hotmail.com",
+    "name": "Matias Brutti - Hotmail",
+    "subject": "Hotmail Test 123"
+}]
+```
 **HTML SAMPLE TEMPLATE**
 ```html
 <html>
@@ -216,7 +233,7 @@ Files can be extremely customized given erb allows for programat
 
 ```
 
-** TEXT SAMPLE TEMPLATE**
+**TEXT SAMPLE TEMPLATE**
 ```txt
 Hola <%= self[:name] %>,
 This email needs to be displayed as HTML.
@@ -249,3 +266,12 @@ Additionally, anyone can easily create them manually and store them in _~/.carte
     }
 }
 ```
+
+### TODO
+Coding:
+- Add attack payloads to Cloner
+- Evaluate/Add tracking methods.
+
+Documentation:
+- Add Samples to each Command Section
+- Upload Videos
