@@ -1,14 +1,14 @@
 [{
-    "email": "matiasbrutti@gmail.com",
-    "name": "Matias Brutti"
+    "email": "johndoe@gmail.com",
+    "name": "John Doe"
 }, {
-    "email": "gauchitohill@gmail.com",
-    "name": "Gauchito Hill"
+    "email": "gh@gmail.com",
+    "name": "Gas Hill"
 }, {
-    "email": "matias@section9labs.com",
-    "name": "Matias Brutti - section9labs"
+    "email": "johndoe@hotmail.com",
+    "name": "John Doe 2"
 }, {
-    "email": "matiasbrutti@hotmail.com",
-    "name": "Matias Brutti - Hotmail",
+    "email": "janedoe@hotmail.com",
+    "name": "Jane Doe - Hotmail",
     "subject": "Hotmail Test 123"
 }]
