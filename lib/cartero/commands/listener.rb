@@ -37,7 +37,7 @@ class Listener < Cartero::Command
       	@options.sslkey = key.split(",")
     	end
 
-    	opts.on("-V", "--views [VIEWS]", String, 
+    	opts.on("-V", "--views [VIEWS_FOLDER]", String, 
     		"Sets SSL Certificate to use for Listener.") do |file|	      	
       	@options.views = file
     	end
@@ -45,6 +45,14 @@ class Listener < Cartero::Command
     	opts.on("-P", "--public [PUBLIC_FOLDER]", String, 
     		"Sets a Sinatra public_folder") do |file|	      	
       	@options.public_folder = file
+    	end
+
+    	opts.on("-W", "--webserver [WEBSERVER_FOLDER]", String,
+    		"Sets the sinatra full path from cloner.") do |path|
+    		app = path.split("/")[-1]
+    		@options.customwebserver = path + "/" + app + ".rb"
+    		@options.views = path + "/views"
+    		@options.public_folder = path + "/static"
     	end
 
     	opts.on("--payload [PAYLOAD]", String, 
