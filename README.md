@@ -81,11 +81,14 @@ Usage: Cartero Listener [options]
     -s, --ssl                        Run over SSL. [this also requires --sslcert and --sslkey]
     -C, --sslcert [CERT_PATH]        Sets Email Payload Ports to scan
     -K, --sslkey [KEY_PATH]          Sets SSL key to use for Listener.
-    -V, --views [VIEWS]              Sets SSL Certificate to use for Listener.
+    -V, --views [VIEWS_FOLDER]       Sets SSL Certificate to use for Listener.
     -P, --public [PUBLIC_FOLDER]     Sets a Sinatra public_folder
+    -W [WEBSERVER_FOLDER],           Sets the sinatra full path from cloner.
+        --webserver
         --payload [PAYLOAD]          Sets a payload download to serve on /download
         --customapp [CUSTOM_SINATRA] Sets a custom Sinatra::Base WebApp. Important, WebApp name should be camelized of filename
     -h, --help                       Show this message
+
 ```
 The WebServers support ssl keys, different public and view paths. Additionally the servers can also be hosted on multiple ports at the same time and they can be bind to a specific IP address as well.
 
