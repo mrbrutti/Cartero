@@ -63,6 +63,7 @@ Usage: Cartero Cloner [options]
     -W, --webserver [SERVER_NAME]    Sets WebServer name to use
     -p, --path [PATH]                Sets path to save webserver
     -P, --payload [PAYLOAD_PATH]     Sets payload path
+        --useragent [UA_STRING]      Sets user agent for cloning
         --wget                       Use wget to clone url
         --apache                     Generate Apache Proxy conf
     -h, --help                       Show this message

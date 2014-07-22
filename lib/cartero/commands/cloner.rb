@@ -31,6 +31,11 @@ class Cloner < Cartero::Command
       	@options.payload = payload
     	end
 
+    	opts.on("--useragent [UA_STRING]", String, 
+    		"Sets user agent for cloning") do |payload|	      	
+      	@options.useragent = payload
+    	end
+
     	opts.on("--wget", "Use wget to clone url") do
     		@options.wget = true
   		end
@@ -49,6 +54,7 @@ class Cloner < Cartero::Command
 	attr_accessor :payload
 	attr_accessor :wget
 	attr_accessor :apache
+	attr_accessor :useragent
 
 	def setup
 		require 'erb'
@@ -74,6 +80,7 @@ class Cloner < Cartero::Command
 		@payload 		= @options.payload
 		@wget 			= @options.wget
 		@apache 		= @options.apache
+		@useragent 	= @options.useragent || "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
 	end
 
 
@@ -95,6 +102,7 @@ class Cloner < Cartero::Command
 		require 'mechanize'
 
 		mechanize = Mechanize.new
+		mechanize.user_agent = useragent
 		page = mechanize.get(url)
 		
 		forms_routes = page.forms.map {|x| [x.method.downcase , x.action] }
