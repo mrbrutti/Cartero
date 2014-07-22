@@ -1,4 +1,4 @@
-class <%= self[:webserver] %> < Sinatra::Base
+class <%= self[:webserver].capitalize %> < Sinatra::Base
 	
 	not_found do
 		puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - #{request.forwarded?} - #{request.user_agent}" 
@@ -66,7 +66,7 @@ class <%= self[:webserver] %> < Sinatra::Base
 		creds = Credential.new(
 			:ip 				=> request.ip,
 			:port 			=> request.port,
-			:domain			-> request.host
+			:domain			=> request.host,
 			:path       => request.path_info,
 			:time 			=> Time.now,
 			:user_agent => request.user_agent,
