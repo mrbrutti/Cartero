@@ -32,7 +32,7 @@ Cartero is a very simple to use CLI.
 Usage: cartero [options]
 
 List of Commands:
-    AdminConsole, Mailer, Cloner, Listener, Servers, Templates
+    AdminConsole, AdminWeb, Mailer, Cloner, Listener, Servers, Templates
 
 Global options:
         --proxy [HOST:PORT]          Sets TCPSocket Proxy server
@@ -48,7 +48,6 @@ Global options:
 Common options:
     -h, --help [COMMAND]             Show this message
         --version                    Shows cartero CLI version
-
 ```
 
 ### Basic Commands
@@ -141,8 +140,8 @@ Usage: Cartero Mailer [options]
     -h, --help                       Show this message
 ```
 
-#### AdminConsole
-The Admin Console is a simple WebApplication that allow us list information about each Campaign.
+#### AdminWeb
+The Admin Web is a simple Web-Application that allows to list information about each Campaign.
 
 ```shell
 ❯❯❯ ./cartero AdminConsole
@@ -155,6 +154,24 @@ Usage: Cartero AdminConsole [options]
     -K, --sslkey [KEY_PATH]          Sets Email Payload Ports to scan
     -h, --help                       Show this message
 ```
+
+### AdminConsole
+The Admin Console is CLI tool that allows to list information about Persons, Campaigns, Hits and Credentials gathered.  
+```shell
+❯❯❯ ./cartero AdminConsole
+Usage: Cartero AdminConsole [options]
+    -p, --persons [LATEST_N]         Display the list of persons that responded
+    -i, --hits [LATEST_N]            Display the list of hits
+    -c, --creds [LATEST_N]           Display the list of Credentials
+    -a, --all                        Sets Email Payload Ports to scan
+    -f, --filter                     flag to search by parameters
+        --email [EMAIL]              Display the list of hits
+        --campaign [CAMPAIGN]        Display the list of hits
+        --ip [IP_ADDRESS]            Display the list of hits
+    -h, --help                       Show this message
+
+```
+
 ### Building Commands
 
 Commands have a fairly easy infrastructure. Default Framework commands are stored on _Cartero/lib/cartero/commands/*.rb_ and _~/.cartero/commands/*.rb_.
