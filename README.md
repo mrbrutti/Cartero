@@ -4,8 +4,31 @@
 ### Description
 A simple Phishing Framework Library with a CLI tool. The project was born out of necessity on projects. Even though there are many projects out there, we were not able to find a suitable solution that gave us both easy of use and customizability.
 
-Cartero is a modular
+Cartero is a modular project divided into commands that perform independent tasks (i.e. Mailer, Cloner, Listener, AdminConsole, etc...). In addition each sub-command has options. 
 
+For example, if we wanted to clone gmail.com, we simply have to perform the following commands. 
+
+```shell
+❯❯❯ ./cartero Cloner --url https://gmail.com --path /tmp --webserver gmail_com
+❯❯❯ ./cartero Listener --webserver /tmp/gmail_com -p 80
+Launching mongodb
+Puma starting in single mode...
+* Version 2.8.2 (ruby 2.1.1-p76), codename: Sir Edmund Percival Hillary
+* Min threads: 4, max threads: 16
+* Environment: production
+* Listening on tcp://0.0.0.0:80
+Use Ctrl-C to stop
+```
+
+Once we have a site up and running we can simply use the Mailer command to send templated emails to our testing victims:
+
+```shell
+❯❯❯ ./cartero Mailer --data victims.json --server gmail2 --subject "Internal Memo" --htmlbody email_html.html --attachment payload.pdf --from "John Doe <jdoe@company.com>"
+Sending victim1@company.com
+Sending victim2@company.com
+Sending victim3@company.com
+
+```
 
 ### Installation
 
@@ -292,6 +315,8 @@ Additionally, anyone can easily create them manually and store them in _~/.carte
 Coding:
 - Add attack payloads to Cloner
 - Evaluate/Add tracking methods.
+- Research the concept of handling multiple projects. 
+- Improve MongoDB integration. 
 
 Documentation:
 - Add Samples to each Command Section
