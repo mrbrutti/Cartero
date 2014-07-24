@@ -144,9 +144,26 @@ class WebAdmin < Sinatra::Base
 		return csv_string
 	end
 
+	post "/stats/search/:type" do
+		case params[:type]
+		when /persons/ then
+			@persons = Person.all.select {|x| x.to_json.to_s =~ /#{params[:searchfield]}/i }
+			erb :stats
+		when /credentials/ then
+			@hits = Credential.all.select {|x| x.to_json.to_s =~ /#{params[:searchfield]}/i }
+			erb :stats_creds
+		when /hits/ then
+			@paths = Hit.distinct("path")
+			@hits = Hit.all.select {|x| x.to_json.to_s =~ /#{params[:searchfield]}/i }
+			erb :stats_hits
+		else
+			redirect back
+		end
+	end
+
 	get "/stats/hits/campaign/:subject" do
 		@paths = Hit.distinct("path")
-		@hits = Hit.where.all.select {|x| x.data['subject'] =~ /params[:subject]/i }
+		@hits = Hit.where.all.select {|x| x.data['subject'] =~ /#{params[:subject]}/i }
 		erb :stats_hits
 	end
 	
