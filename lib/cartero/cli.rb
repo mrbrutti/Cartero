@@ -62,13 +62,13 @@ module Cartero
 	      end
 
 	    	opts.on("-p", "--ports [PORT_1,PORT_2,..,PORT_N]", String,
-	    		"Global Flag fo Mailer and Webserver ports") do |p|
+	    		"Global Flag to set Mailer and Webserver ports") do |p|
 	    		@options.ports = p.split(",").map(&:to_i)
 
 	    	end
 
 	    	opts.on("-m", "--mongodb [HOST:PORT]", String,
-	    		"Global Flag fo Mailer and Webserver ports") do |p|
+	    		"Global flag to Set MongoDB bind_ip and port") do |p|
 	    		@options.mongodb = p
 
 	    	end
