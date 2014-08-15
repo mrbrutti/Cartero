@@ -75,6 +75,19 @@ Common options:
 
 ### Basic Commands
 
+#### Mongo
+This is a simple Wrapper for MongoDB that allows us to start stop the database with the corresponding commands and on the correct ~/.cartero path. 
+
+```shell
+❯❯❯ ./cartero Mongo
+Usage: Cartero Mongo [options]
+    -s, --start                      Start MongoDB
+    -k, --stop                       Stop MongoDB
+    -r, --restart                    Restart MongoDB
+    -b, --bind [HOST:PORT]           Set MongoDB bind_ip and port
+    -h, --help                       Show this message
+```
+
 #### Cloner
 A simple WebSite Cloner. It allows us to download and convert a website into a Cartero WebServer application.
 In this way we can easily customize the website to Harvest Credentials, Server Payloads, or create a fully customized website.
@@ -165,6 +178,63 @@ Usage: Cartero Mailer [options]
     -p [PORT_1,PORT_2,..,PORT_N],    Sets Email Payload Ports to scan
         --ports
     -h, --help                       Show this message
+```
+#### WebMailer 
+This new command is an add on to support yet another known method to send messages using known vulnerabilities or anonymous sending services on the web via web requests. 
+
+```shell
+❯❯❯ ./cartero WebMailer
+Usage: Cartero WebMailer [options]
+    -R, --raw [RAW_REQUEST_FILE]     Sets WebMail Raw Request
+    -S, --server [SERVER_NAME]       Sets WebMail server to use
+    -U, --url [URL:PORT]             Sets WebMail server url to use
+    -H [HEADER:VAL\nHEADER:VAL],     Sets WebMail Headers to use
+        --headers
+    -C, --cookies [COOKIES]          Sets WebMail Cookies to use
+    -D, --data [DATA_FILE]           File containing template data sets
+    -s, --subject [EMAIL_SUBJECT]    Sets Email subject
+    -f, --from [EMAIL_FROM]          Sets Email from
+    -r, --reply-to [EMAIL_REPLY_TO]  Sets Email reply-to
+    -b, --body [REQUEST_FILE_PATH]   Sets Email Text request query Body
+    -p [PORT_1,PORT_2,..,PORT_N],    Sets Email Payload Ports to scan
+        --ports
+    -h, --help                       Show this message
+
+```
+The Command can be used in two main ways. One using a raw command such as the one we get from Intercepting traffic with a web proxy (i.e. Burp Proxy) and or using the servers command available on Cartero.
+
+#####Example of webmail server for send-mail.org
+```json
+{
+    "name": "send-email",
+    "type": "webmail",
+    "options": {
+        "url": "http://send-email.org/send",
+        "method": "POST",
+        "cookies": "",
+        "headers": {
+            "Host": "send-email.org",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:29.0) Gecko/20100101 Firefox/29.0",
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest",
+            "Referer": "http://send-email.org/",
+            "Content-Length": "126",
+            "Connection": "keep-alive",
+            "Pragma": "no-cache"
+        }
+    },
+    "confirmation" : "Your message was sent!"
+}
+```
+
+Using this pre-configured request, we can easily send message using the same datasets for Mailer and using the same type of templates. As it is shown on /templates/mail/sample.web
+
+#####Sample Command:
+```shell
+./cartero WebMailer -S webmail -D ~/sample.json -b ../templates/mail/sample.web -r cartero@gmail.com
 ```
 
 #### AdminWeb

@@ -32,7 +32,7 @@ class Mailer < Cartero::Command
     	end
 
     	opts.on("-r", "--reply-to [EMAIL_REPLY_TO]", String, 
-    		"Sets Email from") do |reply_to|	      	
+    		"Sets Email reply-to") do |reply_to|	      	
       	@options.reply_to = reply_to
     	end
 
@@ -76,7 +76,7 @@ class Mailer < Cartero::Command
 			raise StandardError, "A data set [--data] must be provided"
 		end
 
-		if @options.body.nil? && options.html_body.nil?
+		if @options.body.nil? && @options.html_body.nil?
 			raise StandardError, "At least a body [--body] and/or html_body [--htmlbody] must be provided"
 		end
 
