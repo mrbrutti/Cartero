@@ -13,7 +13,7 @@ class WebMailer < Cartero::Command
 		super do |opts|
 
     	opts.on("-R", "--raw [RAW_REQUEST_FILE]", String, 
-    		"Sets WebMail server to use") do |rawfile|	      	
+    		"Sets WebMail Raw Request") do |rawfile|	      	
       	@options.raw = rawfile
     	end
 

@@ -185,7 +185,7 @@ This new command is an add on to support yet another known method to send messag
 ```shell
 ❯❯❯ ./cartero WebMailer
 Usage: Cartero WebMailer [options]
-    -R, --raw [RAW_REQUEST_FILE]     Sets WebMail server to use
+    -R, --raw [RAW_REQUEST_FILE]     Sets WebMail Raw Request
     -S, --server [SERVER_NAME]       Sets WebMail server to use
     -U, --url [URL:PORT]             Sets WebMail server url to use
     -H [HEADER:VAL\nHEADER:VAL],     Sets WebMail Headers to use
