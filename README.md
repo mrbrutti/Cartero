@@ -66,10 +66,11 @@ Global options:
     -m, --mongodb [HOST:PORT]        Global Flag fo Mailer and Webserver ports
     -d, --debug                      Sets debug flag on/off
         --editor [EDITOR]            Edit Server
-        --list-commands              Prints list of commands for bash completion
+
 
 Common options:
     -h, --help [COMMAND]             Show this message
+        --list-commands              Prints list of commands for bash completion
         --version                    Shows cartero CLI version
 ```
 
@@ -85,7 +86,10 @@ Usage: Cartero Mongo [options]
     -k, --stop                       Stop MongoDB
     -r, --restart                    Restart MongoDB
     -b, --bind [HOST:PORT]           Set MongoDB bind_ip and port
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 ```
 
 #### Cloner
@@ -102,7 +106,10 @@ Usage: Cartero Cloner [options]
         --useragent [UA_STRING]      Sets user agent for cloning
         --wget                       Use wget to clone url
         --apache                     Generate Apache Proxy conf
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 ```
 By default the command users our own internal system to download and convert links to render, but we also support a *--wget* option that will use wget system command.
 
@@ -124,7 +131,10 @@ Usage: Cartero Listener [options]
         --webserver
         --payload [PAYLOAD]          Sets a payload download to serve on /download
         --customapp [CUSTOM_SINATRA] Sets a custom Sinatra::Base WebApp. Important, WebApp name should be camelized of filename
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 
 ```
 The WebServers support ssl keys, different public and view paths. Additionally the servers can also be hosted on multiple ports at the same time and they can be bind to a specific IP address as well.
@@ -133,14 +143,26 @@ The WebServers support ssl keys, different public and view paths. Additionally t
 In order to send emails campaigns we need to setup servers. This is a command that would help Cartero to create, store and list servers. All data is stored on .cartero configuration directory.
 
 ```shell
-❯❯❯ ./cartero Servers
-
+./cartero Servers
 Usage: Cartero Servers [options]
     -a, --add [NAME]                 Add Server
     -e, --edit [NAME]                Edit Server
     -d, --delete [NAME]              Edit Server
     -l, --list                       List servers
+
+Configuration options:
+    -T, --type [TYPE]                Set the type
+    -U, --url [DOMAIN]               Set the Mail or WebMail url/address
+    -M, --method [METHOD]            Sets the WebMail Request Method to use [GET|POST]
+        --api-access [API_KEY]       Sets the Linkedin API Access Key
+        --api-secret [API_SECRET]    Sets the Linkedin API Secret Key
+        --oauth-token [OAUTH_TOKEN]  Sets the Linkedin OAuth Token Key
+        --oauth-secret [OAUTH_SECRET]
+                                     Sets the Linkedin OAuth Secret Key
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 ```
 
 #### Templates
@@ -177,7 +199,10 @@ Usage: Cartero Mailer [options]
         --attachment
     -p [PORT_1,PORT_2,..,PORT_N],    Sets Email Payload Ports to scan
         --ports
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 ```
 #### WebMailer 
 This new command is an add on to support yet another known method to send messages using known vulnerabilities or anonymous sending services on the web via web requests. 
@@ -198,7 +223,10 @@ Usage: Cartero WebMailer [options]
     -b, --body [REQUEST_FILE_PATH]   Sets Email Text request query Body
     -p [PORT_1,PORT_2,..,PORT_N],    Sets Email Payload Ports to scan
         --ports
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 
 ```
 The Command can be used in two main ways. One using a raw command such as the one we get from Intercepting traffic with a web proxy (i.e. Burp Proxy) and or using the servers command available on Cartero.
@@ -236,6 +264,25 @@ Using this pre-configured request, we can easily send message using the same dat
 ```shell
 ./cartero WebMailer -S webmail -D ~/sample.json -b ../templates/mail/sample.web -r cartero@gmail.com
 ```
+#### LinkedIn
+The LinkedIn command is the first Social Network addition to the Cartero Framework. Allowing attackers to use the message platform to send messages and attack users from LinkedIn. 
+```shell
+ ❯❯❯ ./cartero LinkedIn
+Usage: Cartero LinkedIn [options]
+    -D, --data [DATA_FILE]           File containing template data sets
+    -S, --server [SERVER_NAME]       Sets Email server to use
+    -s, --subject [MESSAGE_SUBJECT]  Sets LinkedIn Message subject
+    -b, --body [FILE_PATH]           Sets LinkedIn Message Body
+    -l, --list-connections           Show Summary of connections
+    -o, --save [FILE_PATH]           Sets LinkedIn Message Body
+
+Common options:
+    -h, --help                       Show this message
+        --list-options               Show list of available options
+```
+
+The command requires a developer API and oauth key on the attackers profile. This can be easily obtained in https://www.linkedin.com/secure/developer. and a new server template can be created with the Servers command. 
+
 
 #### AdminWeb
 The Admin Web is a simple Web-Application that allows to list information about each Campaign.
@@ -249,7 +296,10 @@ Usage: Cartero AdminConsole [options]
     -s, --ssl                        Run over SSL. [this also requires --sslcert and --sslkey]
     -C, --sslcert [CERT_PATH]        Sets Email Payload Ports to scan
     -K, --sslkey [KEY_PATH]          Sets Email Payload Ports to scan
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 ```
 
 ### AdminConsole
@@ -265,7 +315,10 @@ Usage: Cartero AdminConsole [options]
         --email [EMAIL]              Display the list of hits
         --campaign [CAMPAIGN]        Display the list of hits
         --ip [IP_ADDRESS]            Display the list of hits
+
+Common options:
     -h, --help                       Show this message
+        --list-options               Show list of available options
 
 ```
 

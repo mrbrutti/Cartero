@@ -2,7 +2,7 @@
     "name": "<%= @name %>",
     "type": "<%= @type %>",
     "options": {
-        "address": "smtp.yourserver.com",
+        "address": "<%= @url %>",
         "port": 25,
         "user_name": "user",
         "password": "password",

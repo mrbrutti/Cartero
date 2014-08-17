@@ -1,16 +1,3 @@
-#{
-#	:name => "Server Name"
-#	:type => "smtp or sendmail"
-#	:options => {
-#		:address        => 'smtp.yourserver.com',
-#    :port           => '25',
-#    :user_name      => 'user',
-#    :password       => 'password',
-#    :authentication => :plain, # :plain, :login, :cram_md5, no auth by default
-#    :domain         => "localhost.localdomain" # the HELO domain provided by the client to the server
-#	}
-#}
-
 require 'json'
 require 'shellwords'
 require 'erb'
@@ -43,13 +30,52 @@ class Servers < Cartero::Command
         "List servers") do |name|
         @options.action = "list"
       end
+
+      opts.separator ""
+      opts.separator "Configuration options:"
+
+      opts.on("-T", "--type [TYPE]", String, 
+        "Set the type") do |val|
+        @options.type = val
+      end
+
+      opts.on("-U", "--url [DOMAIN]", String, 
+        "Set the Mail or WebMail url/address") do |val|
+        @options.url = val
+      end
+
+      opts.on("-M", "--method [METHOD]", String, 
+        "Sets the WebMail Request Method to use [GET|POST]") do |val|
+        @options.req_method = val
+      end
+
+      opts.on("--api-access [API_KEY]", String, 
+        "Sets the Linkedin API Access Key") do |val|
+        @options.api_access = val
+      end
+
+      opts.on("--api-secret [API_SECRET]", String, 
+        "Sets the Linkedin API Secret Key") do |val|
+        @options.api_secret = val
+      end
+
+      opts.on("--oauth-token [OAUTH_TOKEN]", String, 
+        "Sets the Linkedin OAuth Token Key") do |val|
+        @options.oauth_token = val
+      end
+
+      opts.on("--oauth-secret [OAUTH_SECRET]", String, 
+        "Sets the Linkedin OAuth Secret Key") do |val|
+        @options.oauth_secret = val
+      end
+
     end
   end
 
   def run
     case @options.action
     when /add/
-      Servers.create(@options.name)
+      Servers.create(@options.name, @options)
       $stdout.puts "Server #{@options.name} Created."
     when /edit/
       Servers.edit(@options.name)
@@ -83,17 +109,26 @@ class Servers < Cartero::Command
     server_file || "#{Cartero::ServersDir}/#{name}.json"
   end
 
-	def self.template
-  	"#{File.dirname(__FILE__)}/../../../templates/server/server.json"
+	def self.template(type=nil)
+    case type
+    when /smtp/
+  	 "#{File.dirname(__FILE__)}/../../../templates/server/server.json"
+    when /linkedin/
+      "#{File.dirname(__FILE__)}/../../../templates/server/linkedin.json"
+    when /webmail/
+      "#{File.dirname(__FILE__)}/../../../templates/server/webmail.json"
+    else
+      "#{File.dirname(__FILE__)}/../../../templates/server/server.json"
+    end
   end
 
-  def self.create(name)
+  def self.create(name, options)
   	if self.exists?(name)
   		raise StandardError, "Server with name (#{name}) already exists"
   	else
   		s = server(name.shellescape)
   		f = File.new(s, "w+")
-  		f.puts Cartero::Server.new(name.shellescape).render()
+  		f.puts Cartero::Server.new(name.shellescape, options).render()
   		f.close
   		Kernel.system("$EDITOR #{s}")
   	end
@@ -119,13 +154,19 @@ end
 end
 
 class Server
-	def initialize(name, type=nil)
-		@name = name
-		@type = type || "smtp"
+	def initialize(name, options)
+		@name         = name
+		@type         = options.type         || "smtp"
+    @url          = options.url          || "subdomain.domain.com"
+    @method       = options.req_method       || "POST"
+    @api_access   = options.api_access   || "api_access_key"
+    @api_secret   = options.api_secret   || "api_secret_key"
+    @oauth_token  = options.oauth_token  || "oauth_token_key"
+    @oauth_secret = options.oauth_secret || "oauth_secret_key"
 	end
 
 	def render
-		ERB.new(File.read(Cartero::Commands::Servers.template)).result(binding)
+		ERB.new(File.read(Cartero::Commands::Servers.template(@type))).result(binding)
 	end
 end
 end

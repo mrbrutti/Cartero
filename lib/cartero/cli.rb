@@ -83,9 +83,6 @@ module Cartero
 	      	ENV["EDITOR"] = name
 	    	end
 
-	    	opts.on("--list-commands", "Prints list of commands for bash completion") do
-	    		$stdout.puts Cartero::COMMANDS.keys.join(" ")
-	    	end
 
 	    	opts.separator ""
 	      opts.separator "Common options:"
@@ -98,6 +95,10 @@ module Cartero
 	      	end
 	        exit
 	      end
+	    	
+	    	opts.on("--list-commands", "Prints list of commands for bash completion") do
+	    		$stdout.puts Cartero::COMMANDS.keys.join(" ")
+	    	end
 
 	      opts.on_tail("--version", "Shows cartero CLI version") do
 	        puts Cartero::Version.join('.')
