@@ -36,5 +36,4 @@ build/
 .Gemfile.lock
 
 # Unfinished Commands
-/lib/cartero/commands/linkedin.rb
 /lib/cartero/commands/sms.rb

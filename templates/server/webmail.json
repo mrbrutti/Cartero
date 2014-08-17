@@ -1,0 +1,12 @@
+{
+  "name": "<%= @name %>",
+  "type": "<%= @type %>",
+  "options": {
+    "url": "<%= @url %>",
+    "method": "<%= @method %>",
+    "cookies": "",
+    "headers": {
+    }
+  },
+  "confirmation" : null
+}

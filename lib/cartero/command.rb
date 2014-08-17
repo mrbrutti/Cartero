@@ -34,8 +34,15 @@ module Cartero
 			@parser = OptionParser.new do |opts|
 				opts.banner = "Usage: Cartero #{name} [options]"  
 				block.call(opts)
+
+				opts.separator ""
+      	opts.separator "Common options:"
 				opts.on_tail("-h", "--help", "Show this message") do
 	        puts @parser
+	        exit
+	      end
+	      opts.on_tail("--list-options", "Show list of available options") do
+	        $stdout.puts "--" + @parser.send(:top).long.map {|x| x[0]}.join(" --")
 	        exit
 	      end
 			end
