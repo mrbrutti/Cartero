@@ -31,10 +31,15 @@ class LinkedIn < Cartero::Command
       	@options.body = body
     	end
 
-    	opts.on("-l", "--list-connections", 
-    		"Show Summary of connections") do	      	
-      	@options.list_connections = true
-    	end
+      opts.on("-l", "--list [CONNECTIONS|GROUPS]", [:connections, :groups],
+              "List json of (connections or groups)") do |t|
+        @options.list = t
+      end
+
+      opts.on("--send [MESSAGE|GROUP_UPDATE]", [:message, :group],
+              "Send one or more (message/s or group/s updates)") do |t|
+        @options.send_type = t
+      end
 
     	opts.on("-o", "--save [FILE_PATH]", String, 
     		"Sets LinkedIn Message Body") do |f|	      	
@@ -55,12 +60,14 @@ class LinkedIn < Cartero::Command
 	def setup
 		require 'erb'
 		require 'linkedin'
+		require 'json'
+		require 'multi_json'
 
-		if @options.data.nil? && @options.list_connections.nil?
+		if @options.data.nil? and @options.list.nil?
 			raise StandardError, "A data set [--data] must be provided"
 		end
 
-		if @options.body.nil? && @options.list_connections.nil?
+		if @options.body.nil? and @options.list.nil?
 			raise StandardError, "A body [--body] must be provided"
 		end
 
@@ -73,7 +80,10 @@ class LinkedIn < Cartero::Command
 			@server = JSON.parse(File.read(s),{:symbolize_names => true})
 		end
 
-		@data = JSON.parse(File.read(File.expand_path @options.data),{:symbolize_names => true})
+		unless @options.data.nil?
+			@data = JSON.parse(File.read(File.expand_path @options.data),{:symbolize_names => true})
+		end
+
 		@from 				= @options.from
 		@subject 			= @options.subject
 		@file_save    = @options.file_save
@@ -96,29 +106,24 @@ class LinkedIn < Cartero::Command
 	end
 
 	def run
-		unless @options.list_connections.nil?
-			require 'json'
-			list = []
-			@client.connections.all.map.each do |p|
-				unless p.id == "private"
-					list << { 
-						"id" => p.id, 
-						"name" => p.first_name, 
-						"last" => p.last_name,
-						"title" => p.headline
-					}
+		if !@options.list.nil?
+			list = []; 
+			case @options.list
+			when /connections/
+				@client.connections.all.map.each do |p|
+					unless p.id == "private"
+						list << { "id" => p.id, "name" => p.first_name, "last" => p.last_name, "title" => p.headline }
+					end
+				end
+			when /groups/
+				@client.group_memberships.all.map.each do |g|
+					list << { "id" => g.id, "name" => g.group.name }
 				end
 			end
-			unless file_save.nil?
-				f = File.new(file_save , "w+")
-				f.puts JSON.pretty_generate list
-				f.close
-			else
-				$stdout.puts JSON.pretty_generate list
-			end
+			print_json(list)
 		else
 			send do |s|
-				puts "Sending Linkedin Message to #{s[:name]} #{s[:last]}"
+				puts "Sending Linkedin Message to #{s[:name]} #{s[:last]}\n\tStatus: #{s[:status]}"
 			end
 		end
 	end
@@ -132,27 +137,48 @@ class LinkedIn < Cartero::Command
 	def send
 		data.each do |entity|
 			if !entity[:id].nil?
+				begin
+				r = create_linkedin_message(entity, @options.send_type || "message")
+				rescue StandardError => e
+					entity[:status] = e
+				end
 				yield entity if block_given?
-				create_linkedin_email(entity)
 			else
 				Cartelo::Log.error "Entity #{entity} does not contain an :email key."
 			end
 		end
 	end
 
-	def create_linkedin_email(entity)
+	def create_linkedin_message(entity, type)
 		mail = {}
 		
 		# set TO, FROM and Subject
 		mail[:to] 			= entity[:id]
-		mail[:subject]	= entity[:subject] 	|| subject
+		mail[:title]	= entity[:subject] 	|| subject
 
 		# Add Text body if was provided.
 		unless body.nil?
-			mail[:body] = ERB.new(body).result(entity.get_binding)
+			mail[:summary] = ERB.new(body).result(entity.get_binding)
 		end
-		p @client.profile
-		response = @client.send_message(mail[:subject], mail[:body], [mail[:to]])
+
+		case type
+		when /message/ then
+			response = @client.send_message(mail[:title], mail[:summary], [mail[:to]])
+		when /group/ then
+			mail[:content] = entity[:content] || {}
+			response = @client.add_group_share(mail[:to], mail)
+		end
+	end
+
+	def print_json(list)
+		unless file_save.nil?
+			$stdout.puts "Saving data to file #{file_save}."
+			f = File.new(file_save , "w+")
+			f.puts JSON.pretty_generate list
+			f.close
+		else
+			$stdout.puts JSON.pretty_generate list
+		end
 	end
 end
 end
