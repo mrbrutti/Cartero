@@ -267,13 +267,15 @@ Using this pre-configured request, we can easily send message using the same dat
 #### LinkedIn
 The LinkedIn command is the first Social Network addition to the Cartero Framework. Allowing attackers to use the message platform to send messages and attack users from LinkedIn. 
 ```shell
- ❯❯❯ ./cartero LinkedIn
+./cartero LinkedIn
 Usage: Cartero LinkedIn [options]
     -D, --data [DATA_FILE]           File containing template data sets
     -S, --server [SERVER_NAME]       Sets Email server to use
     -s, --subject [MESSAGE_SUBJECT]  Sets LinkedIn Message subject
     -b, --body [FILE_PATH]           Sets LinkedIn Message Body
-    -l, --list-connections           Show Summary of connections
+    -l, --list [CONNECTIONS|GROUPS]  List json of (connections or groups)
+        --send [MESSAGE|GROUP_UPDATE]
+                                     Send one or more (message/s or group/s updates)
     -o, --save [FILE_PATH]           Sets LinkedIn Message Body
 
 Common options:
