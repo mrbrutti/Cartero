@@ -139,6 +139,11 @@ class Listener < Cartero::Command
 				raise StandardError, " #{File.expand_path(@options.payload)} Payload does not exists."
 			end
 		end
+
+		unless @options.metasploit.nil?
+			# Process Metasploit Payload
+		end
+		
 		# Passing PUMA the Sinatra WebApp we will be using. 
 		@puma.options[:app] = @web_server
 		
