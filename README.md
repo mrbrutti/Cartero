@@ -4,9 +4,9 @@
 ### Description
 A simple Phishing Framework Library with a CLI tool. The project was born out of necessity on projects. Even though there are many projects out there, we were not able to find a suitable solution that gave us both easy of use and customizability.
 
-Cartero is a modular project divided into commands that perform independent tasks (i.e. Mailer, Cloner, Listener, AdminConsole, etc...). In addition each sub-command has options. 
+Cartero is a modular project divided into commands that perform independent tasks (i.e. Mailer, Cloner, Listener, AdminConsole, etc...). In addition each sub-command has options.
 
-For example, if we wanted to clone gmail.com, we simply have to perform the following commands. 
+For example, if we wanted to clone gmail.com, we simply have to perform the following commands.
 
 ```shell
 ❯❯❯ ./cartero Cloner --url https://gmail.com --path /tmp --webserver gmail_com
@@ -77,7 +77,7 @@ Common options:
 ### Basic Commands
 
 #### Mongo
-This is a simple Wrapper for MongoDB that allows us to start stop the database with the corresponding commands and on the correct ~/.cartero path. 
+This is a simple Wrapper for MongoDB that allows us to start stop the database with the corresponding commands and on the correct ~/.cartero path.
 
 ```shell
 ❯❯❯ ./cartero Mongo
@@ -204,8 +204,8 @@ Common options:
     -h, --help                       Show this message
         --list-options               Show list of available options
 ```
-#### WebMailer 
-This new command is an add on to support yet another known method to send messages using known vulnerabilities or anonymous sending services on the web via web requests. 
+#### WebMailer
+This new command is an add on to support yet another known method to send messages using known vulnerabilities or anonymous sending services on the web via web requests.
 
 ```shell
 ❯❯❯ ./cartero WebMailer
@@ -262,12 +262,12 @@ Using this pre-configured request, we can easily send message using the same dat
 
 #####Sample Command:
 ```shell
-./cartero WebMailer -S webmail -D ~/sample.json -b ../templates/mail/sample.web -r cartero@gmail.com
+❯❯❯ ./cartero WebMailer -S webmail -D ~/sample.json -b ../templates/mail/sample.web -r cartero@gmail.com
 ```
 #### LinkedIn
-The LinkedIn command is the first Social Network addition to the Cartero Framework. Allowing attackers to use the message platform to send messages and attack users from LinkedIn. 
+The LinkedIn command is the first Social Network addition to the Cartero Framework. Allowing attackers to use the message platform to send messages and attack users from LinkedIn.
 ```shell
-./cartero LinkedIn
+❯❯❯ ./cartero LinkedIn
 Usage: Cartero LinkedIn [options]
     -D, --data [DATA_FILE]           File containing template data sets
     -S, --server [SERVER_NAME]       Sets Email server to use
@@ -283,8 +283,31 @@ Common options:
         --list-options               Show list of available options
 ```
 
-The command requires a developer API and oauth key on the attackers profile. This can be easily obtained in https://www.linkedin.com/secure/developer. and a new server template can be created with the Servers command. 
+The command requires a developer API and oauth key on the attackers profile. This can be easily obtained in https://www.linkedin.com/secure/developer. and a new server template can be created with the Servers command.
 
+#### IMessage
+After reading some news on how Chinese spammers are abusing the fact that iMessage messages will be displayed on all devices linked to the account/s, a quick command was developer to allow Cartero users to also have this feature available to the Framework.
+_Important: This will only work on OSX, for now_
+
+```shell
+❯❯❯ ./cartero IMessage
+Usage: Cartero IMessage [options]
+IMPORTANT: This command only works on OSX
+
+    -D, --data [DATA_FILE]           File containing template data sets
+    -A, --attachment [ATTACHMENT]    Sets iMessage file path to send
+    -b, --body [BODY_FILE]           Sets iMessage message
+    -m, --message [MESSAGE]          Sets iMessage message
+
+Common options:
+    -h, --help                       Show this message
+        --list-options               Show list of available options
+```
+Messages do not allow to send a single message containing both text and attachments, but we both are provided we will split the message and send it as two individual ones.
+#####Sample command
+```shell
+❯❯❯ ./cartero IMessage --data /Users/cartero/Desktop/test.json -b ../templates/mail/sample.imsg -a /Users/cartero/Downloads/jon.jpg
+```
 
 #### AdminWeb
 The Admin Web is a simple Web-Application that allows to list information about each Campaign.
@@ -304,7 +327,7 @@ Common options:
         --list-options               Show list of available options
 ```
 
-### AdminConsole
+#### AdminConsole
 The Admin Console is CLI tool that allows to list information about Persons, Campaigns, Hits and Credentials gathered.  
 ```shell
 ❯❯❯ ./cartero AdminConsole
@@ -334,6 +357,7 @@ module Commands
 class CommandName < Cartero::Command
 	def initialize
 		super do |opts|
+      #OptionsParser options available here.
 			opts.on("-x", "--xoption [DATA_FILE]", String,
     		"Description of command option") do |data|
       	@options.xoption = data
@@ -343,6 +367,7 @@ class CommandName < Cartero::Command
         @options.xoption = data
       end
       # help() option already provided.
+      # --list-options for auto-complete automatic.
     end
   end
 
@@ -367,7 +392,7 @@ end
 ### Mailer Templates
 Emails are simple txt files or limited HTML files, depending on the type of format being used. Cartero allows to build and tempaltes both formats. In order to allow complex templating we use erb ruby gem, also used in many projects like Sinatra, Rails, etc.
 
-Files can be extremely customized given erb allows for programatically edits on run time. Additionally we add an encrypted self[:payload] to each email template that allows Cartero to indentify each specific entity regardless. Last, but not least, this payload is encrypted using a key that is randomly generated and only exists on the Cartero config directory, allowing attackers to keep data secure and away from detection. 
+Files can be extremely customized given erb allows for programatically edits on run time. Additionally we add an encrypted self[:payload] to each email template that allows Cartero to indentify each specific entity regardless. Last, but not least, this payload is encrypted using a key that is randomly generated and only exists on the Cartero config directory, allowing attackers to keep data secure and away from detection.
 
 **SAMPLE DATA FILE**
 ```json
@@ -420,7 +445,7 @@ cheers,
 Servers can be managed using the Cartero Servers command, which allows to add, edit and delete servers.
 Additionally, anyone can easily create them manually and store them in _~/.cartero/servers/*.json_
 
-
+####smtp
 ```json
 {
     "name": "gmail",
@@ -436,13 +461,44 @@ Additionally, anyone can easily create them manually and store them in _~/.carte
 }
 ```
 
-### TODO
-Coding:
-- Add attack payloads to Cloner
-- Evaluate/Add tracking methods.
-- Research the concept of handling multiple projects. 
-- Improve MongoDB integration. 
+####linkedin
+```json
+{
+  "name": "linkedin",
+  "type": "linkedin",
+	"options": {
+	  "api_access": "api_access",
+	  "api_secret": "api_secret",
+	  "oauth_token": "oauth_token",
+	  "oauth_secret": "oauth_secret"
+	}
+}
+```
 
-Documentation:
+####webmail
+```json
+{
+  "name": "webmail-sample",
+  "type": "webmail",
+  "options": {
+    "url": "http://www.send-email.com/data/send/email",
+    "method": "POST",
+    "cookies": "sdajsda09s7das923i3j2l131;21381903810",
+    "headers": {
+      "x-forward": "asdadadasad"
+    }
+  },
+  "confirmation" : null
+}
+```
+### TODO
+#####Coding:
+- msfvenon user-agent based dynamic shell payloads to Cloner
+- Evaluate/Add tracking methods available to people.
+- Research the concept of handling project/s.
+- Interactive shell ?
+
+#####Documentation:
 - Add Samples to each Command Section
+- Screenshots
 - Upload Videos

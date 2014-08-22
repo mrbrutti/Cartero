@@ -158,6 +158,7 @@ class LinkedIn < Cartero::Command
 
 		# Add Text body if was provided.
 		unless body.nil?
+			entity[:payload] = Cartero::CryptoBox.encrypt(entity.to_json)
 			mail[:summary] = ERB.new(body).result(entity.get_binding)
 		end
 

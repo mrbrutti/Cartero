@@ -14,5 +14,4 @@ gem "ipaddress"
 gem "linkedin"
 gem "json"
 gem "rest-client"
-gem "erb"
 
