@@ -30,10 +30,12 @@ class Mongo < Cartero::Command
 
   def setup
     if @options.mongodb.nil?  
-      mongo_ip = "localhost"
-      mongo_port = "27017"
+      @mongo_ip = "localhost"
+      @mongo_port = "27017"
     else
-      mongo_ip, mongo_port = @options.mongodb.split(":")
+      x = @options.mongodb.split(":")
+      @mongo_ip = x[0]
+      @mongo_port = x[1]
     end
   end
 
