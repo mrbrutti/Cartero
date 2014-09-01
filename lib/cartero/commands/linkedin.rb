@@ -36,7 +36,7 @@ class LinkedIn < Cartero::Command
         @options.list = t
       end
 
-      opts.on("--send [MESSAGE|GROUP_UPDATE]", [:message, :group],
+      opts.on("--send [MESSAGE|GROUP_UPDATE|UPDATE]", [:message, :group, :update],
               "Send one or more (message/s or group/s updates)") do |t|
         @options.send_type = t
       end
@@ -63,7 +63,7 @@ class LinkedIn < Cartero::Command
 		require 'json'
 		require 'multi_json'
 
-		if @options.data.nil? and @options.list.nil?
+		if @options.data.nil? and @options.list.nil? and @options.send_type.to_s != "update"
 			raise StandardError, "A data set [--data] must be provided"
 		end
 
@@ -122,6 +122,11 @@ class LinkedIn < Cartero::Command
 			end
 			print_json(list)
 		else
+			if @options.send_type == :update
+				response = @client.add_share(:comment => body)
+				puts "Sending Linkedin Status Update #{@client.profile.first_name} #{@client.profile.last_name}."
+				return
+			end
 			send do |s|
 				puts "Sending Linkedin Message to #{s[:name]} #{s[:last]}\n\tStatus: #{s[:status]}"
 			end
