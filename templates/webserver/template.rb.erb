@@ -1,4 +1,4 @@
-class <%= self[:webserver].capitalize %> < Sinatra::Base
+class <%= self[:webserver].camelize %> < Sinatra::Base
 	
 	not_found do
 		puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - #{request.forwarded?} - #{request.user_agent}" 

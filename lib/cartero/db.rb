@@ -1,18 +1,18 @@
 module Cartero
 	module DB
-		def self.start(ip="localhost",port="27017")
+		def self.start(ip=nil, port=nil)
 			case RUBY_PLATFORM
 			when /linux|darwin/
 				mongod = "mongod --fork"
 				$stdout.puts "Launching mongodb"
-				system( mongod + " --dbpath=" + Cartero::MongoDBDir + " --logpath=" + Cartero::LogsDir + "/mongodb.log" + " --bind_ip " + ip + " --port " + port.to_s + " --logappend" + "> /dev/null")
+				system( mongod + " --dbpath=" + Cartero::MongoDBDir + " --logpath=" + Cartero::LogsDir + "/mongodb.log" + " --bind_ip #{ip.to_s || "localhost"} --port #{port.to_s || "27017"}" + " --logappend" + "> /dev/null")
 				sleep(1)
 			when /mingw|mswin/
 				$stdout.puts "TODO: Manual Launch. !!! Make sure mongodb is running. !!!"
 				sleep(1)
 			end
-		rescue
-			$stderr.puts "Something went wrong starting db"
+		rescue => e
+			$stderr.puts "Something went wrong starting db. #{e.to_s}"
 			exit(0)
 		end
 

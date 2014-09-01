@@ -109,8 +109,8 @@ class Listener < Cartero::Command
 		@web_server.set :server, :puma
 		@web_server.configure do
 			@options.mongodb.nil? ? m = ["localhost", "27017"] : m = @options.mongodb.split(":")
-			MongoMapper.connection = Mongo::Connection.new(m[0], m[1].to_i)
-			MongoMapper.database = "Cartero"
+			::MongoMapper.connection = ::Mongo::Connection.new(m[0], m[1].to_i)
+			::MongoMapper.database = "Cartero"
 		end
 
 		# Allow to pass a Views Render Folder Path
@@ -143,7 +143,7 @@ class Listener < Cartero::Command
 		unless @options.metasploit.nil?
 			# Process Metasploit Payload
 		end
-		
+
 		# Passing PUMA the Sinatra WebApp we will be using. 
 		@puma.options[:app] = @web_server
 		
