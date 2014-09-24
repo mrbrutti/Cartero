@@ -1,6 +1,14 @@
 require 'optparse'
 require 'ostruct'
 
+# Hack to Hash to we can use 
+# the private binding() method on ERB.
+class Hash
+	def get_binding
+		binding()
+	end
+end
+
 module Cartero
 	class Command
 		@@disable_override = false

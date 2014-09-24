@@ -60,6 +60,11 @@ class Listener < Cartero::Command
       	@options.payload = file
     	end
 
+    	opts.on("--metasploit-config [FILE_NAME]", String, 
+    		"Sets a payload download to serve on /download") do |file|	      	
+      	@options.payload = file
+    	end
+
     	opts.on("--customapp [CUSTOM_SINATRA]", String, 
     		"Sets a custom Sinatra::Base WebApp. Important, WebApp name should be camelized of filename") do |app|	      	
       	@options.customwebserver = app

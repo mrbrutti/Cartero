@@ -117,6 +117,8 @@ class Servers < Cartero::Command
       "#{File.dirname(__FILE__)}/../../../templates/server/linkedin.json"
     when /webmail/
       "#{File.dirname(__FILE__)}/../../../templates/server/webmail.json"
+    when /gvoice/
+     "#{File.dirname(__FILE__)}/../../../templates/server/gvoice.json"
     else
       "#{File.dirname(__FILE__)}/../../../templates/server/server.json"
     end
@@ -158,7 +160,7 @@ class Server
 		@name         = name
 		@type         = options.type         || "smtp"
     @url          = options.url          || "subdomain.domain.com"
-    @method       = options.req_method       || "POST"
+    @method       = options.req_method   || "POST"
     @api_access   = options.api_access   || "api_access_key"
     @api_secret   = options.api_secret   || "api_secret_key"
     @oauth_token  = options.oauth_token  || "oauth_token_key"

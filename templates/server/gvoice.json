@@ -1,0 +1,8 @@
+{
+    "name": "<%= @name %>",
+    "type": "<%= @type %>",
+    "options": {
+        "username": "user",
+        "password": "password"
+    }
+}

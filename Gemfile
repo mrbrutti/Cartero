@@ -11,7 +11,8 @@ gem "socksify"
 gem "rbnacl-libsodium"
 gem "rbnacl"
 gem "ipaddress"
-gem "linkedin"
+gem "linkedin" # LinkedIn Command
 gem "json"
 gem "rest-client"
+gem "googlevoiceapi" # SMS Command
 
