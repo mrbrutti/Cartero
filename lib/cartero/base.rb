@@ -35,11 +35,11 @@ module Cartero
 		end
 
     def self.load_commands
-  	  Dir[File.dirname(__FILE__) + "/commands/*.rb"].each do |t|
+  	  Dir[File.dirname(__FILE__) + "/commands/**/*.rb"].each do |t|
   	    load t
   	  end
 
-  	  Dir[ENV["HOME"] + "/.cartero/commands/*.rb"].each do |t|
+  	  Dir[ENV["HOME"] + "/.cartero/commands/**/*.rb"].each do |t|
   	    load t
   	  end
   	end
