@@ -1,11 +1,3 @@
-# Hack to Hash to we can use 
-# the private binding() method on ERB.
-class Hash
-	def get_binding
-		binding()
-	end
-end
-
 module Cartero
 module Commands
 class LinkedIn < Cartero::Command
@@ -78,6 +70,11 @@ class LinkedIn < Cartero::Command
   	else
 			s = Cartero::Commands::Servers.server(@options.server)
 			@server = JSON.parse(File.read(s),{:symbolize_names => true})
+	
+			if @server[:type].downcase != "linkedin"
+				raise StandardError, "Server with name #{@options.server} is not linkedin type."
+			end
+	
 		end
 
 		unless @options.data.nil?
@@ -96,9 +93,6 @@ class LinkedIn < Cartero::Command
 					@body = File.read(File.expand_path @options.body)
 				else
 					raise StandardError, "Text Body Template (#{File.expand_path @options.body}) does not exists"
-				end
-				if @server[:type].downcase != "linkedin"
-					raise StandardError, "Server with name #{@options.server} is not linkedin type."
 				end
 			end
 		end

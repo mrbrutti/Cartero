@@ -315,6 +315,24 @@ iMessage does not allow sending a single message containing both text and attach
 ```shell
 ❯❯❯ ./cartero IMessage --data /Users/cartero/Desktop/test.json -b ../templates/mail/sample.imsg -a /Users/cartero/Downloads/jon.jpg
 ```
+#### GoogleVoice
+If you have a GoogleVoice account and want to automatically send SMS this might be a nice way to do it. It follows the same infrastructure as all other commands.
+
+````shell
+❯❯❯ ./cartero GoogleVoice
+Usage: Cartero GoogleVoice [options]
+    -D, --data [DATA_FILE]           File containing template data sets
+    -S, --server [SERVER_NAME]       Sets SMS server to use
+    -b, --body [FILE_PATH]           Sets SMS Text Body
+    -m, --message [MESSAGE]          Sets SMS message
+    -u, --username [USER]            Sets Google Voice Username
+    -p, --password [PWD]             Sets Google Voice password
+
+Common options:
+    -h, --help                       Show this message
+        --list-options               Show list of available options
+
+````
 
 #### AdminWeb
 The Admin Web interface is a simple Web-Application that allows the attacker to retrieve information about all Campaigns.
@@ -500,14 +518,16 @@ Note: Servers can be manually edited in _~/.cartero/servers/*.json_
   "confirmation" : null
 }
 ```
-### TODO
+.
+## TODO
 #####Coding:
 - msfvenon user-agent based dynamic shell payloads to Cloner
 - Evaluate/Add tracking methods.
 - Research the concept of handling project/s.
 - Interactive shell ?
+- Add payload Cloner add-on and payload directory loading.
 
 #####Documentation:
 - Add Samples to each Command Section
-- Screenshots
+- More Screenshots
 - Upload Videos
