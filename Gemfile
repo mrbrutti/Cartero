@@ -6,7 +6,7 @@ gem "rack"
 gem "mongo"
 gem "mongo_mapper"
 gem "bson_ext"
-gem "pony"
+gem "pony" # Carta (Mailer) Command
 gem "socksify"
 gem "rbnacl-libsodium"
 gem "rbnacl"
@@ -14,5 +14,5 @@ gem "ipaddress"
 gem "linkedin" # LinkedIn Command
 gem "json"
 gem "rest-client"
-gem "googlevoiceapi" # SMS Command
-
+gem "googlevoiceapi" # Google Voice Command
+gem "twilio-ruby" # Twilio Command

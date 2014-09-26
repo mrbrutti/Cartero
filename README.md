@@ -334,6 +334,28 @@ Common options:
 
 ````
 
+#### Twilio
+If you have a Twilio account and want to automatically send SMS this might yet another way to send SMS. It is worth noting this is a paid service and it requires a valid access token (sid) and secret (secret_token). For more information please refer to Twilio's website at https://www.twilio.com/sms/api
+
+````shell
+❯❯❯ ./cartero Twilio
+Usage: Cartero Twilio [options]
+    -D, --data [DATA_FILE]           File containing template data sets
+    -S, --server [SERVER_NAME]       Sets SMS server to use
+    -f, --from [NUMBER]              Sets SMS from number to use
+    -b, --body [FILE_PATH]           Sets SMS Text Body
+    -m, --message [MESSAGE]          Sets SMS message
+    -u, --sid [SID]                  Sets Twilio Username
+    -p, --token [TOKEN]              Sets Twilio password
+    -A, --attachment [PATH_1||PATH_2||PATH_3]    Sets Twilio MMS URL image paths to send
+
+Common options:
+    -h, --help                       Show this message
+        --list-options               Show list of available options
+
+````
+
+
 #### AdminWeb
 The Admin Web interface is a simple Web-Application that allows the attacker to retrieve information about all Campaigns.
 
