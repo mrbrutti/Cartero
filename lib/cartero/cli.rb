@@ -14,8 +14,15 @@ module Cartero
 			# Initialize all avilable loaded Commands that are parto of
 			# Cartero::Commands and are its supper class is << Cartero::Command.
       Cartero::Commands.constants.each do |klass|
-      	# Get the constant from the Kernel using the symbol
-      	const = Kernel.const_get("Cartero::Commands::#{klass}")
+
+				if RUBY_VERSION =~ /1.9.3/
+					# get the constant from Object Concatenation on ruby 1.9.3
+					# Kernel.const_get does not work using strings as a value.
+					const = ::Object.const_get("Cartero").const_get("Commands").const_get(klass)
+				else
+					# Get the constant from the Kernel using the symbol
+      		const = Kernel.const_get("Cartero::Commands::#{klass}")
+				end
       	# Check if the plugin has a super class and if the type is Plugin
       	if const.respond_to?(:superclass) and const.superclass == Cartero::Command
       	  Cartero::COMMANDS[klass.to_s] = const
@@ -24,7 +31,6 @@ module Cartero
 
       # Initialize Crypto Box
 			Cartero::CryptoBox.init
-
 		end
 
 		def commands
@@ -95,7 +101,7 @@ module Cartero
 	      	end
 	        exit
 	      end
-	    	
+
 	    	opts.on("--list-commands", "Prints list of commands for bash completion") do
 	    		$stdout.puts Cartero::COMMANDS.keys.join(" ")
 	    	end
@@ -165,4 +171,3 @@ module Cartero
 		end
 	end
 end
-

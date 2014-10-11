@@ -1,5 +1,5 @@
 <VirtualHost *:80>
-  ServerName cartero.fake.com
+  ServerName <%= self[:url].split("//")[-1] + ".editme.com" %>
   DocumentRoot /var/www/html/
 
   ProxyPass / http://127.0.0.1:8080/

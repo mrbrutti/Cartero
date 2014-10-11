@@ -1,18 +1,32 @@
 module Cartero
-	HomeDir = File.expand_path ("~/.cartero")
-	LogsDir = File.expand_path ("~/.cartero/logs")
-	DataDir = File.expand_path ("~/.cartero/data")
-	MongoDBDir = File.expand_path ("~/.cartero/data/db")
-	ServersDir = File.expand_path ("~/.cartero/servers")
-	CmdsDir = File.expand_path ("~/.cartero/commands")
-	TemplatesDir = File.expand_path ("~/.cartero/templates")
+	MetasploitPath = File.expand_path("/usr/local/share/metasploit-framework")
+	HomeDir = File.expand_path("~/.cartero")
+	LogsDir = File.expand_path("~/.cartero/logs")
+	DataDir = File.expand_path("~/.cartero/data")
+	MongoDBDir = File.expand_path("~/.cartero/data/db")
+	ServersDir = File.expand_path("~/.cartero/servers")
+	CmdsDir = File.expand_path("~/.cartero/commands")
+	TemplatesDir = File.expand_path("~/.cartero/templates")
 	TemplatesApacheDir = Cartero::TemplatesDir + "/apache"
 	TemplatesDataSetDir = Cartero::TemplatesDir + "/dataset"
 	TemplatesMailDir = Cartero::TemplatesDir + "/mail"
 	TemplatesWebServerDir = Cartero::TemplatesDir + "/webserver"
 	SecretMaterial = Cartero::HomeDir + "/.secret_material"
-	
+
 	module Base
+
+		def self.load_config
+			if File.exist? File.expand_path "~/.cartero/config"
+				require 'json'
+				config = JSON.parse(File.read(File.expand_path "~/.cartero/config"))
+				if config["metasploit_path"]
+					Cartero.send(:remove_const, :MetasploitPath)
+					Cartero.const_set(:MetasploitPath, File.expand_path(config.fetch("metasploit_path")))
+				end
+				ENV["EDITOR"] = config.fetch("editor") if config["editor"]
+			end
+		end
+
 		def self.first_run?
 			!File.directory? Cartero::HomeDir
 		end
@@ -26,7 +40,7 @@ module Cartero
 			Dir.mkdir Cartero::ServersDir unless File.directory? Cartero::ServersDir
 			Dir.mkdir Cartero::CmdsDir unless File.directory? Cartero::CmdsDir
 			Dir.mkdir Cartero::TemplatesDir unless File.directory? Cartero::TemplatesDir
-			Dir.mkdir Cartero::TemplatesWebServerDir unless File.directory? Cartero::TemplatesWebServersDir
+			Dir.mkdir Cartero::TemplatesWebServerDir unless File.directory? Cartero::TemplatesWebServerDir
 			Dir.mkdir Cartero::TemplatesApacheDir unless File.directory? Cartero::TemplatesApacheDir
 		end
 
