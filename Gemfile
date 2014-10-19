@@ -18,3 +18,6 @@ gem "googlevoiceapi" # Google Voice Command
 gem "twilio-ruby" # Twilio Command
 gem "command_line_reporter"
 gem "mechanize"
+gem "rjr"
+gem "jsobfu"
+gem "msfrpc-client"

@@ -24,6 +24,9 @@ Cartero::Base::load_config
 # Load all commands
 Cartero::Base::load_commands
 
+# Load all payloads
+Cartero::Base::load_payloads
+
 # Check if this is the first time we running if so create ~/.cartero structure.
 if Cartero::Base::first_run?
 	Cartero::Base::create_structure

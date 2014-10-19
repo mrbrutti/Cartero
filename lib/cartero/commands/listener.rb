@@ -1,13 +1,3 @@
-class String
-  def camelize
-    self.split("_").each {|s| s.capitalize! }.join("")
-  end
-
-  def underscore
-    self.gsub(/(.)([A-Z])/,'\1_\2').downcase
-  end
-end
-
 module Cartero
 module Commands
 class Listener < Cartero::Command
@@ -56,11 +46,6 @@ class Listener < Cartero::Command
     	end
 
     	opts.on("--payload [PAYLOAD]", String, 
-    		"Sets a payload download to serve on /download") do |file|	      	
-      	@options.payload = file
-    	end
-
-    	opts.on("--metasploit-config [FILE_NAME]", String, 
     		"Sets a payload download to serve on /download") do |file|	      	
       	@options.payload = file
     	end
@@ -145,9 +130,6 @@ class Listener < Cartero::Command
 			end
 		end
 
-		unless @options.metasploit.nil?
-			# Process Metasploit Payload
-		end
 
 		# Passing PUMA the Sinatra WebApp we will be using. 
 		@puma.options[:app] = @web_server

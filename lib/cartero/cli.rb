@@ -10,24 +10,11 @@ module Cartero
 			@args = args
 			@options = OpenStruct.new
 			@options.commands = []
+			@options.payloads = []
 
-			# Initialize all avilable loaded Commands that are parto of
-			# Cartero::Commands and are its supper class is << Cartero::Command.
-      Cartero::Commands.constants.each do |klass|
+			initialize_commands
 
-				if RUBY_VERSION =~ /1.9.3/
-					# get the constant from Object Concatenation on ruby 1.9.3
-					# Kernel.const_get does not work using strings as a value.
-					const = ::Object.const_get("Cartero").const_get("Commands").const_get(klass)
-				else
-					# Get the constant from the Kernel using the symbol
-      		const = Kernel.const_get("Cartero::Commands::#{klass}")
-				end
-      	# Check if the plugin has a super class and if the type is Plugin
-      	if const.respond_to?(:superclass) and const.superclass == Cartero::Command
-      	  Cartero::COMMANDS[klass.to_s] = const
-      	end
-      end
+			initialize_payloads
 
       # Initialize Crypto Box
 			Cartero::CryptoBox.init
@@ -37,13 +24,19 @@ module Cartero
 			@options.commands
 		end
 
+		def payloads
+			@options.payloads
+		end
+
 		def parse
 			@parser = OptionParser.new do |opts|
 	    	opts.banner = "Usage: cartero [options]"
 
 	    	opts.separator ""
-
 				opts.separator "List of Commands:\n    " + Cartero::COMMANDS.keys.join(", ")
+
+	    	opts.separator ""
+				opts.separator "List of Payloads:\n    " + Cartero::PAYLOADS.keys.join(", ")
 
 
 	    	opts.separator ""
@@ -106,6 +99,10 @@ module Cartero
 	    		$stdout.puts Cartero::COMMANDS.keys.join(" ")
 	    	end
 
+	    	opts.on("--list-payloads", "Prints list of payloads for bash completion") do
+	    		$stdout.puts Cartero::PAYLOADS.keys.join(" ")
+	    	end
+
 	      opts.on_tail("--version", "Shows cartero CLI version") do
 	        puts Cartero::Version.join('.')
 	        exit
@@ -140,6 +137,7 @@ module Cartero
 		    			exit
 		    		end
 		    		command.order!
+		    		#command.args(ARGV)
 				  	commands << command
 				  rescue OptionParser::InvalidOption, OptionParser::MissingArgument
 				    $stderr.puts "Invalid sub-command #{cmd} option, try -h for usage"
@@ -148,9 +146,25 @@ module Cartero
 				  	$stderr.puts e
 				  	exit(1)
 				  end
-
+				elsif Cartero::PAYLOADS.has_key?(cmd)
+				  begin
+				  	payload = Cartero::PAYLOADS[cmd].new
+				  	if ARGV.empty?
+		    			$stdout.puts payload.help
+		    			exit
+		    		end
+		    		payload.order!
+		    		#payload.args(ARGV)
+				  	commands << payload
+				  rescue OptionParser::InvalidOption, OptionParser::MissingArgument
+				    $stderr.puts "Invalid sub-payload #{cmd} option, try -h for usage"
+				    exit
+				  rescue StandardError => e
+				  	$stderr.puts e
+				  	exit(1)
+				  end
 				else
-					$stderr.puts "Invalid command, try -h for usage"
+					$stderr.puts "Invalid command or payload, try -h for usage"
 				  exit(1)
 				end
 			end
@@ -169,5 +183,45 @@ module Cartero
 				end
 			end
 		end
+
+		private 
+		def initialize_commands
+			# Initialize all avilable loaded Commands that are parto of
+			# Cartero::Commands and are its supper class is << Cartero::Command.
+      Cartero::Commands.constants.each do |klass|
+				if RUBY_VERSION =~ /1.9.3/
+					# get the constant from Object Concatenation on ruby 1.9.3
+					# Kernel.const_get does not work using strings as a value.
+					const = ::Object.const_get("Cartero").const_get("Commands").const_get(klass)
+				else
+					# Get the constant from the Kernel using the symbol
+      		const = Kernel.const_get("Cartero::Commands::#{klass}")
+				end
+      	# Check if the plugin has a super class and if the type is Plugin
+      	if const.respond_to?(:superclass) and const.superclass == Cartero::Command
+      	  Cartero::COMMANDS[klass.to_s] = const
+      	end
+      end
+    end
+
+		def initialize_payloads
+			# Initialize all avilable loaded Commands that are parto of
+			# Cartero::Commands and are its supper class is << Cartero::Command.
+      Cartero::Payloads.constants.each do |klass|
+				if RUBY_VERSION =~ /1.9.3/
+					# get the constant from Object Concatenation on ruby 1.9.3
+					# Kernel.const_get does not work using strings as a value.
+					const = ::Object.const_get("Cartero").const_get("Payloads").const_get(klass)
+				else
+					# Get the constant from the Kernel using the symbol
+      		const = Kernel.const_get("Cartero::Payloads::#{klass}")
+				end
+      	# Check if the plugin has a super class and if the type is Plugin
+      	if const.respond_to?(:superclass) and const.superclass == Cartero::Payload
+      	  Cartero::PAYLOADS[klass.to_s] = const
+      	end
+      end
+    end
+
 	end
 end

@@ -2,7 +2,7 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 
 	not_found do
 		$stdout.puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - #{request.forwarded?} - #{request.user_agent}"
-		erb :error
+		redirect to "/"
 	end
 
 	get "/image" do
