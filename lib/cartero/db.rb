@@ -4,7 +4,7 @@ module Cartero
 			case RUBY_PLATFORM
 			when /linux|darwin/
 				mongod = "mongod --fork"
-				$stdout.puts "Launching mongodb"
+				#$stdout.puts "Launching mongodb"
 				system( mongod + " --dbpath=" + Cartero::MongoDBDir + " --logpath=" + Cartero::LogsDir + "/mongodb.log" + " --bind_ip #{ip || "localhost"} --port #{port || "27017"}" + " --logappend" + "> /dev/null")
 				sleep(1)
 			when /mingw|mswin/
@@ -17,7 +17,7 @@ module Cartero
 		end
 
 		def self.stop
-			$stdout.puts "Stopping Mongodb"
+			#$stdout.puts "Stopping Mongodb"
 			MongoMapper.connection['admin'].command(:shutdown => 1)
 			$stdout.puts "" if RUBY_PLATFORM =~ /mingw|mswin/
 		rescue StandardError => e

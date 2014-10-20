@@ -209,9 +209,9 @@ class VeilEvasion < Cartero::Payload
   def display_payloads_options(c)
   	return if c.empty?
     table() do
-      row(:header => true, :bold => true) do
-        column('NAME', 			:width => 10)
-        column('DEFAULT VALUE',:width => 20)
+      row(:color => 'red', :header => true, :bold => true) do
+        column('NAME', 			:width => 20)
+        column('DEFAULT VALUE',:width => 15)
         column('DESCRIPTION',:width => 50)
       end
       c.each do |p|
@@ -227,7 +227,7 @@ class VeilEvasion < Cartero::Payload
   def display_payloads(c)
   	return if c.empty?
     table() do
-      row(:header => true, :bold => true) do
+      row(:color => 'red', :header => true, :bold => true) do
         column('ID', 			:width => 3)
         column('PAYLOAD',:width => 50)
       end

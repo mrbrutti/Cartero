@@ -1,6 +1,9 @@
+require 'command_line_reporter'
+
 module Cartero
 module Commands
 class LinkedIn < Cartero::Command
+	include CommandLineReporter
 	def initialize
 		super do |opts|
 			opts.on("-D", "--data [DATA_FILE]", String, 
@@ -34,9 +37,13 @@ class LinkedIn < Cartero::Command
       end
 
     	opts.on("-o", "--save [FILE_PATH]", String, 
-    		"Sets LinkedIn Message Body") do |f|	      	
+    		"Save content to file") do |f|	      	
       	@options.file_save = f
     	end
+
+    	opts.on("--json", "Sets output to json") do
+    		@options.json = true
+  		end
     end
 	end
 	
@@ -114,7 +121,11 @@ class LinkedIn < Cartero::Command
 					list << { "id" => g.id, "name" => g.group.name }
 				end
 			end
-			print_json(list)
+			if @options.json
+				print_json(list)
+			else
+				display_table(list, @options.list)
+			end
 		else
 			if @options.send_type == :update
 				response = @client.add_share(:comment => body)
@@ -169,6 +180,42 @@ class LinkedIn < Cartero::Command
 			response = @client.add_group_share(mail[:to], mail)
 		end
 	end
+
+	def display_table(h, type)
+  	return if h.empty?
+  	case type
+  	when /connections/
+	    table() do
+	      row(:color => 'red', :header => true, :bold => true) do
+	        column('ID', 		:width => 15)
+	        column('NAME',  :width => 20)
+	        column('LAST',	:width => 20)
+	        column('TITLE', :width => 90)
+	      end
+	      h.each do |con|
+	        row() do
+	          column(con["id"], :color => 'blue')
+	          column(con["name"])
+	          column(con["last"])
+	          column(con["title"])
+	        end
+	      end
+	    end
+	  when /groups/
+	 	  table() do
+	      row(:color => 'red', :header => true, :bold => true) do
+	        column('ID', 		:width => 10)
+	        column('NAME',  :width => 70)
+	      end
+	      h.each_with_index do |con|
+	        row() do
+	          column(con["id"], :color => 'blue')
+	          column(con["name"])
+	        end
+	      end
+	    end
+	  end 	
+  end
 
 	def print_json(list)
 		unless file_save.nil?

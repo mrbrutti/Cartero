@@ -129,7 +129,7 @@ class AdminConsole < Cartero::Command
   def display_persons(p)
   	return if p.empty?
 
-    table(:border => true) do
+    table() do
       row(:color => 'red', :header => true, :bold => true) do
         column('ID', :width => 3)
         column('EMAIL', :width => 27)
@@ -156,7 +156,7 @@ class AdminConsole < Cartero::Command
   def display_hits(h)
   	return if h.empty?
 
-    table(:border => true) do
+    table() do
       row(:color => 'red', :header => true, :bold => true) do
         column('ID', 			:width => 3)
         column('EMAIL',   :width => 20)
@@ -198,7 +198,7 @@ class AdminConsole < Cartero::Command
   def display_credentials(c)
   	return if c.empty?
 
-    table(:border => true) do
+    table() do
       row(:color => 'red', :header => true, :bold => true) do
         column('ID', 			:width => 3)
         column('USERNAME',:width => 20)
