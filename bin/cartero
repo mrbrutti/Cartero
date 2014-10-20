@@ -14,22 +14,35 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with Cartero.  If not, see <http://www.gnu.org/licenses/>.
 
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__), '../lib'))
-
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'cartero'
 
+# Loading Config file information.
+# Currently not used extensvely but we rely on it more & more.
+Cartero::Base::load_config
+
+# Load all commands
 Cartero::Base::load_commands
 
+# Load all payloads
+Cartero::Base::load_payloads
+
+# Check if this is the first time we running if so create ~/.cartero structure.
 if Cartero::Base::first_run?
 	Cartero::Base::create_structure
 end
 
+# Check if EDITOR is set. We need it for templating, etc.
 if Cartero::Base::check_editor
 	$stderr.puts "Error: Set $EDITOR on your shell."
 	exit(1)
 end
 
+# Create Cartero Instance
 cli = Cartero::CLI.new(ARGV)
+# Parse Commands
+# technically we can run more than one command,
+# but web servers should be run on their own.
 cli.parse
+# Run parsed commands
 cli.run
-

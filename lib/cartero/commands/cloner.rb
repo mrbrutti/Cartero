@@ -3,39 +3,38 @@ module Commands
 class Cloner < Cartero::Command
 	def initialize
 		super do |opts|
-			opts.on("-U", "--url [URL_PATH]", String, 
-    		"Full Path of site to clone") do |url|	      	
+			opts.on("-U", "--url [URL_PATH]", String,
+    		"Full Path of site to clone") do |url|
       	@options.url = url
     	end
 
-    	opts.on("-W", "--webserver [SERVER_NAME]", String, 
-    		"Sets WebServer name to use") do |ws|	      	
+    	opts.on("-W", "--webserver [SERVER_NAME]", String,
+    		"Sets WebServer name to use") do |ws|
       	@options.webserver = ws
     	end
 
-    	opts.on("-p", "--path [PATH]", String, 
-    		"Sets path to save webserver") do |path|	      	
+    	opts.on("-p", "--path [PATH]", String,
+    		"Sets path to save webserver") do |path|
       	@options.path = path
     	end
 
-    	opts.on("-P", "--payload [PAYLOAD_PATH]", String, 
-    		"Sets payload path") do |payload|	      	
-      	@options.payload = payload
-    	end
-
-    	opts.on("--useragent [UA_STRING]", String, 
-    		"Sets user agent for cloning") do |payload|	      	
+    	opts.on("--useragent [UA_STRING]", String,
+    		"Sets user agent for cloning") do |payload|
       	@options.useragent = payload
     	end
 
     	opts.on("--wget", "Use wget to clone url") do
     		@options.wget = true
   		end
-    	
+
     	opts.on("--apache", "Generate Apache Proxy conf") do
     		@options.apache = true
   		end
 
+			opts.on("-P", "--payload [PAYLOAD_PATH]", String,
+				"Sets payload path") do |payload|
+				@options.payload = payload
+			end
     end
 	end
 	attr_accessor :url
@@ -47,11 +46,12 @@ class Cloner < Cartero::Command
 	attr_accessor :wget
 	attr_accessor :apache
 	attr_accessor :useragent
+	attr_accessor :domain_info
 
 	def setup
 		require 'erb'
 		require 'uri'
-		
+
 		if @options.url.nil?
 			raise StandardError, "A url [--url] must be provided"
 		end
@@ -65,9 +65,16 @@ class Cloner < Cartero::Command
 			@options.path = Cartero::TemplatesWebServerDir
 		end
 
+		if ( @options.msfpayload.nil? && ( !@options.msfoptions.nil? || !@options.msfname.nil? || !@options.msfarch.nil? ))
+			raise StandardError, "Option requires a --msfpayload"
+		elsif ( !@options.msfpayload.nil? )
+			@msfpayload = true
+		end
+
+		@msfvenom		= @options.msfvenom
 		@url 				= @options.url
 		@url_route 	= URI.parse(@options.url).path
-		@path 			= @options.path
+		@path 			= File.expand_path @options.path
 		@webserver 	= @options.webserver
 		@payload 		= @options.payload
 		@wget 			= @options.wget
@@ -76,30 +83,34 @@ class Cloner < Cartero::Command
 	end
 
 
-	def run 
-		puts "Clonning URL #{@url}"
+	def run
+		puts "Cloning URL #{@url}"
 		create_structure
 		clone
-		create_apache_conf if apache
+
+		if apache
+			puts "Generating Apache mod_proxy config file"
+			create_apache_conf
+		end
 	end
-	
+
 	def create_structure
 		name = webserver.underscore
-		Dir.mkdir @options.path + "/"  + name unless File.directory?(@options.path + "/"  + name)
-		Dir.mkdir @options.path + "/"  + name + "/static" unless File.directory? @options.path + "/"  + name + "/static"
-		Dir.mkdir @options.path + "/"  + name + "/views" unless File.directory? @options.path + "/"  + name + "/views"
+		Dir.mkdir path + "/"  + name unless File.directory?(path + "/"  + name)
+		Dir.mkdir path + "/"  + name + "/static" unless File.directory? path + "/"  + name + "/static"
+		Dir.mkdir path + "/"  + name + "/views" unless File.directory? path + "/"  + name + "/views"
 	end
 
 	def clone
 		require 'mechanize'
-
+		require 'uri'
 		mechanize = Mechanize.new
 		mechanize.user_agent = useragent
 		page = mechanize.get(url)
-		
-		forms_routes = page.forms.map {|x| [x.method.downcase , x.action] }
 
-		info = {
+		forms_routes = page.forms.map {|x| [x.method.downcase , URI.parse(x.action).path ] }
+
+		@domain_info = {
 			:url 					=> url,
 			:url_route    => url_route,
 			:path 				=> path,
@@ -108,8 +119,8 @@ class Cloner < Cartero::Command
 			:payload 			=> payload
 		}
 
-		ws = File.new(@options.path + "/"  + webserver.underscore + "/" + webserver.underscore + ".rb", "w") 
-		ws << ERB.new(File.read(File.dirname(__FILE__) + "/../../../templates/webserver/template.rb.erb")).result(info.get_binding)
+		ws = File.new(@options.path + "/"  + webserver.underscore + "/" + webserver.underscore + ".rb", "w")
+		ws << ERB.new(File.read(File.dirname(__FILE__) + "/../../../templates/webserver/template.rb.erb")).result(domain_info.get_binding)
 		ws.close
 		if wget
 			system("wget --no-check-certificate -O \"#{@options.path + "/" + webserver.underscore + "/views/index.erb"}\" -c -k  \"#{url}\"")
@@ -121,20 +132,20 @@ class Cloner < Cartero::Command
 	def create_index(page)
 		zurl = URI.parse(url)
 
-		page.search("//*/@href").each do |href| 
+		page.search("//*/@href").each do |href|
 			link = URI.parse(href.value)
 			if link.host.nil? && link.scheme != "mailto"
 				link.host = zurl.host
-				link.scheme = zurl.scheme 
+				link.scheme = zurl.scheme
 				href.value = link.to_s
 			end
 		end
 
-		page.search("//*/@src").each do |src| 
+		page.search("//*/@src").each do |src|
 			link = URI.parse(src.value)
 			if link.host.nil? && link.scheme != "mailto"
 				link.host = zurl.host
-				link.scheme = zurl.scheme 
+				link.scheme = zurl.scheme
 				src.value = link.to_s
 			end
 		end
@@ -145,8 +156,8 @@ class Cloner < Cartero::Command
 	end
 
 	def create_apache_conf
-		ws = File.new(@options.path + "/"  + webserver.underscore + "/" + webserver.underscore + "_apache_module_.conf", "w") 
-		ws << ERB.new(File.read(File.dirname(__FILE__) + "/../../../templates/apache/apache_proxy.conf.erb")).result(info.get_binding)
+		ws = File.new(@options.path + "/"  + webserver.underscore + "/" + webserver.underscore + "_apache_module_.conf", "w")
+		ws << ERB.new(File.read(File.dirname(__FILE__) + "/../../../templates/apache/apache_proxy.conf.erb")).result(domain_info.get_binding)
 		ws.close
 	end
 

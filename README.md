@@ -32,9 +32,27 @@ Sending victim3@company.com
 
 ### Installation
 
+
 #### Dependencies
+##### Ruby
+```shell
+❯❯❯ \curl -sSL https://get.rvm.io | bash -s stable --ruby
+```
+
+##### MongoDB
+On OSX:
 ```shell
 ❯❯❯ brew install mongodb
+```
+
+On Ubuntu / Kali / Debian
+```shell
+❯❯❯ apt-get install mongodb
+```
+
+On Arch Linux
+```
+❯❯❯ pacman -Syu mongodb
 ```
 
 #### Framework

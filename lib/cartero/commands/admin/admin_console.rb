@@ -73,7 +73,7 @@ class AdminConsole < Cartero::Command
 		Cartero::DB.start
 
 		@options.mongodb.nil? ? m = ["localhost", "27017"] : m = @options.mongodb.split(":")
-		MongoMapper.connection = Mongo::Connection.new(m[0], m[1].to_i)
+		MongoMapper.connection = ::Mongo::Connection.new(m[0], m[1].to_i)
 		MongoMapper.database = "Cartero"
 		
 	end
@@ -110,7 +110,7 @@ class AdminConsole < Cartero::Command
       display_hits(h)
     end
     if credentials || all
-      if search
+      if filter
         c_email    = Credential.where(:username => /#{email}/i).all if !email.nil?
         c_campaign = Credential.where(:domain =~ /#{campaign}/i).all if !campaign.nil?
         c_ip       = Credential.where(:ip => /#{ip}/i).all if !ip.nil?
@@ -129,7 +129,7 @@ class AdminConsole < Cartero::Command
   def display_persons(p)
   	return if p.empty?
 
-    table(:border => true) do
+    table() do
       row(:color => 'red', :header => true, :bold => true) do
         column('ID', :width => 3)
         column('EMAIL', :width => 27)
@@ -156,7 +156,7 @@ class AdminConsole < Cartero::Command
   def display_hits(h)
   	return if h.empty?
 
-    table(:border => true) do
+    table() do
       row(:color => 'red', :header => true, :bold => true) do
         column('ID', 			:width => 3)
         column('EMAIL',   :width => 20)
@@ -198,7 +198,7 @@ class AdminConsole < Cartero::Command
   def display_credentials(c)
   	return if c.empty?
 
-    table(:border => true) do
+    table() do
       row(:color => 'red', :header => true, :bold => true) do
         column('ID', 			:width => 3)
         column('USERNAME',:width => 20)

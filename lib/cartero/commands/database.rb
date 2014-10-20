@@ -42,12 +42,16 @@ class Mongo < Cartero::Command
   def run
     case @options.action
     when "start"
+      $stdout.puts "Launching mongodb"
       Cartero::DB.start(mongo_ip, mongo_port)
     when "stop"
+      $stdout.puts "Stopping Mongodb"
       Cartero::DB.stop
     when "restart"
+      $stdout.puts "Stopping Mongodb"
       Cartero::DB.stop
       sleep(1)
+      $stdout.puts "Launching Mongodb"
       Cartero::DB.start
     else
       raise StandardError, "Unknown Action."

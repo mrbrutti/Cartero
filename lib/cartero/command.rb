@@ -13,6 +13,7 @@ module Cartero
 	class Command
 		@@disable_override = false
 		attr_accessor :options
+		attr_accessor :args
 
 		def initialize(&block)
 			@options = OpenStruct.new
@@ -26,6 +27,9 @@ module Cartero
 		def setup
 		end
 
+		def after
+	  end
+
 		def help
 			@parser.help
 		end
@@ -33,7 +37,7 @@ module Cartero
 		def order!
 			@parser.order!
 		end
-		
+
 		def name
 			self.class.name.split("::")[-1]
 		end
@@ -55,11 +59,7 @@ module Cartero
 	      end
 			end
 		end
-		  
-
-	  def after
-	  end
-
+		
 	  def self.method_added name
 	    unless @@disable_override
 	      if name == :run
@@ -75,5 +75,10 @@ module Cartero
 	      end
 	    end
 	  end
+	end
+end
+
+module Cartero
+	class Payload < Cartero::Command
 	end
 end
