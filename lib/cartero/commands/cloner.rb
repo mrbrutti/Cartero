@@ -103,12 +103,12 @@ class Cloner < Cartero::Command
 
 	def clone
 		require 'mechanize'
-
+		require 'uri'
 		mechanize = Mechanize.new
 		mechanize.user_agent = useragent
 		page = mechanize.get(url)
 
-		forms_routes = page.forms.map {|x| [x.method.downcase , x.action] }
+		forms_routes = page.forms.map {|x| [x.method.downcase , URI.parse(x.action).path ] }
 
 		@domain_info = {
 			:url 					=> url,
