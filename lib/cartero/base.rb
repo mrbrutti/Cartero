@@ -47,7 +47,22 @@ module Cartero
 			Dir.mkdir Cartero::TemplatesWebServerDir unless File.directory? Cartero::TemplatesWebServerDir
 			if Cartero::HomeDir + "/config"
 				File.open(Cartero::HomeDir + "/config") do |config| 
-					config << "{}\n"
+					config << '{
+	"veilEvasion" : {
+		"host" : "127.0.0.1",
+		"port" : "4242",
+		"path" : "~/Veil-Evasion/Veil-Evasion.py",
+		"ssh" : true,
+		"ssh_user" :  "matt"
+	},
+	"metasploit" : {
+		"host" : "127.0.0.1",
+		"port" : "4567",
+		"username" : "msf",
+		"password" : "msf",
+		"path" : "/usr/local/share/metasploit-framework"
+	}
+}'
 				end
 			end
 		end

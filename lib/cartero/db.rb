@@ -5,7 +5,7 @@ module Cartero
 			when /linux|darwin/
 				mongod = "mongod --fork"
 				$stdout.puts "Launching mongodb"
-				system( mongod + " --dbpath=" + Cartero::MongoDBDir + " --logpath=" + Cartero::LogsDir + "/mongodb.log" + " --bind_ip #{ip.to_s || "localhost"} --port #{port.to_s || "27017"}" + " --logappend" + "> /dev/null")
+				system( mongod + " --dbpath=" + Cartero::MongoDBDir + " --logpath=" + Cartero::LogsDir + "/mongodb.log" + " --bind_ip #{ip || "localhost"} --port #{port || "27017"}" + " --logappend" + "> /dev/null")
 				sleep(1)
 			when /mingw|mswin/
 				$stdout.puts "TODO: Manual Launch. !!! Make sure mongodb is running. !!!"

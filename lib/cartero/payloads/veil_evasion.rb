@@ -158,7 +158,7 @@ class VeilEvasion < Cartero::Payload
     	when "start_veil"
     		puts "Starting Veil-Evasion RPC Server"
     		ssh = "ssh #{Cartero::GlobalConfig["veilEvasion"]["ssh_user"]}@#{host}" if Cartero::GlobalConfig["veilEvasion"]["ssh"]
-    		system("#{ssh} #{Cartero::GlobalConfig["veilpath"] || "Veil-Evasion.py" } --rpc > /dev/null &")
+    		system("#{ssh} #{Cartero::GlobalConfig["veilEvasion"]["path"] || "Veil-Evasion.py" } --rpc > /dev/null &")
     	when "stop_veil"
     		puts "Stoping Veil-Evasion RPC Server"
     		@client.notify "jsonrpc://#{host}:#{port}", "shutdown"
@@ -216,7 +216,7 @@ class VeilEvasion < Cartero::Payload
       end
       c.each do |p|
         row() do
-          column(p[0])
+          column(p[0], :color => "blue")
           column(p[1] == "" ? "--" : p[1])
           column(p[2])
         end
@@ -234,7 +234,7 @@ class VeilEvasion < Cartero::Payload
       c.each_with_index do |p,idx|
         row() do
         	column(idx + 1)
-          column(p)
+          column(p, :color => "blue")
         end
       end
     end
