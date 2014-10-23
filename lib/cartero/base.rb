@@ -45,8 +45,8 @@ module Cartero
 			Dir.mkdir Cartero::TemplatesDataSetDir unless File.directory? Cartero::TemplatesDataSetDir
 			Dir.mkdir Cartero::TemplatesMailDir unless File.directory? Cartero::TemplatesMailDir
 			Dir.mkdir Cartero::TemplatesWebServerDir unless File.directory? Cartero::TemplatesWebServerDir
-			unless File.exists? File.Cartero::HomeDir + "/config"
-				File.open(Cartero::HomeDir + "/config") do |config| 
+			unless File.exists? Cartero::HomeDir + "/config"
+				File.open(Cartero::HomeDir + "/config", "w") do |config| 
 					config << '{
 	"veilEvasion" : {
 		"host" : "127.0.0.1",
