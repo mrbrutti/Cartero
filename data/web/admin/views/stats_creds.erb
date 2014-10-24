@@ -23,7 +23,7 @@
 	    </thead>
 	    <tbody>
 	      <% @hits.each do |hit| %>
-	        <tr>
+	        <tr onclick="$('.<%= hit['_id']%>').toggle('slow');">
 	        	<td><%if !hit.username.nil?%><%=h hit.username %><%end%></td>
 	        	<td><%if !hit.password.nil?%><span class="label label-info"><%=h hit.password %></span><%end%></td>
 	          <td><%=h hit.ip %></td>
@@ -40,6 +40,9 @@
 						<td><%=h hit.ua_engine %></td>	
 						<td><%=h hit.ua_platform %></td>
 	          <td><small><%=h hit.created_at.strftime("%m/%d/%Y-%T")%></small></td>
+	        </tr>
+	        <tr class="<%= hit['_id']%>" style="display:none; background:#eee;" >
+	        	<td colspan="12"><%= h hit.data %></td>
 	        </tr>
 	      <% end %>
 	    </tbody>

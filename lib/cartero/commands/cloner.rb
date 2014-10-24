@@ -150,6 +150,10 @@ class Cloner < Cartero::Command
 			end
 		end
 
+		page.search("//form/@action").each do |form|
+			form.value = URI.parse(form.value).path
+		end
+
 		f = File.new(@options.path + "/" + webserver.underscore + "/views/index.erb", "w")
 		f << page.parser.to_s
 		f.close
