@@ -79,8 +79,8 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 			:ua_engine	=> ua.engine,
 			:ua_platform => ua.platform,
 			:ua_lang		=> ua.lang,
-			:username		=> params[:username] || params[:email] || params[:user],
-			:password		=> params[:password] || params[:pwd] || params[:secret]
+			:username		=> params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]],
+			:password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]]
 		)
 		creds.save!
 	end
