@@ -54,11 +54,13 @@ class Update < Cartero::Command
 			puts "[*] - Performing a diff against #{branch} Cartero git repository"
 			system("git", "diff", branch, "--stat")
 			puts "[*] - Updating Cartero from git repository"
+			system("git", "reset", "--hard", "HEAD")
 			system("git", "pull", r, b)
 		else
 			puts "[*] - Performing a diff against master Cartero git repository"
 			system("git", "diff", "origin/master", "--stat")
 			puts "[*] - Updating Cartero from git repository"
+			system("git", "reset", "--hard", "HEAD")
 			system("git", "pull")
 		end
 	end
