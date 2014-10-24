@@ -105,7 +105,7 @@ module Cartero
       when /safari\/([\d\w\.\-]+)/i  then "Safari #{$1}"
       when /webkit\/([\d\w\.\-]+)/i  then "Webkit #{$1}"
       when /AppleWebKit\/([\d\w\.\-]+)/i then "Apple Webkit #{$1}"
-      when /msie \/([\d\w\.\-]+)/i   then "Internet Explorer #{$1}" 
+      when /msie\s([\d\w.\-]+)/i   then "Internet Explorer #{$1}" 
       when /outlook ([\d\w\.\-]+)/i  then "Microsoft Outlook 2010 #{$1}"
       when /msoffice 12/  then "Microsoft Outlook 2007"
       when /msoffice 14/  then "Microsoft Outlook 2010"
