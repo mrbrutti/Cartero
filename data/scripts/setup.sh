@@ -178,6 +178,10 @@ function install_mongodb {
 	esac	
 }
 
+function github_clone_cartero {
+    git clone https://github.com/section9labs/Cartero /usr/local/share/Cartero >> $LOGFILE 2>&1    
+}
+
 NOW=$(date +"-%b-%d-%y-%H%M%S")
 LOGFILE="/tmp/cartero-setup$NOW.log"
 
@@ -208,10 +212,15 @@ else
     install_ruby_osx
 fi
 
-
-
 print_status "Cloning Cartero from official Repository"
-git clone https://github.com/section9labs/Cartero /usr/local/share/Cartero >> $LOGFILE 2>&1
+if [ -w /usr/local/share ]; then
+    github_clone_cartero 
+else
+    sudo mkdir /usr/local/share/Cartero
+    sudo chown -R `whoami` /usr/local/share/Cartero
+    github_clone_cartero
+fi    
+
 cd /usr/local/share/Cartero
 
 print_status "Installing dependencies" 
@@ -219,13 +228,20 @@ bundle install >> $LOGFILE 2>&1
 
 print_status "Setting up cartero binary"
 # Generate executable in PATH /usr/local/bin/cartero
+if [ -w /usr/local/bin ]; then
 sh -c 'echo "#!/bin/bash
 /usr/local/share/Cartero/bin/cartero \$@" > /usr/local/bin/cartero'
-
 chmod +x /usr/local/bin/cartero
+else
+    sudo sh -c 'echo "#!/bin/bash
+/usr/local/share/Cartero/bin/cartero \$@" > /usr/local/bin/cartero'
+    sudo chmod +x /usr/local/bin/cartero
+fi
 
 if [ -e /usr/loca/bin/cartero ]; then 
 	print_good "Cartero command installed on /usr/local/bin/cartero"
 fi
 
-
+print_status "Setting default \$EDITOR to vim on ~/.bash_profile"
+echo "# Setting EDITOR variable for Cartero Framework" >> ~/.bash_profile
+print_error "IMPORTANT: Don't forget to source ~/.bash_profile"
