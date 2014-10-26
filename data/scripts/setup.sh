@@ -56,7 +56,7 @@ function check_for_brew_osx
     else
 
         print_status "Installing Homebrew"
-        /usr/bin/ruby -e "$(curl -fsSkL raw.github.com/Homebrew/homebrew/go/install)"
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         if [ "$(grep ":/usr/local/sbin" ~/.bash_profile -q)" ]; then
             print_good "Paths are properly set"
         else
