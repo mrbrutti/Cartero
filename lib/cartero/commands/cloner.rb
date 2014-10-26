@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module Cartero
 module Commands
 class Cloner < Cartero::Command
@@ -157,9 +159,15 @@ class Cloner < Cartero::Command
 		page.search("//form/@action").each do |form|
 			form.value = URI.parse(form.value).path
 		end
+		
+		content_type = page.header["content-type"].split("=")[-1]
 
-		f = File.new(@options.path + "/" + webserver.underscore + "/views/index.erb", "w")
-		f << page.parser.to_s
+		f = File.new(@options.path + "/" + webserver.underscore + "/views/index.erb", "w") 
+		if content_type != ""
+			f << page.parser.to_s.force_encoding(content_type).encode('utf-8')
+		else
+			f << page.parser.to_s
+		end
 		f.close
 	end
 

@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module Cartero
 module Commands
 class Listener < Cartero::Command
