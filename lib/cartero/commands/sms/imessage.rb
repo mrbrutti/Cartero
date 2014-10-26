@@ -121,7 +121,7 @@ class IMessage < Cartero::Command
 	end
 
 	def send_msg(m)
-		system("osascript ../data/scripts/imsg.applescript #{m[:to]} #{m[:type]} \"#{m[:body]}\"")
+		system("osascript #{File.expand_path(File.dirname(__FILE__) + "/../../../../data/scripts/imsg.applescript")} #{m[:to]} #{m[:type]} \"#{m[:body]}\"")
 	end
 
 end
