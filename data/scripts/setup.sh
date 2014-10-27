@@ -244,4 +244,5 @@ fi
 
 print_status "Setting default \$EDITOR to vim on ~/.bash_profile"
 echo "# Setting EDITOR variable for Cartero Framework" >> ~/.bash_profile
+echo "export EDITOR=vim" >> ~/.bash_profile
 print_error "IMPORTANT: Don't forget to source ~/.bash_profile"
