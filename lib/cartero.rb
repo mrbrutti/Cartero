@@ -9,9 +9,9 @@ class String
 end
 
 module Cartero
-	COMMANDS = {}
-	PAYLOADS = {}
-	Version = [0,3,"ekologico"]
+  COMMANDS = {}
+  PAYLOADS = {}
+  Version = [0,4,"madconex"]
 end
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))

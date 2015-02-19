@@ -1,6 +1,8 @@
 source "http://rubygems.org"
 
 gem "sinatra"
+gem "sinatra-contrib"
+gem "rack-reverse-proxy"
 gem "puma"
 gem "rack"
 gem "mongo"

@@ -4,7 +4,7 @@ require 'erb'
 
 module Cartero
 module Commands
-class Servers < Cartero::Command
+class Servers < ::Cartero::Command
 
   def initialize
     super do |opts|
@@ -27,7 +27,7 @@ class Servers < Cartero::Command
       end
 
       opts.on("-l", "--list", String,
-        "List servers") do |name|
+        "List servers") do
         @options.action = "list"
       end
 
@@ -90,29 +90,29 @@ class Servers < Cartero::Command
     end
   end
 
-	def self.list
-		servers = []
-		Dir.glob(Cartero::ServersDir + "/**/*.json").each do |server|
-			servers << File.basename(server).split(".")[0..-2].join(".")
-			#servers << (File.read(server),{:symbolize_names => true})
-		end
-		servers
-	end
+  def self.list
+    servers = []
+    Dir.glob(::Cartero::ServersDir + "/**/*.json").each do |server|
+      servers << File.basename(server).split(".")[0..-2].join(".")
+      #servers << (File.read(server),{:symbolize_names => true})
+    end
+    servers
+  end
 
-	def self.exists?(name)
-		File.exists?(self.server(name))
-	end
+  def self.exists?(name)
+    File.exist?(self.server(name))
+  end
 
-	def self.server(name)
-    servers = Dir.glob(Cartero::ServersDir + "/**/*.json")
+  def self.server(name)
+    servers = Dir.glob(::Cartero::ServersDir + "/**/*.json")
     server_file = servers.detect { |server| server =~ /^#{name}.json$/ }
     server_file || "#{Cartero::ServersDir}/#{name}.json"
   end
 
-	def self.template(type=nil)
+  def self.template(type=nil)
     case type
     when /smtp/
-  	 "#{File.dirname(__FILE__)}/../../../templates/server/server.json"
+     "#{File.dirname(__FILE__)}/../../../templates/server/server.json"
     when /linkedin/
       "#{File.dirname(__FILE__)}/../../../templates/server/linkedin.json"
     when /webmail/
@@ -127,50 +127,50 @@ class Servers < Cartero::Command
   end
 
   def self.create(name, options)
-  	if self.exists?(name)
-  		raise StandardError, "Server with name (#{name}) already exists"
-  	else
-  		s = server(name.shellescape)
-  		f = File.new(s, "w+")
-  		f.puts Cartero::Server.new(name.shellescape, options).render()
-  		f.close
-  		Kernel.system("$EDITOR #{s}")
-  	end
+    if self.exists?(name)
+      raise StandardError, "Server with name (#{name}) already exists"
+    else
+      s = server(name.shellescape)
+      f = File.new(s, "w+")
+      f.puts ::Cartero::Server.new(name.shellescape, options).render()
+      f.close
+      Kernel.system("$EDITOR #{s}")
+    end
   end
 
   def self.edit(name)
-  	if !self.exists?(name)
-  		raise StandardError, "Server with name #{name} does not exist."
-  	else
-  		s = server(name.shellescape)
-  		Kernel.system("$EDITOR #{s}")
-  	end
+    if !self.exists?(name)
+      raise StandardError, "Server with name #{name} does not exist."
+    else
+      s = server(name.shellescape)
+      Kernel.system("$EDITOR #{s}")
+    end
   end
 
   def self.delete(name)
-  	if !self.exists?(name)
-  		raise StandardError, "Server with name #{name} does not exist."
-  	else
-  		File.delete(server(name.shellescape))
-  	end
+    if !self.exists?(name)
+      raise StandardError, "Server with name #{name} does not exist."
+    else
+      File.delete(server(name.shellescape))
+    end
   end
 end
 end
 
 class Server
-	def initialize(name, options)
-		@name         = name
-		@type         = options.type         || "smtp"
+  def initialize(name, options)
+    @name         = name
+    @type         = options.type         || "smtp"
     @url          = options.url          || "subdomain.domain.com"
     @method       = options.req_method   || "POST"
     @api_access   = options.api_access   || "api_access_key"
     @api_secret   = options.api_secret   || "api_secret_key"
     @oauth_token  = options.oauth_token  || "oauth_token_key"
     @oauth_secret = options.oauth_secret || "oauth_secret_key"
-	end
+  end
 
-	def render
-		ERB.new(File.read(Cartero::Commands::Servers.template(@type))).result(binding)
-	end
+  def render
+    ERB.new(File.read(::Cartero::Commands::Servers.template(@type))).result(binding)
+  end
 end
 end

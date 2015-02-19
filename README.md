@@ -412,7 +412,7 @@ Commands have a fairly easy infrastructure. Default Framework commands are store
 ```ruby
 module Cartero
 module Commands
-class CommandName < Cartero::Command
+class CommandName < ::Cartero::Command
 	def initialize
 		super do |opts|
       #OptionsParser options available here.
@@ -550,15 +550,41 @@ Additionally, anyone can easily create them manually and store them in _~/.carte
 }
 ```
 .
+
+## CHANGELOG
+
+#### 12-00-14:
+- Added metasploit support. Will not commit until metasploit accepts changes.
+  UPDATE: 12/13/14 - Changes accepted #4142.
+
+#### 2-10-15:
+- added rubocop & fixed a bunch of things. Still plenty to go.
+- Added Cartero::SinatraHelpers helpers to make webserver code cleaner and smaller.
+
+#### 2-14-15:
+- added Cartero::CrawlerBlock Register to block and redirect bots
+
+#### 2-18-15
+- Added first version of Cloner --reverse-proxy
+
 ## TODO
-#####Coding:
+##### Coding:
+- beef Integration
+  - Part one simple hook integration. [IN PROGRESS]
+  - Part two Full API integration.
+
+- Add user agent strings. possibly reimplement our own very bad class.
 - msfvenon user-agent based dynamic shell payloads to Cloner
 - Evaluate/Add tracking methods available to people.
 - Research the concept of handling project/s.
-- Interactive shell ?
+- Interactive shell.
 - Add payload Cloner add-on and payload directory loading.
 
-#####Documentation:
+##### Testing
+- Implement RuboCop and pass most tests [IN PROGRESS]
+- Implement Testing Framework for commands & Options.
+
+##### Documentation:
 - Add Samples to each Command Section
 - More Screenshots
 - Upload Videos
