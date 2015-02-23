@@ -240,7 +240,7 @@ fi
 
 if [ -e /usr/local/data/scripts/CarteroComplete.sh ]; then
 	source /usr/local/data/scripts/CarteroComplete.sh
-  sh -c 'echo "[[ -s /usr/local/data/scripts/CarteroComplete.sh ]] && source /usr/local/data/scripts/CarteroComplete.sh" >> ~/.bash_profile'
+  sh -c 'echo "[[ -s /usr/local/share/Cartero/data/scripts/CarteroComplete.sh ]] && source /usr/local/share/Cartero/data/scripts/CarteroComplete.sh" >> ~/.bash_profile'
 fi
 
 if [ -e /usr/local/bin/cartero ]; then
