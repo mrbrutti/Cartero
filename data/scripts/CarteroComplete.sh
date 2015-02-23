@@ -5,13 +5,16 @@ _CarteroAutoComplete ()
 {
   COMPREPLY=()
   local cur=${COMP_WORDS[COMP_CWORD]}
-	local line=${COMP_LINE%$cur}
+	read -a cmd <<<  "$COMP_LINE"
+
 
   case "$cur" in
     -*)
-		COMPREPLY=( $( compgen -W '`$line --list-options` `$line --list-short-options`' -- $cur ) );;
+    # This is ghetto and I know it does not support all cases. But it will help for now.
+    # More complex detailed case statemen to follow. 
+		COMPREPLY=( $( compgen -W '`${cmd[0]} ${cmd[1]} --list-options` `${cmd[0]} ${cmd[1]} --list-short-options`' -- $cur ) );;
    	*)
-		COMPREPLY=( $( compgen -W '`cartero --list-commands` `bin/cartero --list-payloads`' -- $cur ) );;
+		COMPREPLY=( $( compgen -W '`cartero --list-commands` `cartero --list-payloads`' -- $cur ) );;
   esac
 
   return 0
