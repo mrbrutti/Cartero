@@ -33,6 +33,7 @@
             <li><a href="/stats/persons">Persons</a></li>
             <li><a href="/stats/hits">Hits</a></li>
             <li><a href="/stats/credentials">Credentials</a></li>
+            <% if beef_enabled? %><li><a href="/stats/beef">Beef</a></li><% end %>
             <li><a href="/help">Help</a></li>
           </ul>
           <div class="col-sm-3 col-md-3 pull-right">
@@ -55,7 +56,7 @@
     <div class="container" style="width:85%;">
       <%= yield %>
     </div>
-        
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
   </body>

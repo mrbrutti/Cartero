@@ -2,52 +2,52 @@ require 'command_line_reporter'
 
 module Cartero
 module Commands
-class AdminConsole < Cartero::Command
-	include CommandLineReporter
-	def initialize
-		super do |opts|
-			opts.on("-p", "--persons [LATEST_N]", Integer, 
-    		"Display the list of persons that responded") do |n|	      	
-      	@options.persons = n || 50
-    	end
+class AdminConsole < ::Cartero::Command
+  include CommandLineReporter
+  def initialize
+    super do |opts|
+      opts.on("-p", "--persons [LATEST_N]", Integer,
+        "Display the list of persons that responded") do |n|
+        @options.persons = n || 50
+      end
 
-    	opts.on("-i", "--hits [LATEST_N]", Integer, 
-    		"Display the list of hits") do |n|	      	
-      	@options.hits = n || 100
-    	end
-    	    	
-    	opts.on("-c", "--creds [LATEST_N]", Integer, 
-    		"Display the list of Credentials") do |n|	      	
-      	@options.credentials = n || 50
-    	end
+      opts.on("-i", "--hits [LATEST_N]", Integer,
+        "Display the list of hits") do |n|
+        @options.hits = n || 100
+      end
 
-    	opts.on("-a", "--all", 
-    		"Sets Email Payload Ports to scan") do	      	
-      	@options.all = true
-    	end
+      opts.on("-c", "--creds [LATEST_N]", Integer,
+        "Display the list of Credentials") do |n|
+        @options.credentials = n || 50
+      end
 
-    	opts.on("-f", "--filter", 
-    		"flag to search by parameters") do	      	
-      	@options.filter = true
-    	end
+      opts.on("-a", "--all",
+        "Sets Email Payload Ports to scan") do
+        @options.all = true
+      end
 
-      opts.on("--email [EMAIL]", String, 
-        "Display the list of hits") do |e|          
+      opts.on("-f", "--filter",
+        "flag to search by parameters") do
+        @options.filter = true
+      end
+
+      opts.on("--email [EMAIL]", String,
+        "Display the list of hits") do |e|
         @options.email = e
       end
 
-      opts.on("--campaign [CAMPAIGN]", String, 
-        "Display the list of hits") do |c|          
+      opts.on("--campaign [CAMPAIGN]", String,
+        "Display the list of hits") do |c|
         @options.campaign = c
       end
 
-      opts.on("--ip [IP_ADDRESS]", String, 
-        "Display the list of hits") do |ip|          
+      opts.on("--ip [IP_ADDRESS]", String,
+        "Display the list of hits") do |ip|
         @options.ip = ip
       end
 
     end
-	end
+  end
 
   attr_accessor :persons
   attr_accessor :hits
@@ -58,29 +58,29 @@ class AdminConsole < Cartero::Command
   attr_accessor :ip
   attr_accessor :filter
 
-	def setup
-	  require 'cartero/models'
-	  
+  def setup
+    require 'cartero/models'
 
-		@persons 			= @options.persons
-		@hits 				= @options.hits
-		@credentials 	= @options.credentials
+
+    @persons 			= @options.persons
+    @hits 				= @options.hits
+    @credentials 	= @options.credentials
     @email        = @options.email
     @campaign     = @options.campaign
     @ip           = @options.ip
     @filter       = @options.filter
-		
-		Cartero::DB.start
 
-		@options.mongodb.nil? ? m = ["localhost", "27017"] : m = @options.mongodb.split(":")
-		MongoMapper.connection = ::Mongo::Connection.new(m[0], m[1].to_i)
-		MongoMapper.database = "Cartero"
-		
-	end
+    ::Cartero::DB.start
 
-	def run
+    @options.mongodb.nil? ? m = ["localhost", "27017"] : m = @options.mongodb.split(":")
+    MongoMapper.connection = ::Mongo::Connection.new(m[0], m[1].to_i)
+    MongoMapper.database = "Cartero"
+
+  end
+
+  def run
     if persons || all
-      if filter 
+      if filter
         p_email    = Person.where(:email => /#{email}/).all if !email.nil?
         p_ip       = Person.all.select { |x| x.responded.to_s =~ /#{ip}/ } if !ip.nil?
         p_campaign = Person.all.select { |x| x.campaigns.to_s =~ /#{campaign}/i } if !campaign.nil?
@@ -91,13 +91,13 @@ class AdminConsole < Cartero::Command
         p.uniq!
       else
         p = Person.sort(:updated_at.desc).limit(persons || 50).all.reverse
-		  end
+      end
       display_persons(p)
     end
     if hits || all
       if filter
         h_email    = Hit.where.all.select {|x| x.data['email'] =~ /#{email}/i }if !email.nil?
-		    h_campaign = Hit.where.all.select {|x| x.data['subject'] =~ /#{campaign}/i } if !campaign.nil?
+        h_campaign = Hit.where.all.select {|x| x.data['subject'] =~ /#{campaign}/i } if !campaign.nil?
         h_ip       = Hit.where(:ip => /#{ip}/i).all if !ip.nil?
         h = []
         h.concat(h_campaign) if !h_campaign.nil?
@@ -122,12 +122,12 @@ class AdminConsole < Cartero::Command
       else
         c = Credential.sort(:created_at.desc).limit(credentials || 50).all.reverse
       end
-		  display_credentials(c)
+      display_credentials(c)
     end
-	end
+  end
 
   def display_persons(p)
-  	return if p.empty?
+    return if p.empty?
 
     table() do
       row(:color => 'red', :header => true, :bold => true) do
@@ -141,7 +141,7 @@ class AdminConsole < Cartero::Command
       end
       p.each_with_index do |person,idx|
         row(:color => 'blue') do
-        	column(idx + 1)
+          column(idx + 1)
           column(person.email)
           column(person.responded.last)
           column(person.hits.last.ua_os)
@@ -154,7 +154,7 @@ class AdminConsole < Cartero::Command
   end
 
   def display_hits(h)
-  	return if h.empty?
+    return if h.empty?
 
     table() do
       row(:color => 'red', :header => true, :bold => true) do
@@ -173,13 +173,13 @@ class AdminConsole < Cartero::Command
       end
       h.each_with_index do |hit,idx|
         row(:color => 'blue') do
-        	column(idx + 1)
-        	if !hit.data.nil?
-          	column(hit.data['email'])
-          	column(hit.data['subject'])
-          else 
-          	column("")
-          	column("")
+          column(idx + 1)
+          if !hit.data.nil?
+            column(hit.data['email'])
+            column(hit.data['subject'])
+          else
+            column("")
+            column("")
           end
           column(hit.ip)
           column(hit.port)
@@ -196,7 +196,7 @@ class AdminConsole < Cartero::Command
   end
 
   def display_credentials(c)
-  	return if c.empty?
+    return if c.empty?
 
     table() do
       row(:color => 'red', :header => true, :bold => true) do
@@ -215,7 +215,7 @@ class AdminConsole < Cartero::Command
       end
       c.each_with_index do |cred,idx|
         row(:color => 'blue') do
-        	column(idx + 1)
+          column(idx + 1)
           column(cred.username)
           column(cred.password)
           column(cred.ip)

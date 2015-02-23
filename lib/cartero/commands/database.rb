@@ -1,24 +1,24 @@
 module Cartero
 module Commands
-class Mongo < Cartero::Command
-	 def initialize
+class Mongo < ::Cartero::Command
+   def initialize
     super do |opts|
-      opts.on("-s","--start",  
-        "Start MongoDB") do |name|         
+      opts.on("-s","--start",
+        "Start MongoDB") do
         @options.action = "start"
       end
 
-      opts.on("-k","--stop",  
-        "Stop MongoDB") do          
+      opts.on("-k","--stop",
+        "Stop MongoDB") do
         @options.action = "stop"
       end
 
-      opts.on("-r","--restart",  
-        "Restart MongoDB") do          
+      opts.on("-r","--restart",
+        "Restart MongoDB") do
         @options.action = "restart"
       end
 
-      opts.on("-b", "--bind [HOST:PORT]", String,
+      opts.on("-b", "--bind HOST:PORT", String,
         "Set MongoDB bind_ip and port") do |p|
         @options.mongodb = p
       end
@@ -29,7 +29,7 @@ class Mongo < Cartero::Command
   attr_accessor :mongo_port
 
   def setup
-    if @options.mongodb.nil?  
+    if @options.mongodb.nil?
       @mongo_ip = "localhost"
       @mongo_port = "27017"
     else
@@ -43,16 +43,16 @@ class Mongo < Cartero::Command
     case @options.action
     when "start"
       $stdout.puts "Launching mongodb"
-      Cartero::DB.start(mongo_ip, mongo_port)
+      ::Cartero::DB.start(mongo_ip, mongo_port)
     when "stop"
       $stdout.puts "Stopping Mongodb"
-      Cartero::DB.stop
+      ::Cartero::DB.stop
     when "restart"
       $stdout.puts "Stopping Mongodb"
-      Cartero::DB.stop
+      ::Cartero::DB.stop
       sleep(1)
       $stdout.puts "Launching Mongodb"
-      Cartero::DB.start
+      ::Cartero::DB.start
     else
       raise StandardError, "Unknown Action."
     end
