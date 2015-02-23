@@ -2,35 +2,35 @@ require 'shellwords'
 
 module Cartero
 module Commands
-class Templates < Cartero::Command
+class Templates < ::Cartero::Command
 
   def initialize
     super do |opts|
-      opts.on("-a","--add [NAME]", String, 
-        "Add Template") do |name|         
+      opts.on("-a","--add NAME", String,
+        "Add Template") do |name|
         @options.name = name
         @options.action = "add"
       end
 
-      opts.on("-e","--edit [NAME]", String, 
-        "Edit Template") do |name|          
+      opts.on("-e","--edit NAME", String,
+        "Edit Template") do |name|
         @options.name = name
         @options.action = "edit"
       end
 
-      opts.on("-d","--delete [NAME]", String, 
-        "Edit Template") do |name|          
+      opts.on("-d","--delete NAME", String,
+        "Edit Template") do |name|
         @options.name = name
         @options.action = "delete"
       end
 
-      opts.on("-l", "--list", String, 
-        "List Templates") do |name|
+      opts.on("-l", "--list", String,
+        "List Templates") do
         @options.action = "list"
       end
     end
   end
-  
+
   def run
     case @options.action
     when /add/
@@ -47,55 +47,55 @@ class Templates < Cartero::Command
         $stdout.puts "    " + s
       end
     end
-  end   
+  end
 
-	def self.list
-		templates = []
-		Dir.glob(Cartero::TemplatesDir + "/**/*.erb").each do |template|
-			templates << File.basename(template).split(".")[0..-2].join(".")
-		end
-		templates
-	end
+  def self.list
+    templates = []
+    Dir.glob(::Cartero::TemplatesDir + "/**/*.erb").each do |template|
+      templates << File.basename(template).split(".")[0..-2].join(".")
+    end
+    templates
+  end
 
-	def self.exists?(name)
-		File.exists?(self.template(name))
-	end
+  def self.exists?(name)
+    File.exist?(self.template(name))
+  end
 
-	def self.template(name)
+  def self.template(name)
     templates = Dir.glob(base_templates)
-    templates.concat(Dir.glob(Cartero::TemplatesDir + "/**/*.erb"))
+    templates.concat(Dir.glob(::Cartero::TemplatesDir + "/**/*.erb"))
     template_file = templates.detect { |tmplt| tmplt =~ /^#{name}.erb$/ }
     template_file || "#{Cartero::TemplatesDir}/#{name}.erb"
   end
 
   def self.base_templates
-  	"#{File.dirname(__FILE__)}/../../../templates/mail/**/*.erb"
+    "#{File.dirname(__FILE__)}/../../../templates/mail/**/*.erb"
   end
 
   def self.create(name)
-  	if self.exists?(name)
-  		raise StandardError, "Server with name (#{name}) already exists"
-  	else
-  		Kernel.system("$EDITOR #{template(name.shellescape)}")
-  	end
+    if self.exists?(name)
+      raise StandardError, "Server with name (#{name}) already exists"
+    else
+      Kernel.system("$EDITOR #{template(name.shellescape)}")
+    end
   end
 
   def self.edit(name)
-  	if !self.exists?(name)
-  		raise StandardError, "Server with name #{name} does not exist"
-  	else
-  		server = template(name.shellescape)
-  		Kernel.system("cp #{template} #{server}")
-  		Kernel.system("$EDITOR #{server}")
-  	end
+    if !self.exists?(name)
+      raise StandardError, "Server with name #{name} does not exist"
+    else
+      server = template(name.shellescape)
+      Kernel.system("cp #{template} #{server}")
+      Kernel.system("$EDITOR #{server}")
+    end
   end
 
   def self.delete(name)
-  	if !self.exists?(name)
-  		raise StandardError, "Server with name #{name} does not exist"
-  	else
-  		Kernel.system("rm #{template(name.shellescape)}")
-  	end
+    if !self.exists?(name)
+      raise StandardError, "Server with name #{name} does not exist"
+    else
+      Kernel.system("rm #{template(name.shellescape)}")
+    end
   end
 end
 end

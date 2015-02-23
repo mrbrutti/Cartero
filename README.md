@@ -419,7 +419,7 @@ Commands have a fairly simple framework. Example Framework commands are stored i
 ```ruby
 module Cartero
 module Commands
-class CommandName < Cartero::Command
+class CommandName < ::Cartero::Command
 	def initialize
 		super do |opts|
       #OptionsParser options available here.
@@ -559,15 +559,8 @@ Note: Servers can be manually edited in _~/.cartero/servers/*.json_
 }
 ```
 .
-## TODO
-#####Coding:
-- msfvenon user-agent based dynamic shell payloads to Cloner
-- Evaluate/Add tracking methods.
-- Research the concept of handling project/s.
-- Interactive shell ?
-- Add payload Cloner add-on and payload directory loading.
+### CHANGELOG
+- [CHANGELOG](CHANGELOG.md)
 
-#####Documentation:
-- Add Samples to each Command Section
-- More Screenshots
-- Upload Videos
+### TODO
+- [TODO](TODO.md)

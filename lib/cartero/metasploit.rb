@@ -3,19 +3,92 @@ require 'msfrpc-client'
 
 module Cartero
 class Metasploit
-  include CommandLineReporter 
+  include CommandLineReporter
 
-  def initialize(options={})
-    @options = options
-    @client = Msf::RPC::Client.new(:host=>@options["host"] || "192.168.1.216", :port=>@options["port"] || "4567")
+  attr_reader :client
+  attr_reader :options
+
+  def fix_options(opts = {})
+    opts.each do |k, v|
+      opts[k.to_sym] = v
+    end
   end
 
-  def login(u=nil,p=nil)
-    @client.login(u || @options["username"], p || @options["password"])
+  def initialize(options = {})
+    @options = options
+    @client = Msf::RPC::Client.new(:host=>@options["host"] || "192.168.1.216", :port => @options["port"] || "4567")
+  end
+
+  def token
+    @client.token
+  end
+
+  def login(u = nil, p = nil)
+    @options["username"] = u unless u.nil?
+    @options["password"] = p unless p.nil?
+    @client.login(@options["username"], @options["password"])
+  end
+
+  def db_connect(uname = nil, pwd = nil, db = nil)
+    call("db.connect", {
+      :username => uname || @options["db_user"] || "msf", # default db username "msf"
+      :password => pwd || @options["db_pwd"] || "", # default db password is ""
+      :database => db || @options["db_name"] || "msf" # default db name is "msf"
+    })
+  end
+
+
+
+  def hosts(opts={})
+    call("db.hosts", opts)
+  end
+
+  def get_workspace(wname = nil)
+    @client.call("db.get_workspace", wname || @options["workspace"] || "default")["workspace"][0]
+  end
+
+  def add_host(opts)
+    # { workspace: "default", host: "192.168.2.153",
+    #   os_name: "Windows 8", os_lang: "en-US", os_flavor: "Plus",
+    #   info: "John Doe johndoe@corpox.com", name: "Windows8"
+    # }
+    call("db.report_host", opts )
+  end
+
+  def creds(opts={})
+    @client.call("db.creds", opts)
+  end
+
+  def add_cred(opts)
+    opts[:workspace_id] = get_workspace(opts[:workspace])["id"].to_i || 1 if opts[:workspace_id].nil?
+    # {
+    #  origin_type: :service, address: '192.168.19.1', port: 9090, service_name: 'http', protocol: 'tcp',
+    #  module_fullname: 'auxiliary/scanner/http/cartero', workspace_id: 1,
+    #  private_data: 'password1', private_type: :password, username: 'Administrator',
+    #  last_attempted_at: Time.now.to_s, status: "Successful"
+    # }
+    call("db.create_credential", opts )
+  end
+
+  def clients(opts={})
+    call("db.clients", opts)
+  end
+
+  def add_client(opts)
+    call("db.report_client", opts )
   end
 
   def call(*args)
-    @client.call(*args)
+    try = true
+    begin
+      @client.call(*args)
+    rescue
+      if try
+        @client.login(@options["username"], @options["password"])
+        try = false
+        retry
+      end
+    end
   end
 
   def info(type,name)
@@ -27,7 +100,7 @@ class Metasploit
     options.delete("filepath")
     options.merge!(generate_datastore(name, options["datastore"]))
     options.delete("datastore")
-    begin 
+    begin
       payload = call('module.execute', "payload", name, options)["payload"]
     rescue Msf::RPC::Exception => e
       $stderr.puts e.to_s
@@ -80,7 +153,7 @@ class Metasploit
   def local_ip
     require 'socket'
     orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true
-   
+
     UDPSocket.open do |s|
       s.connect '64.233.187.99', 1
       s.addr.last

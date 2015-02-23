@@ -1,8 +1,8 @@
-# Functions borrowed it from DarkOperator MSF-Installer script. 
+# Functions borrowed it from DarkOperator MSF-Installer script.
 # Original source: https://github.com/darkoperator/MSF-Installer/blob/master/msf_install.sh
-# They were just too good not to be re-used. 
-# It is important to notice that Cartero can run on any version of ruby, 
-# but we will default to 1.9.3 given it is what metasploit uses. 
+# They were just too good not to be re-used.
+# It is important to notice that Cartero can run on any version of ruby,
+# but we will default to 1.9.3 given it is what metasploit uses.
 # Thanks :-)
 function print_good ()
 {
@@ -175,11 +175,11 @@ function install_mongodb {
 		*)
 			print_status "OS not supported. Install mongodb manually"
 			;;
-	esac	
+	esac
 }
 
 function github_clone_cartero {
-    git clone https://github.com/section9labs/Cartero /usr/local/share/Cartero >> $LOGFILE 2>&1    
+    git clone https://github.com/section9labs/Cartero /usr/local/share/Cartero >> $LOGFILE 2>&1
 }
 
 NOW=$(date +"-%b-%d-%y-%H%M%S")
@@ -196,7 +196,7 @@ while getopts "r2:h" options; do
     esac
 done
 
-print_status "Installing logs on $LOGFILE" 
+print_status "Installing logs on $LOGFILE"
 # Check homebrew
 if [[ $(uname -a) =~ Darwin ]]; then
 	check_for_brew_osx
@@ -214,31 +214,36 @@ fi
 
 print_status "Cloning Cartero from official Repository"
 if [ -w /usr/local/share ]; then
-    github_clone_cartero 
+    github_clone_cartero
 else
     sudo mkdir /usr/local/share/Cartero
     sudo chown -R `whoami` /usr/local/share/Cartero
     github_clone_cartero
-fi    
+fi
 
 cd /usr/local/share/Cartero
 
-print_status "Installing dependencies" 
+print_status "Installing dependencies"
 bundle install >> $LOGFILE 2>&1
 
 print_status "Setting up cartero binary"
 # Generate executable in PATH /usr/local/bin/cartero
 if [ -w /usr/local/bin ]; then
 sh -c 'echo "#!/bin/bash
-/usr/local/share/Cartero/bin/cartero \$@" > /usr/local/bin/cartero'
+/usr/local/share/Cartero/bin/cartero \"\$@\"" > /usr/local/bin/cartero'
 chmod +x /usr/local/bin/cartero
 else
     sudo sh -c 'echo "#!/bin/bash
-/usr/local/share/Cartero/bin/cartero \$@" > /usr/local/bin/cartero'
+/usr/local/share/Cartero/bin/cartero \"\$@\"" > /usr/local/bin/cartero'
     sudo chmod +x /usr/local/bin/cartero
 fi
 
-if [ -e /usr/loca/bin/cartero ]; then 
+if [ -e /usr/local/data/scripts/CarteroComplete.sh ]; then
+	source /usr/local/data/scripts/CarteroComplete.sh
+  sh -c 'echo "[[ -s /usr/local/data/scripts/CarteroComplete.sh ]] && source /usr/local/data/scripts/CarteroComplete.sh" >> ~/.bash_profile'
+fi
+
+if [ -e /usr/local/bin/cartero ]; then
 	print_good "Cartero command installed on /usr/local/bin/cartero"
 fi
 
