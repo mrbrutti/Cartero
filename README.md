@@ -550,53 +550,8 @@ Additionally, anyone can easily create them manually and store them in _~/.carte
 }
 ```
 .
+### CHANGELOG
+- [CHANGELOG](CHANGELOG.md)
 
-## CHANGELOG
-
-#### 12-00-14:
-- Added metasploit support. Will not commit until metasploit accepts changes.
-  UPDATE: 12/13/14 - Changes accepted #4142.
-
-#### 2-10-15:
-- added rubocop & fixed a bunch of things. Still plenty to go.
-- Added Cartero::SinatraHelpers helpers to make webserver code cleaner and smaller.
-
-#### 2-14-15:
-- added Cartero::CrawlerBlock Register to block and redirect bots
-
-#### 2-18-15
-- Added first version of Cloner --reverse-proxy
-
-#### 2-19-15
-- Pushing version 0.4
-- Uploaded non-stable changes to Github
-
-#### 2-22-15
-- Added _CarteroAutoComplete script for basic Bash AutoComplete.
-- Fixed OptsParser language around [non]mandatory arguments.
-- Fixed minor issues on install script and added autocomplete logic.
-- Added --list-short-options to all commands.
-- Added beef logic to AdminWeb & AdminWebServer
-- Pushing version 0.4.1
-
-
-## TODO
-##### Coding:
-- beef Integration
-  - Part one simple hook integration. [IN PROGRESS]
-  - Part two Full API integration.
-- Add user agent strings. possibly reimplement our own very bad class.
-- msfvenon user-agent based dynamic shell payloads to Cloner
-- Evaluate/Add tracking methods available to people.
-- Research the concept of handling project/s.
-- Interactive shell.
-- Add payload Cloner add-on and payload directory loading.
-
-##### Testing
-- Implement RuboCop and pass most tests [IN PROGRESS]
-- Implement Testing Framework for commands & Options.
-
-##### Documentation:
-- Add Samples to each Command Section
-- More Screenshots
-- Upload Videos
+### TODO
+- [TODO](TODO.md)
