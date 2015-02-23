@@ -42,6 +42,7 @@ class Update < ::Cartero::Command
     if @options.update
       Dir.chdir(@cartero_base_install) do
         update_git(@options.branch)
+        update_bundle
       end
     end
   end
