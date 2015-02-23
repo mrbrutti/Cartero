@@ -3,42 +3,42 @@ module Commands
 class Mailer < Command
   def initialize
     super do |opts|
-      opts.on("-D", "--data [DATA_FILE]", String,
+      opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
       end
 
-      opts.on("-S", "--server [SERVER_NAME]", String,
+      opts.on("-S", "--server SERVER_NAME", String,
         "Sets Email server to use") do |server|
         @options.server = server
       end
 
-      opts.on("-s", "--subject [EMAIL_SUBJECT]", String,
+      opts.on("-s", "--subject EMAIL_SUBJECT", String,
         "Sets Email subject") do |subject|
         @options.subject = subject
       end
 
-      opts.on("-f", "--from [EMAIL_FROM]", String,
+      opts.on("-f", "--from EMAIL_FROM", String,
         "Sets Email from") do |from|
         @options.from = from
       end
 
-      opts.on("-r", "--reply-to [EMAIL_REPLY_TO]", String,
+      opts.on("-r", "--reply-to EMAIL_REPLY_TO", String,
         "Sets Email reply-to") do |reply_to|
         @options.reply_to = reply_to
       end
 
-      opts.on("-b", "--body [FILE_PATH]", String,
+      opts.on("-b", "--body FILE_PATH", String,
         "Sets Email Text Body") do |body|
         @options.body = body
       end
 
-      opts.on("-B", "--htmlbody [FILE_PATH]", String,
+      opts.on("-B", "--htmlbody FILE_PATH", String,
         "Sets Email HTML Body") do |body|
         @options.html_body = body
       end
 
-      opts.on("-c", "--charset [CHARSET]", String,
+      opts.on("-c", "--charset CHARSET", String,
         "Sets Email charset") do |charset|
         @options.charset = charset
       end
@@ -48,12 +48,12 @@ class Mailer < Command
         @options.charset = charset
       end
 
-      opts.on("-a", "--attachment [FILE_1,FILE_2,..,FILE_N]", String,
+      opts.on("-a", "--attachment FILE_1,FILE_2,..,FILE_N", String,
         "Sets Email Attachments") do |attach|
         @options.attachments = attach.split(",")
       end
 
-      opts.on("-p", "--ports [PORT_1,PORT_2,..,PORT_N]", String,
+      opts.on("-p", "--ports PORT_1,PORT_2,..,PORT_N", String,
         "Sets Email Payload Ports to scan") do |p|
         @options.ports = p.split(",").map(&:to_i)
       end

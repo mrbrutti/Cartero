@@ -3,32 +3,32 @@ module Commands
 class GoogleVoice < ::Cartero::Command
   def initialize
     super do |opts|
-      opts.on("-D", "--data [DATA_FILE]", String,
+      opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
       end
 
-      opts.on("-S", "--server [SERVER_NAME]", String,
+      opts.on("-S", "--server SERVER_NAME", String,
         "Sets SMS server to use") do |server|
         @options.server = server
       end
 
-      opts.on("-b", "--body [FILE_PATH]", String,
+      opts.on("-b", "--body FILE_PATH", String,
         "Sets SMS Text Body") do |body|
         @options.body = body
       end
 
-      opts.on("-m", "--message [MESSAGE]", String,
+      opts.on("-m", "--message MESSAGE", String,
         "Sets SMS message") do |message|
         @options.message = message
       end
 
-      opts.on("-u", "--username [USER]", String,
+      opts.on("-u", "--username USER", String,
         "Sets Google Voice Username") do |u|
         @options.username = u
       end
 
-      opts.on("-p", "--password [PWD]", String,
+      opts.on("-p", "--password PWD", String,
         "Sets Google Voice password") do |p|
         @options.password = p
       end

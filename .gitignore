@@ -40,3 +40,5 @@ Gemfile.lock
 
 # Unfinished Commands
 /lib/cartero/commands/whatsapp.rb
+/lib/cartero/payloads/beef.rb
+/lib/cartero/beef_api.rb

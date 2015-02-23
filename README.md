@@ -567,12 +567,24 @@ Additionally, anyone can easily create them manually and store them in _~/.carte
 #### 2-18-15
 - Added first version of Cloner --reverse-proxy
 
+#### 2-19-15
+- Pushing version 0.4
+- Uploaded non-stable changes to Github
+
+#### 2-22-15
+- Added _CarteroAutoComplete script for basic Bash AutoComplete.
+- Fixed OptsParser language around [non]mandatory arguments.
+- Fixed minor issues on install script and added autocomplete logic.
+- Added --list-short-options to all commands.
+- Added beef logic to AdminWeb & AdminWebServer
+- Pushing version 0.4.1
+
+
 ## TODO
 ##### Coding:
 - beef Integration
   - Part one simple hook integration. [IN PROGRESS]
   - Part two Full API integration.
-
 - Add user agent strings. possibly reimplement our own very bad class.
 - msfvenon user-agent based dynamic shell payloads to Cloner
 - Evaluate/Add tracking methods available to people.

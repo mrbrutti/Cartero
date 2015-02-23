@@ -3,7 +3,7 @@ module Commands
 class AdminWeb < ::Cartero::Command
   def initialize
     super do |opts|
-      opts.on("-i", "--ip [1.1.1.1]", String,
+      opts.on("-i", "--ip 1.1.1.1", String,
         "Sets IP interface, default is 0.0.0.0") do |ip|
         @options.ip = ip
       end
@@ -17,14 +17,19 @@ class AdminWeb < ::Cartero::Command
         @options.ssl = true
       end
 
-      opts.on("-C", "--sslcert [CERT_PATH]", String,
+      opts.on("-C", "--sslcert CERT_PATH", String,
         "Sets Email Payload Ports to scan") do |cert|
         @options.sslcert = cert.split(",")
       end
 
-      opts.on("-K", "--sslkey [KEY_PATH]", String,
+      opts.on("-K", "--sslkey KEY_PATH", String,
         "Sets Email Payload Ports to scan") do |key|
         @options.sslkey = key.split(",")
+      end
+
+      opts.on("-B", "--beef URL", String,
+       "Sets Beef Framework UI URL") do |url|
+        @options.beef = url
       end
     end
   end
@@ -34,6 +39,7 @@ class AdminWeb < ::Cartero::Command
   attr_accessor :ssl_key_path
   attr_accessor :ssl_cert_path
   attr_accessor :web_server
+
 
   def setup
     require 'cartero/models'
@@ -64,13 +70,22 @@ class AdminWeb < ::Cartero::Command
       MongoMapper.database = "Cartero"
     end
 
+    @web_server.set :beef, @options.beef
+
+    if @options.beef
+      Rack::ReverseProxy.class_eval("def beef_url; \"#{@options.beef}\"; end")
+      @web_server.use Rack::ReverseProxy do
+        reverse_proxy /^\/stats\/beef\/?(.*)$/, "#{beef_url}/$1"
+      end
+
+    end
+
     # Passing PUMA the Sinatra WebApp we will be using.
     @puma.options[:app] = @web_server
 
     # Handling SSL Options in Advance.
     # Handling Also port inside here, to ensure that
     # if none provided 443 || 80 are correctly provided.
-    @options.ports
     if @options.ssl.nil?
       @ports = @options.ports || [80]
     else
@@ -103,11 +118,17 @@ end
 require 'rack'
 require 'sinatra'
 require 'csv'
+require 'rack/reverse_proxy'
 
 class WebAdmin < Sinatra::Base
+
   helpers do
     def h(text)
       Rack::Utils.escape_html(text)
+    end
+
+    def beef_enabled?
+      settings.beef != nil
     end
   end
 
@@ -177,5 +198,6 @@ class WebAdmin < Sinatra::Base
     @person = Person.where(:email => params[:email]).first
     erb :stats_person
   end
+
 end
 end

@@ -49,12 +49,19 @@ module Cartero
 
         opts.separator ""
         opts.separator "Common options:"
+
         opts.on_tail("-h", "--help", "Show this message") do
           puts @parser
           exit
         end
+
         opts.on_tail("--list-options", "Show list of available options") do
           $stdout.puts "--" + @parser.send(:top).long.map {|x| x[0]}.join(" --")
+          exit
+        end
+
+        opts.on_tail("--list-short-options", "Show list of short available options") do
+          $stdout.puts @parser.send(:top).long.map {|x| x[1].short[0]}.join(" ")
           exit
         end
       end

@@ -5,12 +5,12 @@ module Commands
 class Listener < ::Cartero::Command
   def initialize
     super do |opts|
-      opts.on("-i", "--ip [1.1.1.1]", String,
+      opts.on("-i", "--ip 1.1.1.1", String,
         "Sets IP interface, default is 0.0.0.0") do |ip|
         @options.ip = ip
       end
 
-      opts.on("-p", "--ports [PORT_1,PORT_2,..,PORT_N]", String,
+      opts.on("-p", "--ports PORT_1,PORT_2,..,PORT_N", String,
         "Sets Email Payload Ports to scan") do |p|
         @options.ports = p.split(",").map(&:to_i)
       end
@@ -19,27 +19,27 @@ class Listener < ::Cartero::Command
         @options.ssl = true
       end
 
-      opts.on("-C", "--sslcert [CERT_PATH]", String,
+      opts.on("-C", "--sslcert CERT_PATH", String,
         "Sets Email Payload Ports to scan") do |cert|
         @options.sslcert = cert.split(",")
       end
 
-      opts.on("-K", "--sslkey [KEY_PATH]", String,
+      opts.on("-K", "--sslkey KEY_PATH", String,
         "Sets SSL key to use for Listener.") do |key|
         @options.sslkey = key.split(",")
       end
 
-      opts.on("-V", "--views [VIEWS_FOLDER]", String,
+      opts.on("-V", "--views VIEWS_FOLDER", String,
         "Sets SSL Certificate to use for Listener.") do |file|
         @options.views = file
       end
 
-      opts.on("-P", "--public [PUBLIC_FOLDER]", String,
+      opts.on("-P", "--public PUBLIC_FOLDER", String,
         "Sets a Sinatra public_folder") do |file|
         @options.public_folder = file
       end
 
-      opts.on("-W", "--webserver [WEBSERVER_FOLDER]", String,
+      opts.on("-W", "--webserver WEBSERVER_FOLDER", String,
         "Sets the sinatra full path from cloner.") do |path|
         app = path.split("/")[-1]
         @options.customwebserver = path + "/" + app + ".rb"
@@ -47,7 +47,7 @@ class Listener < ::Cartero::Command
         @options.public_folder = path + "/static"
       end
 
-      opts.on("--payload [PAYLOAD]", String,
+      opts.on("--payload PAYLOAD", String,
         "Sets a payload download to serve on /download") do |file|
         @options.payload = file
       end
@@ -56,7 +56,7 @@ class Listener < ::Cartero::Command
         @options.metasploit = true
       end
 
-      opts.on("--customapp [CUSTOM_SINATRA]", String,
+      opts.on("--customapp CUSTOM_SINATRA", String,
         "Sets a custom Sinatra::Base WebApp. Important, WebApp name should be camelized of filename") do |app|
         @options.customwebserver = app
       end

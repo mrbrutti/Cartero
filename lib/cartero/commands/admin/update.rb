@@ -19,11 +19,11 @@ class Update < ::Cartero::Command
         @options.branch = b
       end
 
-      opts.on("-n", "--name [REPO_NAME]", String,
+      opts.on("-n", "--name REPO_NAME", String,
       "Sets the remote repository local name") do |n|
         @options.repo_name = n
       end
-      opts.on("-u", "--url [REPO_URL]", String,
+      opts.on("-u", "--url REPO_URL", String,
       "Sets the remote repository url") do |u|
         @options.repo_url = u
       end

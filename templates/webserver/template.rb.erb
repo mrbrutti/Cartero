@@ -8,18 +8,23 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 	helpers Cartero::SinatraHelpers
 	register Cartero::CrawlerBlock
 
+	# Block and Redirect Cartero Crawler Blocker
+	# This method is used to redirect to the original site cloned when we
+	# detect it is a crawler bot.
 	block_and_redirect("<%=self[:url] %>")
 
-	<% if self[:reverse_proxy] %>
+	# Reverse Proxy Parameters:
+	# This is an automated generated list based on the src/href  reacheable
+	# by our script parser. Some might not be correctly reached and/or other
+	# could not be correctly added.
+	# reverse_proxy /RexExp/, "url/$1"<% if self[:reverse_proxy] %>
 	use Rack::ReverseProxy do <% self[:reverse_proxy].each do |proxy| %>
-		reverse_proxy /^<%= proxy[0] %>\/?(.*)$/, '<%= proxy[1] %>/$1'
-	<% end %>end
+		reverse_proxy /^<%= proxy[0] %>\/?(.*)$/, '<%= proxy[1] %>/$1'<% end %>
+	end
 	<% end %>
-
 	<% if self[:payload] %>
 		set :payload_path,	self[:payload]
 	<% end %>
-
 	not_found do
 		$stdout.puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - PATH #{request.path} - #{request.forwarded?} - #{request.user_agent}"
 		redirect to "/"

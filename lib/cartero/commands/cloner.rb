@@ -5,22 +5,22 @@ module Commands
 class Cloner < ::Cartero::Command
   def initialize
     super do |opts|
-      opts.on("-U", "--url [URL_PATH]", String,
+      opts.on("-U", "--url URL_PATH", String,
         "Full Path of site to clone") do |url|
         @options.url = url
       end
 
-      opts.on("-W", "--webserver [SERVER_NAME]", String,
+      opts.on("-W", "--webserver SERVER_NAME", String,
         "Sets WebServer name to use") do |ws|
         @options.webserver = ws
       end
 
-      opts.on("-p", "--path [PATH]", String,
+      opts.on("-p", "--path PATH", String,
         "Sets path to save webserver") do |path|
         @options.path = path
       end
 
-      opts.on("--useragent [UA_STRING]", String,
+      opts.on("--useragent UA_STRING", String,
         "Sets user agent for cloning") do |payload|
         @options.useragent = payload
       end
@@ -37,7 +37,7 @@ class Cloner < ::Cartero::Command
         @options.reverse_proxy = true
       end
 
-      opts.on("-P", "--payload [PAYLOAD_PATH]", String,
+      opts.on("-P", "--payload PAYLOAD_PATH", String,
         "Sets payload path") do |payload|
         @options.payload = payload
       end

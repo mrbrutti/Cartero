@@ -4,57 +4,57 @@ class WebMailer < ::Cartero::Command
   def initialize
     super do |opts|
 
-      opts.on("-R", "--raw [RAW_REQUEST_FILE]", String,
+      opts.on("-R", "--raw RAW_REQUEST_FILE", String,
         "Sets WebMail Raw Request") do |rawfile|
         @options.raw = rawfile
       end
 
-      opts.on("-S", "--server [SERVER_NAME]", String,
+      opts.on("-S", "--server SERVER_NAME", String,
         "Sets WebMail server to use") do |server|
         @options.server = server
       end
 
-      opts.on("-U", "--url [URL:PORT]", String,
+      opts.on("-U", "--url URL:PORT", String,
         "Sets WebMail server url to use") do |rawfile|
         @options.raw = rawfile
       end
 
-      opts.on("-H", "--headers [HEADER:VAL\\nHEADER:VAL]", String,
+      opts.on("-H", "--headers HEADER:VAL\\nHEADER:VAL", String,
         "Sets WebMail Headers to use") do |headers|
         @options.headers = headers
       end
 
-      opts.on("-C", "--cookies [COOKIES]", String,
+      opts.on("-C", "--cookies COOKIES", String,
         "Sets WebMail Cookies to use") do |cookies|
         @options.cookies = cookies
       end
 
-      opts.on("-D", "--data [DATA_FILE]", String,
+      opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
       end
 
-      opts.on("-s", "--subject [EMAIL_SUBJECT]", String,
+      opts.on("-s", "--subject EMAIL_SUBJECT", String,
         "Sets Email subject") do |subject|
         @options.subject = subject
       end
 
-      opts.on("-f", "--from [EMAIL_FROM]", String,
+      opts.on("-f", "--from EMAIL_FROM", String,
         "Sets Email from") do |from|
         @options.from = from
       end
 
-      opts.on("-r", "--reply-to [EMAIL_REPLY_TO]", String,
+      opts.on("-r", "--reply-to EMAIL_REPLY_TO", String,
         "Sets Email reply-to") do |reply_to|
         @options.reply_to = reply_to
       end
 
-      opts.on("-b", "--body [REQUEST_FILE_PATH]", String,
+      opts.on("-b", "--body REQUEST_FILE_PATH", String,
         "Sets Email Text request query Body") do |body|
         @options.body = body
       end
 
-      opts.on("-p", "--ports [PORT_1,PORT_2,..,PORT_N]", String,
+      opts.on("-p", "--ports PORT_1,PORT_2,..,PORT_N", String,
         "Sets Email Payload Ports to scan") do |p|
         @options.ports = p.split(",").map(&:to_i)
       end

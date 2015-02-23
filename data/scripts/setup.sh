@@ -238,7 +238,12 @@ else
     sudo chmod +x /usr/local/bin/cartero
 fi
 
-if [ -e /usr/loca/bin/cartero ]; then
+if [ -e /usr/local/data/scripts/CarteroComplete.sh ]; then
+	source /usr/local/data/scripts/CarteroComplete.sh
+  sh -c 'echo "[[ -s /usr/local/data/scripts/CarteroComplete.sh ]] && source /usr/local/data/scripts/CarteroComplete.sh" >> ~/.bash_profile'
+fi
+
+if [ -e /usr/local/bin/cartero ]; then
 	print_good "Cartero command installed on /usr/local/bin/cartero"
 fi
 

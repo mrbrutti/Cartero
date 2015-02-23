@@ -103,6 +103,16 @@ module Cartero
           $stdout.puts ::Cartero::PAYLOADS.keys.join(" ")
         end
 
+        opts.on_tail("--list-options", "Show list of long available options") do
+          $stdout.puts "--" + @parser.send(:top).long.map {|x| x[0]}.join(" --")
+          exit
+        end
+
+        opts.on_tail("--list-short-options", "Show list of short available options") do
+          $stdout.puts @parser.send(:top).long.map {|x| x[1].short[0]}.join(" ")
+          exit
+        end
+
         opts.on_tail("--version", "Shows cartero CLI version") do
           puts ::Cartero::Version.join('.')
           exit

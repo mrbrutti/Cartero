@@ -7,22 +7,22 @@ class IMessage < ::Cartero::Command
       opts.separator "IMPORTANT: This command only works on OSX"
       opts.separator ""
 
-      opts.on("-D", "--data [DATA_FILE]", String,
+      opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
       end
 
-      opts.on("-A", "--attachment [ATTACHMENT]", String,
+      opts.on("-A", "--attachment ATTACHMENT", String,
         "Sets iMessage file path to send") do |attachment|
         @options.attachment = attachment
       end
 
-      opts.on("-b", "--body [BODY_FILE]", String,
+      opts.on("-b", "--body BODY_FILE", String,
         "Sets iMessage message") do |body|
         @options.body = body
       end
 
-      opts.on("-m", "--message [MESSAGE]", String,
+      opts.on("-m", "--message MESSAGE", String,
         "Sets iMessage message") do |message|
         @options.message = message
       end

@@ -6,19 +6,19 @@ class Templates < ::Cartero::Command
 
   def initialize
     super do |opts|
-      opts.on("-a","--add [NAME]", String,
+      opts.on("-a","--add NAME", String,
         "Add Template") do |name|
         @options.name = name
         @options.action = "add"
       end
 
-      opts.on("-e","--edit [NAME]", String,
+      opts.on("-e","--edit NAME", String,
         "Edit Template") do |name|
         @options.name = name
         @options.action = "edit"
       end
 
-      opts.on("-d","--delete [NAME]", String,
+      opts.on("-d","--delete NAME", String,
         "Edit Template") do |name|
         @options.name = name
         @options.action = "delete"

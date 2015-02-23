@@ -3,42 +3,42 @@ module Commands
 class Twilio < ::Cartero::Command
   def initialize
     super do |opts|
-      opts.on("-D", "--data [DATA_FILE]", String,
+      opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
       end
 
-      opts.on("-S", "--server [SERVER_NAME]", String,
+      opts.on("-S", "--server SERVER_NAME", String,
         "Sets SMS server to use") do |server|
         @options.server = server
       end
 
-      opts.on("-f", "--from [NUMBER]", String,
+      opts.on("-f", "--from NUMBER", String,
         "Sets SMS from number to use") do |from|
         @options.from = from
       end
 
-      opts.on("-b", "--body [FILE_PATH]", String,
+      opts.on("-b", "--body FILE_PATH", String,
         "Sets SMS Text Body") do |body|
         @options.body = body
       end
 
-      opts.on("-m", "--message [MESSAGE]", String,
+      opts.on("-m", "--message MESSAGE", String,
         "Sets SMS message") do |message|
         @options.message = message
       end
 
-      opts.on("-u", "--sid [SID]", String,
+      opts.on("-u", "--sid SID", String,
         "Sets Twilio Username") do |u|
         @options.sid = u
       end
 
-      opts.on("-p", "--token [TOKEN]", String,
+      opts.on("-p", "--token TOKEN", String,
         "Sets Twilio password") do |p|
         @options.token = p
       end
 
-      opts.on("-A", "--attachment [PATH_1||PATH_2||PATH_3]", String,
+      opts.on("-A", "--attachment PATH_1||PATH_2||PATH_3", String,
         "Sets Twilio MMS URL image paths to send") do |attachment|
         @options.attachment = attachment
       end

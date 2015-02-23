@@ -18,7 +18,7 @@ class Mongo < ::Cartero::Command
         @options.action = "restart"
       end
 
-      opts.on("-b", "--bind [HOST:PORT]", String,
+      opts.on("-b", "--bind HOST:PORT", String,
         "Set MongoDB bind_ip and port") do |p|
         @options.mongodb = p
       end

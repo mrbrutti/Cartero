@@ -6,37 +6,37 @@ class LinkedIn < ::Cartero::Command
   include CommandLineReporter
   def initialize
     super do |opts|
-      opts.on("-D", "--data [DATA_FILE]", String,
+      opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
       end
 
-      opts.on("-S", "--server [SERVER_NAME]", String,
+      opts.on("-S", "--server SERVER_NAME", String,
         "Sets Email server to use") do |server|
         @options.server = server
       end
 
-      opts.on("-s", "--subject [MESSAGE_SUBJECT]", String,
+      opts.on("-s", "--subject MESSAGE_SUBJECT", String,
         "Sets LinkedIn Message subject") do |subject|
         @options.subject = subject
       end
 
-      opts.on("-b", "--body [FILE_PATH]", String,
+      opts.on("-b", "--body FILE_PATH", String,
         "Sets LinkedIn Message Body") do |body|
         @options.body = body
       end
 
-      opts.on("-l", "--list [CONNECTIONS|GROUPS]", [:connections, :groups],
+      opts.on("-l", "--list CONNECTIONS|GROUPS", [:connections, :groups],
               "List json of (connections or groups)") do |t|
         @options.list = t
       end
 
-      opts.on("--send [MESSAGE|GROUP_UPDATE|UPDATE]", [:message, :group, :update],
+      opts.on("--send MESSAGE|GROUP_UPDATE|UPDATE", [:message, :group, :update],
               "Send one or more (message/s or group/s updates)") do |t|
         @options.send_type = t
       end
 
-      opts.on("-o", "--save [FILE_PATH]", String,
+      opts.on("-o", "--save FILE_PATH", String,
         "Save content to file") do |f|
         @options.file_save = f
       end

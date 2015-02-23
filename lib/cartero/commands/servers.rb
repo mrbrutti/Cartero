@@ -8,19 +8,19 @@ class Servers < ::Cartero::Command
 
   def initialize
     super do |opts|
-      opts.on("-a","--add [NAME]", String,
+      opts.on("-a","--add NAME", String,
         "Add Server") do |name|
         @options.name = name
         @options.action = "add"
       end
 
-      opts.on("-e","--edit [NAME]", String,
+      opts.on("-e","--edit NAME", String,
         "Edit Server") do |name|
         @options.name = name
         @options.action = "edit"
       end
 
-      opts.on("-d","--delete [NAME]", String,
+      opts.on("-d","--delete NAME", String,
         "Edit Server") do |name|
         @options.name = name
         @options.action = "delete"
@@ -34,37 +34,37 @@ class Servers < ::Cartero::Command
       opts.separator ""
       opts.separator "Configuration options:"
 
-      opts.on("-T", "--type [TYPE]", String,
+      opts.on("-T", "--type TYPE", String,
         "Set the type") do |val|
         @options.type = val
       end
 
-      opts.on("-U", "--url [DOMAIN]", String,
+      opts.on("-U", "--url DOMAIN", String,
         "Set the Mail or WebMail url/address") do |val|
         @options.url = val
       end
 
-      opts.on("-M", "--method [METHOD]", String,
+      opts.on("-M", "--method METHOD", String,
         "Sets the WebMail Request Method to use [GET|POST]") do |val|
         @options.req_method = val
       end
 
-      opts.on("--api-access [API_KEY]", String,
+      opts.on("--api-access API_KEY", String,
         "Sets the Linkedin API Access Key") do |val|
         @options.api_access = val
       end
 
-      opts.on("--api-secret [API_SECRET]", String,
+      opts.on("--api-secret API_SECRET", String,
         "Sets the Linkedin API Secret Key") do |val|
         @options.api_secret = val
       end
 
-      opts.on("--oauth-token [OAUTH_TOKEN]", String,
+      opts.on("--oauth-token OAUTH_TOKEN", String,
         "Sets the Linkedin OAuth Token Key") do |val|
         @options.oauth_token = val
       end
 
-      opts.on("--oauth-secret [OAUTH_SECRET]", String,
+      opts.on("--oauth-secret OAUTH_SECRET", String,
         "Sets the Linkedin OAuth Secret Key") do |val|
         @options.oauth_secret = val
       end
