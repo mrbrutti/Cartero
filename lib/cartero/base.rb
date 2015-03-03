@@ -1,3 +1,5 @@
+# Documentatino for Cartero
+# All static paths should be described here.
 module Cartero
   MetasploitPath = File.expand_path("/usr/local/share/metasploit-framework")
   HomeDir = File.expand_path("~/.cartero")
@@ -14,6 +16,9 @@ module Cartero
   TemplatesWebServerDir = ::Cartero::TemplatesDir + "/webserver"
   SecretMaterial = ::Cartero::HomeDir + "/.secret_material"
 
+  # Documentation for Base module.
+  # This module will contain several initialization methods
+  # that will help the tool load and setup the enviroment.
   module Base
 
     def self.load_config
@@ -48,6 +53,7 @@ module Cartero
       unless File.exist? ::Cartero::HomeDir + "/config"
         File.open(::Cartero::HomeDir + "/config", "w") do |config|
           config << '{
+  "crypto" : "aes",
   "veilEvasion" : {
     "host" : "127.0.0.1",
     "port" : "4242",

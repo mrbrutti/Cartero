@@ -3,6 +3,7 @@ require 'ostruct'
 require 'cartero/crypto_box'
 
 module Cartero
+  # Documentation for CLI
   class CLI
     attr_reader :options
 
@@ -16,6 +17,8 @@ module Cartero
 
       initialize_payloads
 
+      # Setup Correct Crypto Box ( AES || RBNACL )
+      ::Cartero::CryptoBox.setup
       # Initialize Crypto Box
       ::Cartero::CryptoBox.init
     end
@@ -37,7 +40,6 @@ module Cartero
 
         opts.separator ""
         opts.separator "List of Payloads:\n    " + ::Cartero::PAYLOADS.keys.join(", ")
-
 
         opts.separator ""
         opts.separator "Global options:"
@@ -82,7 +84,6 @@ module Cartero
           ENV["EDITOR"] = name
         end
 
-
         opts.separator ""
         opts.separator "Common options:"
 
@@ -114,7 +115,7 @@ module Cartero
         end
 
         opts.on_tail("--version", "Shows cartero CLI version") do
-          puts ::Cartero::Version.join('.')
+          puts ::Cartero.version.join('.')
           exit
         end
       end
