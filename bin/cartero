@@ -19,21 +19,21 @@ require 'cartero'
 
 # Loading Config file information.
 # Currently not used extensvely but we rely on it more & more.
-Cartero::Base::load_config
+Cartero::Base.load_config
 
 # Load all commands
-Cartero::Base::load_commands
+Cartero::Base.load_commands
 
 # Load all payloads
-Cartero::Base::load_payloads
+Cartero::Base.load_payloads
 
 # Check if this is the first time we running if so create ~/.cartero structure.
-if ::Cartero::Base::first_run?
-  ::Cartero::Base::create_structure
+if ::Cartero::Base.first_run?
+  ::Cartero::Base.create_structure
 end
 
 # Check if EDITOR is set. We need it for templating, etc.
-if ::Cartero::Base::check_editor
+if ::Cartero::Base.check_editor
   $stderr.puts "Error: Set $EDITOR on your shell."
   exit(1)
 end

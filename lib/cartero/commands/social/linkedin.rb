@@ -2,10 +2,17 @@ require 'command_line_reporter'
 
 module Cartero
 module Commands
+# Documentation for LinkedIn < ::Cartero::Command
 class LinkedIn < ::Cartero::Command
   include CommandLineReporter
   def initialize
-    super do |opts|
+    super(name: "",
+      description: "",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type:"",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
@@ -138,7 +145,6 @@ class LinkedIn < ::Cartero::Command
     end
   end
 
-
   def login
     @client = ::LinkedIn::Client.new(server[:options][:api_access], server[:options][:api_secret])
     @client.authorize_from_access server[:options][:oauth_token], server[:options][:oauth_secret]
@@ -219,7 +225,7 @@ class LinkedIn < ::Cartero::Command
   end
 
   def print_json(list)
-    unless file_save.nil?
+    if !file_save.nil?
       $stdout.puts "Saving data to file #{file_save}."
       f = File.new(file_save , "w+")
       f.puts JSON.pretty_generate list

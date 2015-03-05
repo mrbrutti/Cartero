@@ -2,9 +2,21 @@
 
 module Cartero
 module Commands
+# Documentation for Cloner < ::Cartero::Command
 class Cloner < ::Cartero::Command
   def initialize
-    super do |opts|
+    super(name: "Web Application Cloner",
+          description: "This command allows a user to clone a site using Cartero's webservers." +
+                       "Additionally, it will automatically edit forms, catch traffic, block bots, and redirect" +
+                       "to the original site, among many other things.",
+          author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+          type:"General",
+          license: "LGPL",
+          references: [
+            "https://section9labs.github.io/Cartero",
+            "https://section9labs.github.io/Cartero"
+            ]
+          ) do |opts|
       opts.on("-U", "--url URL_PATH", String,
         "Full Path of site to clone") do |url|
         @options.url = url
@@ -90,18 +102,15 @@ class Cloner < ::Cartero::Command
     @useragent 	= @options.useragent || "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
   end
 
-
   def run
     puts "Cloning URL #{@url}"
     create_structure
     clone
 
-    if apache
-      puts "Generating Apache mod_proxy config file"
-      create_apache_conf
-    end
+    create_apache_conf if apache
   end
 
+  private
   def create_structure
     name = webserver.underscore
     Dir.mkdir path + "/"  + name unless File.directory?(path + "/"  + name)
@@ -124,89 +133,65 @@ class Cloner < ::Cartero::Command
       :path 				=> path,
       :webserver 		=> webserver,
       :forms_routes => forms_routes,
-      :payload 			=> payload,
+      :payload 			=> payload
     }
 
     @domain_info[:reverse_proxy] = [] if reverse_proxy
 
     # Create Index.erb
     if wget
-      system("wget --no-check-certificate -O \"#{@options.path + "/" + webserver.underscore + "/views/index.erb"}\" -c -k  \"#{url}\"")
+      system("wget --no-check-certificate -O \"#{@options.path + '/' + webserver.underscore + '/views/index.erb'}\" -c -k  \"#{url}\"")
     else
       create_index(page)
     end
 
     # Create templated Sinatra WebServer
-    ws = File.new(@options.path + "/"  + webserver.underscore + "/" + webserver.underscore + ".rb", "w")
+    ws = File.new(@options.path + '/' + webserver.underscore + '/' + webserver.underscore + '.rb', "w")
     ws << ERB.new(File.read(File.dirname(__FILE__) + "/../../../templates/webserver/template.rb.erb")).result(domain_info.get_binding)
     ws.close
+  end
+
+  def process_reverse_proxy_urls(zurl,regexp)
+    page.search(regexp).each do |href|
+      link = URI.parse(href.value)
+      if link.scheme != 'mailto' && link.scheme != 'javascript' && link.path != '/' && link.path != ''
+        if link.host.nil?
+          link.host = zurl.host
+          link.scheme = zurl.scheme
+          href.value = link.path + "#{"?#{link.query}" if link.query != nil }"
+        else
+          href.value = link.path + "#{"?#{link.query}" if link.query != nil }"
+        end
+        path = [
+          link.path.split('/')[0..1].join("\\/"),  # regular expression
+          link.to_s.split('?')[0].split('/')[0..3].join('/')     # full path
+        ]
+        @domain_info[:reverse_proxy] << path unless @domain_info[:reverse_proxy].include? path
+      end
+    end
+  end
+
+  def proccess_urls(zurl,regexp)
+    page.search(regexp).each do |href|
+      link = URI.parse(href.value)
+      if link.host.nil? && link.scheme != 'mailto' && link.scheme != 'javascript'
+        link.host = zurl.host
+        link.scheme = zurl.scheme
+        href.value = link.to_s
+      end
+    end
   end
 
   def create_index(page)
     zurl = URI.parse(url)
 
     if reverse_proxy
-      page.search("//*/@href").each do |href|
-        unless href.value.start_with?("javascript:")
-          link = URI.parse(href.value)
-          if link.scheme != "mailto" && link.scheme != "javascript" && link.path != "/" && link.path != ""
-              if link.host.nil?
-                link.host = zurl.host
-                link.scheme = zurl.scheme
-                href.value = link.path + "#{"?#{link.query}" if link.query != nil }"
-              else
-                href.value = link.path + "#{"?#{link.query}" if link.query != nil }"
-              end
-              path = [
-                link.path.split("/")[0..1].join("\\/"),  # regular expression
-                link.to_s.split("?")[0].split("/")[0..3].join("/")     # full path
-              ]
-              @domain_info[:reverse_proxy] << path unless @domain_info[:reverse_proxy].include? path
-            end
-        end
-      end
+      process_reverse_proxy_urls(zurl,"//*/@href")
+      process_reverse_proxy_urls(zurl,"//*/@src")
 
-      page.search("//*/@src").each do |src|
-        unless src.value.start_with?("javascript:")
-          link = URI.parse(src.value)
-          if link.scheme != "mailto" && link.scheme != "javascript" && link.path != "/" && link.path != ""
-            if link.host.nil?
-              link.host = zurl.host
-              link.scheme = zurl.scheme
-              src.value = link.path + "#{"?#{link.query}" if link.query != nil }"
-            else
-              src.value = link.path + "#{"?#{link.query}" if link.query != nil }"
-            end
-            path = [
-              link.path.split("/")[0..1].join("\\/"),  # regular expression
-              link.to_s.split("?")[0].split("/")[0..3].join("/")     # full path
-            ]
-            @domain_info[:reverse_proxy] << path unless @domain_info[:reverse_proxy].include? path
-          end
-        end
-      end
     else # normal flow no Reverse Proxy
-      page.search("//*/@href").each do |href|
-        unless href.value.start_with?("javascript:")
-          link = URI.parse(href.value)
-          if link.host.nil? && link.scheme != "mailto" && link.scheme != "javascript"
-            link.host = zurl.host
-            link.scheme = zurl.scheme
-            href.value = link.to_s
-          end
-        end
-      end
-
-      page.search("//*/@src").each do |src|
-        unless src.value.start_with?("javascript:")
-          link = URI.parse(src.value)
-          if link.host.nil? && link.scheme != "mailto"
-            link.host = zurl.host
-            link.scheme = zurl.scheme
-            src.value = link.to_s
-          end
-        end
-      end
+      proccess_urls(zurl,"//*/@href")
+      proccess_urls(zurl,"//*/@src")
     end
 
     page.search("//form/@action").each do |form|
@@ -215,7 +200,7 @@ class Cloner < ::Cartero::Command
       # is requesting domain name where phishing sitewill be hosted.
       path = URI.parse(form.value).path
       if reverse_proxy
-        conflict_rules = @domain_info[:reverse_proxy].select {|x| x[0] == path.split("/")[0..1].join("\\/")}
+        conflict_rules = @domain_info[:reverse_proxy].select {|x| x[0] == path.split('/')[0..1].join("\\/")}
         unless conflict_rules.empty?
           $stdout.puts "ISSUE: It looks like the form #{path} is in conflict with one or more"
           $stdout.puts "       of the --reverse-proxy rules and it requires your attention:"
@@ -229,7 +214,7 @@ class Cloner < ::Cartero::Command
 
     content_type = page.header["content-type"].split("=")[-1]
 
-    f = File.new(@options.path + "/" + webserver.underscore + "/views/index.erb", "w")
+    f = File.new(@options.path + '/' + webserver.underscore + '/views/index.erb', "w")
     if content_type != ""
       f << page.parser.to_s.force_encoding(content_type).encode('utf-8')
     else
@@ -239,7 +224,8 @@ class Cloner < ::Cartero::Command
   end
 
   def create_apache_conf
-    ws = File.new(@options.path + "/"  + webserver.underscore + "/" + webserver.underscore + "_apache_module_.conf", "w")
+    puts "Generating Apache mod_proxy config file"
+    ws = File.new(@options.path + '/' + webserver.underscore + '/' + webserver.underscore + '_apache_module_.conf', "w")
     ws << ERB.new(File.read(File.dirname(__FILE__) + "/../../../templates/apache/apache_proxy.conf.erb")).result(domain_info.get_binding)
     ws.close
   end

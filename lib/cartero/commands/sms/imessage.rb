@@ -1,8 +1,15 @@
 module Cartero
 module Commands
+# Documentation for IMessage < ::Cartero::Command
 class IMessage < ::Cartero::Command
   def initialize
-    super do |opts|
+    super(name: "",
+      description: "",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type:"",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
 
       opts.separator "IMPORTANT: This command only works on OSX"
       opts.separator ""
@@ -59,7 +66,7 @@ class IMessage < ::Cartero::Command
       end
     end
 
-    unless @options.attachment.nil?
+    unless @options.attachment.nil? # rubocop:disable Style/GuardClause
       if File.exist?(File.expand_path @options.attachment)
         @attachment = File.expand_path @options.attachment
       else
@@ -99,21 +106,21 @@ class IMessage < ::Cartero::Command
 
     mail[:to] = entity[:email] || entity[:phone]
 
-    unless entity[:message].nil? && body.nil?
+    unless entity[:message].nil? && body.nil? # rubocop:disable Style/GuardClause
       entity[:payload] = ::Cartero::CryptoBox.encrypt(entity.to_json)
       mail[:body] = entity[:message] || ERB.new(body).result(entity.get_binding)
       mail[:type] = "message"
       send_msg(mail)
     end
 
-    unless message.nil?
+    unless message.nil? # rubocop:disable Style/GuardClause
       entity[:payload] = ::Cartero::CryptoBox.encrypt(entity.to_json)
       mail[:body] = ERB.new(message).result(entity.get_binding)
       mail[:type] = "message"
       send_msg(mail)
     end
 
-    unless entity[:attachment].nil? && attachment.nil?
+    unless entity[:attachment].nil? && attachment.nil? # rubocop:disable Style/GuardClause
       mail[:body] = entity[:attachment] || attachment
       mail[:type] = "attachment"
       send_msg(mail)
@@ -121,7 +128,7 @@ class IMessage < ::Cartero::Command
   end
 
   def send_msg(m)
-    system("osascript #{File.expand_path(File.dirname(__FILE__) + "/../../../../data/scripts/imsg.applescript")} #{m[:to]} #{m[:type]} \"#{m[:body]}\"")
+    system("osascript #{File.expand_path(File.dirname(__FILE__) + '/../../../../data/scripts/imsg.applescript')} #{m[:to]} #{m[:type]} \"#{m[:body]}\"")
   end
 
 end

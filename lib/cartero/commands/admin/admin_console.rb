@@ -2,10 +2,17 @@ require 'command_line_reporter'
 
 module Cartero
 module Commands
+# Documentation for AdminConsole < ::Cartero::Command
 class AdminConsole < ::Cartero::Command
   include CommandLineReporter
   def initialize
-    super do |opts|
+    super(name: "Administration Console",
+          description: "",
+          author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+          type:"",
+          license: "LGPL",
+          references: ["https://section9labs.github.io/Cartero"]
+          ) do |opts|
       opts.on("-p", "--persons [LATEST_N]", Integer,
         "Display the list of persons that responded") do |n|
         @options.persons = n || 50
@@ -61,7 +68,6 @@ class AdminConsole < ::Cartero::Command
   def setup
     require 'cartero/models'
 
-
     @persons 			= @options.persons
     @hits 				= @options.hits
     @credentials 	= @options.credentials
@@ -79,51 +85,50 @@ class AdminConsole < ::Cartero::Command
   end
 
   def run
-    if persons || all
-      if filter
-        p_email    = Person.where(:email => /#{email}/).all if !email.nil?
-        p_ip       = Person.all.select { |x| x.responded.to_s =~ /#{ip}/ } if !ip.nil?
-        p_campaign = Person.all.select { |x| x.campaigns.to_s =~ /#{campaign}/i } if !campaign.nil?
-        p = []
-        p.concat(p_campaign) if !p_campaign.nil?
-        p.concat(p_email) if !p_email.nil?
-        p.concat(p_ip) if !p_ip.nil?
-        p.uniq!
-      else
-        p = Person.sort(:updated_at.desc).limit(persons || 50).all.reverse
-      end
-      display_persons(p)
-    end
-    if hits || all
-      if filter
-        h_email    = Hit.where.all.select {|x| x.data['email'] =~ /#{email}/i }if !email.nil?
-        h_campaign = Hit.where.all.select {|x| x.data['subject'] =~ /#{campaign}/i } if !campaign.nil?
-        h_ip       = Hit.where(:ip => /#{ip}/i).all if !ip.nil?
-        h = []
-        h.concat(h_campaign) if !h_campaign.nil?
-        h.concat(h_email) if !h_email.nil?
-        h.concat(h_ip) if !h_ip.nil?
-        h.uniq!
-      else
-        h = Hit.sort(:created_at.desc).limit(hits || 100).all.reverse
-      end
-      display_hits(h)
-    end
-    if credentials || all
-      if filter
-        c_email    = Credential.where(:username => /#{email}/i).all if !email.nil?
-        c_campaign = Credential.where(:domain =~ /#{campaign}/i).all if !campaign.nil?
-        c_ip       = Credential.where(:ip => /#{ip}/i).all if !ip.nil?
-        c = []
-        c.concat(c_campaign) if !c_campaign.nil?
-        c.concat(c_email) if !c_email.nil?
-        c.concat(c_ip) if !c_ip.nil?
-        c.uniq!
-      else
-        c = Credential.sort(:created_at.desc).limit(credentials || 50).all.reverse
-      end
-      display_credentials(c)
-    end
+    run_persons if persons || all
+    run_hits if hits || all
+    run_credentials if credentials || all
+  end
+
+  private
+
+  def run_persons
+    return display_persons(Person.sort(:updated_at.desc).limit(persons || 50).all.reverse) if filter
+    p_email    = Person.where(:email => /#{email}/).all if !email.nil?
+    p_ip       = Person.all.select { |x| x.responded.to_s =~ /#{ip}/ } if !ip.nil?
+    p_campaign = Person.all.select { |x| x.campaigns.to_s =~ /#{campaign}/i } if !campaign.nil?
+    pe = []
+    pe.concat(p_campaign) if !p_campaign.nil?
+    pe.concat(p_email) if !p_email.nil?
+    pe.concat(p_ip) if !p_ip.nil?
+    pe.uniq!
+    display_persons(pe)
+  end
+
+  def run_hits
+    return display_hits(Hit.sort(:created_at.desc).limit(hits || 100).all.reverse) if filter
+    h_email    = Hit.where.all.select {|x| x.data['email'] =~ /#{email}/i }if !email.nil?
+    h_campaign = Hit.where.all.select {|x| x.data['subject'] =~ /#{campaign}/i } if !campaign.nil?
+    h_ip       = Hit.where(:ip => /#{ip}/i).all if !ip.nil?
+    h = []
+    h.concat(h_campaign) if !h_campaign.nil?
+    h.concat(h_email) if !h_email.nil?
+    h.concat(h_ip) if !h_ip.nil?
+    h.uniq!
+    display_hits(h)
+  end
+
+  def run_credentials
+    return display_credentials(Credential.sort(:created_at.desc).limit(credentials || 50).all.reverse) if filter
+    c_email    = Credential.where(:username => /#{email}/i).all if !email.nil?
+    c_campaign = Credential.where(:domain =~ /#{campaign}/i).all if !campaign.nil?
+    c_ip       = Credential.where(:ip => /#{ip}/i).all if !ip.nil?
+    c = []
+    c.concat(c_campaign) if !c_campaign.nil?
+    c.concat(c_email) if !c_email.nil?
+    c.concat(c_ip) if !c_ip.nil?
+    c.uniq!
+    display_credentials(c)
   end
 
   def display_persons(p)

@@ -2,10 +2,17 @@ require 'shellwords'
 
 module Cartero
 module Commands
+# Documentation for Templates < ::Cartero::Command
 class Templates < ::Cartero::Command
 
   def initialize
-    super do |opts|
+    super(name: "",
+      description: "",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type:"",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("-a","--add NAME", String,
         "Add Template") do |name|
         @options.name = name

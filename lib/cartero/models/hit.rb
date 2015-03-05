@@ -1,3 +1,4 @@
+# Documentation for Hit
 class Hit
   include MongoMapper::Document
 

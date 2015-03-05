@@ -1,8 +1,15 @@
 module Cartero
 module Commands
+# Documentation for Mailer < ::Cartero::Commands
 class Mailer < Command
   def initialize
-    super do |opts|
+    super(name: "",
+      description: "",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type:"",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data

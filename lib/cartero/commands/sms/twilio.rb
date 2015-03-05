@@ -1,8 +1,15 @@
 module Cartero
 module Commands
+# Documentatin for Twilio < ::Cartero::Command
 class Twilio < ::Cartero::Command
   def initialize
-    super do |opts|
+    super(name: "",
+      description: "",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type:"",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
@@ -93,11 +100,11 @@ class Twilio < ::Cartero::Command
       end
     end
 
-    unless @options.attachment.nil?
+    unless @options.attachment.nil? # rubocop:disable Style/GuardClause
       @attachment = @options.attachment.split("||")[0..9] # First 10 suported
     end
 
-    unless @options.message.nil?
+    unless @options.message.nil? # rubocop:disable Style/GuardClause
       @message = @options.message
     end
 

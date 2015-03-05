@@ -2,6 +2,7 @@ require 'command_line_reporter'
 require 'msfrpc-client'
 
 module Cartero
+# Documentation for Metasploit
 class Metasploit
   include CommandLineReporter
 
@@ -16,7 +17,7 @@ class Metasploit
 
   def initialize(options = {})
     @options = options
-    @client = Msf::RPC::Client.new(:host=>@options["host"] || "192.168.1.216", :port => @options["port"] || "4567")
+    @client = Msf::RPC::Client.new(:host=>@options["host"] || "192.168.1.216", :port => @options["port"] || '4567')
   end
 
   def token
@@ -31,13 +32,11 @@ class Metasploit
 
   def db_connect(uname = nil, pwd = nil, db = nil)
     call("db.connect", {
-      :username => uname || @options["db_user"] || "msf", # default db username "msf"
-      :password => pwd || @options["db_pwd"] || "", # default db password is ""
-      :database => db || @options["db_name"] || "msf" # default db name is "msf"
+      :username => uname || @options['db_user'] || "msf", # default db username "msf"
+      :password => pwd || @options['db_pwd'] || "", # default db password is ""
+      :database => db || @options['db_name'] || "msf" # default db name is "msf"
     })
   end
-
-
 
   def hosts(opts={})
     call("db.hosts", opts)
@@ -132,7 +131,7 @@ class Metasploit
     return "use exploit/multi/handler\n" +
            "set PAYLOAD #{payload}\n" +
            "set LHOST #{datastore['LHOST']}\n" +
-           "set LPORT #{datastore['LPORT'] || "4444"}\n" +
+           "set LPORT #{datastore['LPORT'] || '4444'}\n" +
            "set ExitOnSession false\n" +
            "exploit -j\n"
   end

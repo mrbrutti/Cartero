@@ -1,3 +1,4 @@
+# Documentation for Person
 class Person
   include MongoMapper::Document
 

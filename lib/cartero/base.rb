@@ -20,7 +20,6 @@ module Cartero
   # This module will contain several initialization methods
   # that will help the tool load and setup the enviroment.
   module Base
-
     def self.load_config
       if File.exist? ::Cartero::HomeDir + "/config"
         require 'json'

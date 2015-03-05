@@ -1,8 +1,15 @@
 module Cartero
 module Commands
+# Documentation for WebMailer < ::Cartero::Command
 class WebMailer < ::Cartero::Command
   def initialize
-    super do |opts|
+    super(name: "",
+      description: "",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type:"",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
 
       opts.on("-R", "--raw RAW_REQUEST_FILE", String,
         "Sets WebMail Raw Request") do |rawfile|
@@ -169,7 +176,7 @@ class WebMailer < ::Cartero::Command
     else
       r = raw_webmail(entity)
     end
-    if !server[:confirmation].nil?
+    if !server[:confirmation].nil? # rubocop:disable Style/GuardClause
       unless r.scan(/#{server[:confirmation]}/).empty?
         $stdout.puts "WebMail request Confirmed."
       end
@@ -182,7 +189,7 @@ class WebMailer < ::Cartero::Command
       :url 			=> server[:options][:url] || url ,
       :payload 	=> ERB.new(body).result(entity.get_binding),
       :headers 	=> server[:options][:headers] || headers || {},
-      :cookies 	=> server[:options][:cookies] || cookies || {},
+      :cookies 	=> server[:options][:cookies] || cookies || {}
     )
   end
 

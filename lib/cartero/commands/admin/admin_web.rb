@@ -1,8 +1,16 @@
+# Documentation for Cartero
 module Cartero
 module Commands
+# Documentation for AdminWeb < ::Cartero::Command
 class AdminWeb < ::Cartero::Command
   def initialize
-    super do |opts|
+    super(name: "",
+      description: "",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type:"",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("-i", "--ip 1.1.1.1", String,
         "Sets IP interface, default is 0.0.0.0") do |ip|
         @options.ip = ip
@@ -39,7 +47,6 @@ class AdminWeb < ::Cartero::Command
   attr_accessor :ssl_key_path
   attr_accessor :ssl_cert_path
   attr_accessor :web_server
-
 
   def setup
     require 'cartero/models'
@@ -105,13 +112,11 @@ class AdminWeb < ::Cartero::Command
       end
     end
     @puma.options[:binds] = binds
-
   end
 
   def run
     @puma.run
   end
-
 end
 end
 
@@ -120,8 +125,8 @@ require 'sinatra'
 require 'csv'
 require 'rack/reverse_proxy'
 
+# Documentation for WebAdmin < Sinatra::Base
 class WebAdmin < Sinatra::Base
-
   helpers do
     def h(text)
       Rack::Utils.escape_html(text)
@@ -198,6 +203,5 @@ class WebAdmin < Sinatra::Base
     @person = Person.where(:email => params[:email]).first
     erb :stats_person
   end
-
 end
 end

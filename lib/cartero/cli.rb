@@ -49,8 +49,8 @@ module Cartero
           @options.proxy = pry
           require 'socksify'
           url, port = pxy.split(":")
-          TCPSocket::socks_server = url
-          TCPSocket::socks_port = port.to_i
+          TCPSocket.socks_server = url
+          TCPSocket.socks_port = port.to_i
         end
 
         opts.on("-c", "--config [CONFIG_FILE]", String,
@@ -65,7 +65,6 @@ module Cartero
         opts.on("-p", "--ports [PORT_1,PORT_2,..,PORT_N]", String,
           "Global Flag to set Mailer and Webserver ports") do |p|
           @options.ports = p.split(",").map(&:to_i)
-
         end
 
         opts.on("-m", "--mongodb [HOST:PORT]", String,
@@ -140,7 +139,7 @@ module Cartero
 
       while !ARGV.empty?
         cmd = ARGV.shift
-        if ::Cartero::COMMANDS.has_key?(cmd)
+        if ::Cartero::COMMANDS.key?(cmd)
           begin
             command = ::Cartero::COMMANDS[cmd].new
             if ARGV.empty?
@@ -157,7 +156,7 @@ module Cartero
             $stderr.puts e
             exit(1)
           end
-        elsif ::Cartero::PAYLOADS.has_key?(cmd)
+        elsif ::Cartero::PAYLOADS.key?(cmd)
           begin
             payload = ::Cartero::PAYLOADS[cmd].new
             if ARGV.empty?
@@ -196,6 +195,7 @@ module Cartero
     end
 
     private
+
     def initialize_commands
       # Initialize all avilable loaded Commands that are parto of
       # ::Cartero::Commands and are its supper class is << ::::Cartero::Command.
@@ -209,7 +209,7 @@ module Cartero
           const = Kernel.const_get("Cartero::Commands::#{klass}")
         end
         # Check if the plugin has a super class and if the type is Plugin
-        if const.respond_to?(:superclass) and const.superclass == ::Cartero::Command
+        if const.respond_to?(:superclass) && const.superclass == ::Cartero::Command
           ::Cartero::COMMANDS[klass.to_s] = const
         end
       end
@@ -228,7 +228,7 @@ module Cartero
           const = Kernel.const_get("Cartero::Payloads::#{klass}")
         end
         # Check if the plugin has a super class and if the type is Plugin
-        if const.respond_to?(:superclass) and const.superclass == ::Cartero::Payload
+        if const.respond_to?(:superclass) && const.superclass == ::Cartero::Payload
           ::Cartero::PAYLOADS[klass.to_s] = const
         end
       end
