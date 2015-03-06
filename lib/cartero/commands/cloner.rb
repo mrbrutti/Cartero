@@ -151,7 +151,7 @@ class Cloner < ::Cartero::Command
     ws.close
   end
 
-  def process_reverse_proxy_urls(zurl,regexp)
+  def process_reverse_proxy_urls(page,zurl,regexp)
     page.search(regexp).each do |href|
       link = URI.parse(href.value)
       if link.scheme != 'mailto' && link.scheme != 'javascript' && link.path != '/' && link.path != ''
@@ -171,7 +171,7 @@ class Cloner < ::Cartero::Command
     end
   end
 
-  def proccess_urls(zurl,regexp)
+  def proccess_urls(page,zurl,regexp)
     page.search(regexp).each do |href|
       link = URI.parse(href.value)
       if link.host.nil? && link.scheme != 'mailto' && link.scheme != 'javascript'
@@ -186,12 +186,12 @@ class Cloner < ::Cartero::Command
     zurl = URI.parse(url)
 
     if reverse_proxy
-      process_reverse_proxy_urls(zurl,"//*/@href")
-      process_reverse_proxy_urls(zurl,"//*/@src")
+      process_reverse_proxy_urls(page,zurl,"//*/@href")
+      process_reverse_proxy_urls(page,zurl,"//*/@src")
 
     else # normal flow no Reverse Proxy
-      proccess_urls(zurl,"//*/@href")
-      proccess_urls(zurl,"//*/@src")
+      proccess_urls(page,zurl,"//*/@href")
+      proccess_urls(page,zurl,"//*/@src")
     end
 
     page.search("//form/@action").each do |form|

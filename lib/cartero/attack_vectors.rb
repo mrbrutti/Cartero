@@ -2,9 +2,10 @@ module Cartero
 # Documentation for AttackVectors
 class AttackVectors
   def initialize(options, payload=nil)
+    p options
     @options = options
     @options.payload = payload
-    @options.webserver = Module.const_get(File.basename(@options.customwebserver).split('.')[0..-2].join('.').camelize)
+    @options.webserver = File.basename(@options.customwebserver).split('.')[0..-2].join('.').camelize
     case options.attack_type
     when "hta"
       raise StandardError, "Missing Payload for hta attack" if @payload.nil?
@@ -14,6 +15,9 @@ class AttackVectors
       raise StandardError, "Missing Payload for hta attack" if @payload.nil?
       $stdout.puts "Generating #{options.request_path || '/download'}"
       create_download_payload
+    when "beef"
+      $stdout.puts "Generating smart erb_based beef hooks"
+      create_beef_payload
     else
       raise StandardError, "No attack type provided."
     end

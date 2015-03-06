@@ -1,13 +1,3 @@
-# Documentation for String
-class String
-  def camelize
-    self.split("_").each(&:capitalize!).join("")
-  end
-
-  def underscore
-    self.gsub(/(.)([A-Z])/,'\1_\2').downcase
-  end
-end
 
 # Documentation for Cartero
 # Just for Versioning
@@ -26,3 +16,4 @@ require 'cartero/base'
 require 'cartero/cli'
 require 'cartero/db'
 require 'cartero/command'
+require 'cartero/cartero_patches'

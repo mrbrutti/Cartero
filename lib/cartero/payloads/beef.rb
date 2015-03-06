@@ -92,31 +92,31 @@ class Beef < ::Cartero::Payload
       end
     end
 
-    unless File.exist?(File.expand_path(@options.json_file))
-      raise StandardError, "Hooked Json data container does not exists."
+    if @options.json_file
+      raise StandardError, "Hooked Json data container does not exists." unless File.exist?(File.expand_path(@options.json_file))
     end
 
-    unless File.exist?(File.expand_path(@options.lsit_file))
-      raise StandardError, "Hooked list file does not exists."
+    if @options.list_file
+      raise StandardError, "Hooked list file does not exists." unless File.exist?(File.expand_path(@options.list_file))
     end
-
     # If no list if given, everyone will be hooked.
-    if @options.json_file.nil? && @options.list_file.nil?
+    if @options.json_file.nil? && @options.list_file.nil? && !@options.hook_url.nil?
       $stdout.puts "NOTE: No list was provided hooking all incoming traffic."
       @options.hook_all = true
     end
 
-    #  Connect to the Beef RESTful API
-    require 'cartero/beef_api'
-    @rest_client = ::Cartero::BeefApi.new(
-      :server => @options.hook_url,
-      :username => @options.username || ::Cartero::GlobalConfig["beef"]["username"]  || "beef",
-      :password => @options.password || ::Cartero::GlobalConfig["beef"]["password"]  || "beef"
-    )
-    @rest_client.login
-
-    # Time to see if we were able to login.
-    raise StandardError, "Something went wrong while connecting to Beef RESTful API" unless @rest_client.token.nil?
+    if !@options.hook_url.nil?
+      #  Connect to the Beef RESTful API
+      require 'cartero/beef_api'
+      @rest_client = ::Cartero::BeefApi.new(
+        :server => @options.hook_url,
+        :username => @options.username || ::Cartero::GlobalConfig["beef"]["username"]  || "beef",
+        :password => @options.password || ::Cartero::GlobalConfig["beef"]["password"]  || "beef"
+      )
+      @rest_client.login
+      # Time to see if we were able to login.
+      raise StandardError, "Something went wrong while connecting to Beef RESTful API" if @rest_client.token.nil?
+    end
   end
 
   def run
@@ -128,42 +128,37 @@ class Beef < ::Cartero::Payload
 
   def run_command
     case @options.command
-    when "start_veil"
-      puts "Starting Beef RESTful Server"
+    when "start_beef"
+      puts "Starting Beef & Beef RESTful Server"
       # Check if an ssh paramter was provided on the ~/.cartero/config was provided.
       # NOTE: This does require either you to authenticate and/or
       #       to have ssh_keys enabled for no interaction.
       #
-      if ::Cartero::GlobalConfig['beef']['ssh'] || ::Cartero::GlobalConfig['beef']['ssh'] != ""
+      if ::Cartero::GlobalConfig['beef']['ssh']
         ssh = "ssh #{::Cartero::GlobalConfig['beef']['ssh_user']}@#{::Cartero::GlobalConfig["beef"]["host"]}"
       end
       # Check if a config file path was provided.
       # This will not work if you need to copy the file to the SSH. Server.
       # It is possible, but not implemented, feel free to do so and create a PR.
-      if !@options.config.nil? || ::Cartero::GlobalConfig['beef']['config'] || ::Cartero::GlobalConfig['beef']['config'] != ""
-        config = "--config " + File.expand_path(@options.config || ::Cartero::GlobalConfig['beef']['config'])
+      if !@options.config.nil? || (!::Cartero::GlobalConfig['beef']['config'].nil? && ::Cartero::GlobalConfig['beef']['config'] != "")
+        config = "--config \"#{File.expand_path(@options.config || ::Cartero::GlobalConfig['beef']['config'])}\""
       end
       # Check if we running Kali
-      if running_kali(ssh)
-        cmd = "#{ssh} sudo service beef-xss start"
-      else
-        cmd = "#{ssh} #{Cartero::GlobalConfig['beef']['path'] || 'beef' } #{config} > /dev/null &"
-      end
-      puts `#{cmd}`
-    when "stop_veil"
+      cmd = "#{ssh} \"bash -s\" -- < \"#{File.expand_path("../../../../data/scripts/beef/start.sh", __FILE__)}\" \"#{Cartero::GlobalConfig['beef']['path'] || 'beef' }\" #{config}"
+      puts cmd
+      system(cmd)
+    when "stop_beef"
       ssh = "ssh #{::Cartero::GlobalConfig['beef']['ssh_user']}@#{::Cartero::GlobalConfig["beef"]["host"]}" if ::Cartero::GlobalConfig['beef']['ssh']
-      puts "Stoping Beef RESTful Server"
-      if running_kali(ssh)
-        cmd = "#{ssh} sudo service beef-xss stop"
-      else
-        cmd = "#{ssh} \"#{kill `ps aux | grep -v grep | grep beef | awk '{print $2}'`}\""
-      end
+      puts "Stoping Beef & Beef RESTful Server"
+      cmd = "#{ssh} \"bash -s\" -- < \"#{File.expand_path("../../../../data/scripts/beef/stop.sh", __FILE__)}\""
+      system(cmd)
     else
       puts "Should not be here :-)"
     end
   end
 
   def run_hook
+    require 'cartero/attack_vectors'
     list_to_hook = []
     # load list of emails to hook from json file.
     list_to_hook << JSON.parse(
@@ -179,15 +174,17 @@ class Beef < ::Cartero::Payload
 
     # dump all of them ( unique list ) to the file under the customwebserver path.
     File.open(
-      File.expand_path(@options.path + "/hooked_list.list")
+      File.expand_path(@options.path + "/hooked_list.list"), "w"
     ) do |f|
       f << list_to_hook.uniq.join("\n")
     end
     # Adding WebServers hooks for Beef.
-    AttackVectors.new(@options).create_beef_payload
+    @options.attack_type = "beef"
+    ::Cartero::AttackVectors.new(@options).create_beef_payload
   end
 
   def running_kali(ssh)
+
     `#{ssh} uname -a` =~ /Kali/i
   end
 end

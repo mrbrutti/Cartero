@@ -1,5 +1,6 @@
 require 'rest-client'
 require 'json'
+require 'uri'
 
 module Cartero
 # Documentation for BeefApi
@@ -11,6 +12,8 @@ class BeefApi
 
   def initialize(options = {})
     @options = options
+    server_url = URI.parse(options[:server])
+    @options[:server] =  server_url.to_s.split(server_url.path)[0]
     @options[:username] ||= "beef"
     @options[:password] ||= "beef"
     @token = nil

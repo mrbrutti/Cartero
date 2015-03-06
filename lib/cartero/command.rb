@@ -1,15 +1,6 @@
 require 'optparse'
 require 'ostruct'
 
-# Hack to Hash to we can use
-# the private binding() method on ERB.
-# Documentation for Hash
-class Hash
-  def get_binding # rubocop:disable AccessorMethodName
-    binding()
-  end
-end
-
 module Cartero
   # Documentation for Command
   # Base Command class container with several shared methods definitions.
