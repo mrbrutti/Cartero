@@ -75,8 +75,12 @@ class Beef < ::Cartero::Payload
       raise StandardError, "A webserver [--webserver /path/webserver ] must be provided"
     end
 
-    if @options.hook_url.nil? && @options.command.nil?
-      raise StandardError, "A Beef URL [--url https://localhost:3000 ] must be provided"
+    if @options.hook_url.nil? && @options.command.nil? &&
+      if ::Cartero::GlobalConfig["beef"]["hook"] != "" && !::Cartero::GlobalConfig["beef"]["hook"].nil?
+        @options.hook_url = ::Cartero::GlobalConfig["beef"]["hook"]
+      else
+        raise StandardError, "A Beef URL [--url https://localhost:3000 ] must be provided"
+      end
     end
 
     # Only if we are not running a basic command :-)
