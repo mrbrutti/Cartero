@@ -3,10 +3,10 @@ module Commands
 # Documentatin for Twilio < ::Cartero::Command
 class Twilio < ::Cartero::Command
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Twilio SMS/MMS Mass Messenger",
+      description: "Using Twilio as a delivery method, an attacker can send multiple individually crafted text messages. This method requires to have an active (paid) account with Twilio.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

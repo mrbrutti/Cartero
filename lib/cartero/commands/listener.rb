@@ -5,10 +5,10 @@ module Commands
 # Documentation for Listener < ::Cartero::Command
 class Listener < ::Cartero::Command
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Cartero Customizeable Web Server",
+      description: "Listener is the command that serves our customized WebServers hosting pages on one or more ports at any given time.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Infrastructure",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

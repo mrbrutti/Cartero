@@ -7,9 +7,9 @@ class AdminConsole < ::Cartero::Command
   include CommandLineReporter
   def initialize
     super(name: "Administration Console",
-          description: "",
+          description: "Cartero Console based Admnistration Interface. It allows users to interact with the captured data (i.e. hits, persons, credentials.)",
           author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type:"",
+          type:"Admin",
           license: "LGPL",
           references: ["https://section9labs.github.io/Cartero"]
           ) do |opts|

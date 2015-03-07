@@ -4,10 +4,10 @@ module Commands
 # Documentation for AdminWeb < ::Cartero::Command
 class AdminWeb < ::Cartero::Command
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Cartero Administration Web Application",
+      description: "Cartero WebApp based Admnistration Interface. It allows users to interact with the captured data (i.e. hits, persons, credentials.) using a friendly Web Application.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Admin",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

@@ -7,10 +7,10 @@ module Commands
 # Documentatation for ::Cartero::Command
 class Servers < ::Cartero::Command
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Server Template Manager",
+      description: "Servers keeps email servers templates. It allows uses to easily craft servers configuration files for emails servers, Linkedin, Twilio, Google Voice, WebMailer, etc.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Infrastructure",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

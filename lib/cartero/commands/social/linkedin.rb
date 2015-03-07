@@ -6,10 +6,10 @@ module Commands
 class LinkedIn < ::Cartero::Command
   include CommandLineReporter
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "LinkedIn Automation Mass Sender",
+      description: "Using LinkedIn Network an attacker is able to use one or more accounts on an automated way to deliver messages, updates and group updates contaning simple messages, malicious payloads, etc.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Social Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

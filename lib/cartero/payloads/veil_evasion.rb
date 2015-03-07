@@ -5,10 +5,10 @@ module Payloads
 class VeilEvasion < ::Cartero::Payload
   include CommandLineReporter
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Veil Evasion Payload RPC Builder",
+      description: "Cartero's Veil Evasion RPC client to create local and remote paylods making use of the amazing and undetectable VeilEvasion paylods.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Payload",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

@@ -3,10 +3,10 @@ module Commands
 # Documentation for Mailer < ::Cartero::Commands
 class Mailer < Command
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Customized Mass Email Command",
+      description: "Mailer is responsible for crafting and sending emails from a simple txt based email all the way to complicated email templates that can individualize each email as if it was being written by a person.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

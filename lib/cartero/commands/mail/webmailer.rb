@@ -3,10 +3,10 @@ module Commands
 # Documentation for WebMailer < ::Cartero::Command
 class WebMailer < ::Cartero::Command
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Web Form Email Command",
+      description: "As the name states, it abuses(uses) open or vulnerable email forms available on the internet. This command is very useful when bypassing email filters during a penetration test. Since most webforms might be whitelisted.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

@@ -6,10 +6,12 @@ module Commands
 class Templates < ::Cartero::Command
 
   def initialize
-    super(name: "",
-      description: "",
+    super(name: "Email Template Manager",
+      description: "This command allows you to create and mantain customizeable templates for your campaings." +
+                   "Even though it is not necessary to use this command to send templated emails, text, updates, " +
+                   "it comes in handy when you have re-usable templates such as Social Network updates, Mail Server delivery, etc.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Infrastructure",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

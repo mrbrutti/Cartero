@@ -3,10 +3,10 @@ module Commands
 # Documentation for ::Cartero::Command
 class Mongo < ::Cartero::Command
    def initialize
-    super(name: "",
-      description: "",
+    super(name: "MongoDB Launcher",
+      description: "Command Responsible for starting and stopping the underlaying MongoDB database used to store data.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"",
+      type:"Admin",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

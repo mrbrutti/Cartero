@@ -386,7 +386,7 @@ Common options:
 ```
 
 #### AdminConsole
-The Admin Console is CLI tool that allows to list information about Persons, Campaigns, Hits and Credentials gathered.  
+The Admin Console is CLI tool that allows to list information about Persons, Campaigns, Hits and Credentials gathered.
 ```shell
 ❯❯❯ ./cartero AdminConsole
 Usage: Cartero AdminConsole [options]
@@ -414,7 +414,18 @@ module Cartero
 module Commands
 class CommandName < ::Cartero::Command
 	def initialize
-		super do |opts|
+		super(
+          name: "Long Command Name Here",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          author: ["Author Name <noname [©] cartero.com>"],
+          type:"General",
+          license: "LGPL",
+          references: [
+            "https://section9labs.github.io/Cartero",
+            "https://section9labs.github.io/Cartero"
+            ]
+
+    ) do |opts|
       #OptionsParser options available here.
 			opts.on("-x", "--xoption [DATA_FILE]", String,
     		"Description of command option") do |data|

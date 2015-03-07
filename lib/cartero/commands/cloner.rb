@@ -10,7 +10,7 @@ class Cloner < ::Cartero::Command
                        "Additionally, it will automatically edit forms, catch traffic, block bots, and redirect" +
                        "to the original site, among many other things.",
           author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type:"General",
+          type:"Infrastructure",
           license: "LGPL",
           references: [
             "https://section9labs.github.io/Cartero",
