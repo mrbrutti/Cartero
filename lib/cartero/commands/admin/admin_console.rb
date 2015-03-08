@@ -28,11 +28,6 @@ class AdminConsole < ::Cartero::Command
         @options.credentials = n || 50
       end
 
-      opts.on("-c", "--hooked [ALL|ONLINE|OFFLINE]", String,
-        "Display the list of Credentials") do |n|
-        @options.hooks = n || "ALL"
-      end
-
       opts.on("-a", "--all",
         "Sets Email Payload Ports to scan") do
         @options.all = true
@@ -95,7 +90,6 @@ class AdminConsole < ::Cartero::Command
     run_persons if persons || all
     run_hits if hits || all
     run_credentials if credentials || all
-    run_hooked(hooks)if hooks
   end
 
   private
@@ -137,68 +131,6 @@ class AdminConsole < ::Cartero::Command
     c.concat(c_ip) if !c_ip.nil?
     c.uniq!
     display_credentials(c)
-  end
-
-  def run_hooked(c)
-    require 'cartero/beef_api'
-    @rest_client = ::Cartero::BeefApi.new(
-      :server => ::Cartero::GlobalConfig["beef"]["hook"],
-      :username => @options.username || ::Cartero::GlobalConfig["beef"]["username"]  || "beef",
-      :password => @options.password || ::Cartero::GlobalConfig["beef"]["password"]  || "beef"
-    )
-    @rest_client.login
-    # Time to see if we were able to login.
-    raise StandardError, "Something went wrong while connecting to Beef RESTful API" if @rest_client.token.nil?
-    hooked = @rest_client.hooks
-
-    case c
-    when /online/i
-      puts "ONLINE"
-      display_hooks(hooked["hooked-browsers"]["online"])
-    when /offline/i
-      puts "OFFLINE"
-      display_hooks(hooked["hooked-browsers"]["offline"])
-    when /all/i
-      puts "ONLINE"
-      display_hooks(hooked["hooked-browsers"]["online"])
-      puts "OFFLINE"
-      display_hooks(hooked["hooked-browsers"]["offline"])
-    else
-    end
-
-
-  end
-
-  def display_hooks(p)
-    return if p.empty?
-    table() do
-      row(:color => 'red', :header => true, :bold => true) do
-        column('ID', :width => 3)
-        column('IP', :width => 16)
-        column('SESSION', :width => 30)
-        column('NAME', :width => 15)
-        column('VERSION', :width => 10)
-        column('OS', :width => 15)
-        column('PLATFORM', :width => 15)
-        column('DOMAIN', :width => 10)
-        column('PORT', :width => 6)
-        column('PAGE_URI', :width => 40)
-      end
-      p.each do |key,value|
-        row(:color => 'blue') do
-          column(value["id"])
-          column(value["ip"])
-          column(value["session"])
-          column(value["name"])
-          column(value["version"])
-          column(value["os"])
-          column(value["platform"])
-          column(value["domain"])
-          column(value["port"])
-          column(value["page_uri"])
-        end
-      end
-    end
   end
 
   def display_persons(p)
