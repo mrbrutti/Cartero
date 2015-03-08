@@ -6,7 +6,7 @@ class Twilio < ::Cartero::Command
     super(name: "Twilio SMS/MMS Mass Messenger",
       description: "Using Twilio as a delivery method, an attacker can send multiple individually crafted text messages. This method requires to have an active (paid) account with Twilio.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Delivery",
+      type: "Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
@@ -49,7 +49,6 @@ class Twilio < ::Cartero::Command
         "Sets Twilio MMS URL image paths to send") do |attachment|
         @options.attachment = attachment
       end
-
     end
   end
 
@@ -107,7 +106,6 @@ class Twilio < ::Cartero::Command
     unless @options.message.nil? # rubocop:disable Style/GuardClause
       @message = @options.message
     end
-
   end
 
   attr_reader :data

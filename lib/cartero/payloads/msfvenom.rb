@@ -7,7 +7,7 @@ class MSFVenom < ::Cartero::Payload
       description: "This command is a home-made implementation of metasploit's msfvenon over metasploit's RPC protocol. " +
                    "This allows us to generate and serve msf payloads, even from remote metasploit instances.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Payload",
+      type: "Payload",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|

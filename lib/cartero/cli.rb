@@ -70,7 +70,6 @@ module Cartero
         opts.on("-m", "--mongodb [HOST:PORT]", String,
           "Global flag to Set MongoDB bind_ip and port") do |p|
           @options.mongodb = p
-
         end
 
         opts.on("-d", "--debug", "Sets debug flag on/off") do
@@ -233,6 +232,5 @@ module Cartero
         end
       end
     end
-
   end
 end

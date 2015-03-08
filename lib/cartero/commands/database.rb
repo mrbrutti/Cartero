@@ -6,7 +6,7 @@ class Mongo < ::Cartero::Command
     super(name: "MongoDB Launcher",
       description: "Command Responsible for starting and stopping the underlaying MongoDB database used to store data.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Admin",
+      type: "Admin",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
@@ -29,7 +29,6 @@ class Mongo < ::Cartero::Command
         "Set MongoDB bind_ip and port") do |p|
         @options.mongodb = p
       end
-
     end
   end
   attr_accessor :mongo_ip

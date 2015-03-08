@@ -6,7 +6,7 @@ class Mailer < Command
     super(name: "Customized Mass Email Command",
       description: "Mailer is responsible for crafting and sending emails from a simple txt based email all the way to complicated email templates that can individualize each email as if it was being written by a person.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Delivery",
+      type: "Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
@@ -164,7 +164,6 @@ class Mailer < Command
   end
 
   def create_email(entity)
-
     mail = {}
     # Set server configuration
     mail[:via] 				 = server[:type].to_sym

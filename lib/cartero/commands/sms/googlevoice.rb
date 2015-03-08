@@ -6,7 +6,7 @@ class GoogleVoice < ::Cartero::Command
     super(name: "Google Voice SMS/MMS Text Messages Command",
       description: "Using Google Voice as a delivery method, an attacker can send multiple individually crafted text messages.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Delivery",
+      type: "Delivery",
       license: "LGPL",
       references: [
         "https://section9labs.github.io/Cartero",
@@ -92,8 +92,6 @@ class GoogleVoice < ::Cartero::Command
     end
 
     @message = @options.message unless @options.message.nil?
-
-
   end
 
   attr_reader :data

@@ -70,7 +70,6 @@ module Cartero
           exit
         end
       end
-
     end
 
     def self.method_added name

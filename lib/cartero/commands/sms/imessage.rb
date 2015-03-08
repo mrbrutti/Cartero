@@ -6,11 +6,10 @@ class IMessage < ::Cartero::Command
     super(name: "Apple Messages Command",
       description: "The commands wraps AppleScripts to send customized messages to emails or phone numbers using Messages infrastructure.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Delivery",
+      type: "Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
-
       opts.separator "IMPORTANT: This command only works on OSX"
       opts.separator ""
 
@@ -37,7 +36,6 @@ class IMessage < ::Cartero::Command
   end
 
   def setup
-
     if @options.data.nil?
       raise StandardError, "A data set [--data] must be provided"
     end
@@ -130,7 +128,6 @@ class IMessage < ::Cartero::Command
   def send_msg(m)
     system("osascript #{File.expand_path(File.dirname(__FILE__) + '/../../../../data/scripts/imsg.applescript')} #{m[:to]} #{m[:type]} \"#{m[:body]}\"")
   end
-
 end
 end
 end

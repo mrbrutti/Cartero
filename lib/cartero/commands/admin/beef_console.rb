@@ -9,7 +9,7 @@ class BeefConsole < ::Cartero::Command
     super(name: " Beef Administration Console",
           description: "Cartero Console based Admnistration Interface for Beef API. It allows users to interact with the captured data (i.e. hooks, logs, modules, commands, dns, etc.)",
           author: ['Matias P. Brutti <matias [©] section9labs.com>'],
-          type:"Admin",
+          type: "Admin",
           license: "LGPL",
           references: [
             'https://section9labs.github.io/Cartero',
@@ -31,11 +31,19 @@ class BeefConsole < ::Cartero::Command
         @options.logs = true
         @options.log_session = s
       end
+
       opts.on("--modules [ID]", String,
         "Display Beef logs for all or a specific hooked Session") do |id|
         @options.modules = true
         @options.module_id = id
       end
+
+      opts.on("--dns-rules [ID]", String,
+        "Display Beef logs for all or a specific hooked Session") do |id|
+        @options.dns_rules = true
+        @options.dns_rules_id = id
+      end
+
       # TODO: Implement Command, Command-results, multi-command, dns-ruleset, dns-rule and dns-rule-remove
     end
   end
@@ -52,9 +60,20 @@ class BeefConsole < ::Cartero::Command
     # Logs
     run_logs(@options.log_session) if @options.logs
     run_modules(@options.module_id) if @options.modules
+    run_dns(@options.dns_rules_id) if @options.dns_rules
   end
 
   private
+
+  def run_dns(id)
+    if id.nil?
+      dns_ruleset = @rest_client.dns_ruleset
+      display_dns_ruleset(dns_ruleset)
+    else
+      rule = @rest_client.dns_rule(id)
+      display_dns_rule(rule)
+    end
+  end
 
   def run_modules(id)
     if id.nil?
@@ -64,7 +83,6 @@ class BeefConsole < ::Cartero::Command
       mod = @rest_client.module(id)
       display_module(mod)
     end
-
   end
 
   def run_logs(session)
@@ -75,7 +93,6 @@ class BeefConsole < ::Cartero::Command
     end
     display_logs(logs)
   end
-
 
   def run_hooks(c)
     hooked = @rest_client.hooks
@@ -88,12 +105,21 @@ class BeefConsole < ::Cartero::Command
       display_hooks(hooked['hooked-browsers']['online'], 'ONLINE')
       display_hooks(hooked['hooked-browsers']['offline'], 'OFFLINE')
     else
+      raise StandardError, "Not a valid Option."
     end
   end
 
   def run_hook(session)
     info = @rest_client.hook(session)
     display_hook(info)
+  end
+
+  def display_dns_ruleset(ruleset)
+    p ruleset
+  end
+
+  def display_dns_rule(rule)
+    p rule
   end
 
   def display_module(mod)
@@ -110,7 +136,7 @@ class BeefConsole < ::Cartero::Command
         column(mod['name'])
         column(mod['description'])
         column(mod['class'])
-        column(mod['category'].kind_of?(Array) ? mod['category'].join(', ') : mod['category'])
+        column(mod['category'].is_a?(Array) ? mod['category'].join(', ') : mod['category'])
       end
     end
     if mod['options'].empty?
@@ -152,7 +178,7 @@ class BeefConsole < ::Cartero::Command
           column(value['id'].to_s)
           column(value['name'])
           column(value['class'])
-          column(value['category'].kind_of?(Array) ? value['category'].join(', ') : value['category'])
+          column(value['category'].is_a?(Array) ? value['category'].join(', ') : value['category'])
         end
       end
     end

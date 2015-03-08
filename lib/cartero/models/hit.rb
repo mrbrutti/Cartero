@@ -19,5 +19,4 @@ class Hit
   timestamps!
 
   belongs_to :user
-
 end

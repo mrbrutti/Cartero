@@ -10,7 +10,7 @@ class Servers < ::Cartero::Command
     super(name: "Server Template Manager",
       description: "Servers keeps email servers templates. It allows uses to easily craft servers configuration files for emails servers, Linkedin, Twilio, Google Voice, WebMailer, etc.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Infrastructure",
+      type: "Infrastructure",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
@@ -74,7 +74,6 @@ class Servers < ::Cartero::Command
         "Sets the Linkedin OAuth Secret Key") do |val|
         @options.oauth_secret = val
       end
-
     end
   end
 

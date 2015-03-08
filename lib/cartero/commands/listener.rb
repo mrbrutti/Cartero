@@ -8,7 +8,7 @@ class Listener < ::Cartero::Command
     super(name: "Cartero Customizeable Web Server",
       description: "Listener is the command that serves our customized WebServers hosting pages on one or more ports at any given time.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Infrastructure",
+      type: "Infrastructure",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
@@ -189,7 +189,6 @@ class Listener < ::Cartero::Command
       end
     end
     @puma.options[:binds] = binds
-
   end
 
   attr_accessor :ip
@@ -236,6 +235,5 @@ class WebServer < Sinatra::Base
     process_info(params,request)
     return_img
   end
-
 end
 end

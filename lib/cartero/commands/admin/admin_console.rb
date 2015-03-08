@@ -9,7 +9,7 @@ class AdminConsole < ::Cartero::Command
     super(name: "Administration Console",
           description: "Cartero Console based Admnistration Interface. It allows users to interact with the captured data (i.e. hits, persons, credentials.)",
           author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type:"Admin",
+          type: "Admin",
           license: "LGPL",
           references: ["https://section9labs.github.io/Cartero"]
           ) do |opts|
@@ -52,7 +52,6 @@ class AdminConsole < ::Cartero::Command
         "Display the list of hits") do |ip|
         @options.ip = ip
       end
-
     end
   end
 
@@ -83,7 +82,6 @@ class AdminConsole < ::Cartero::Command
     @options.mongodb.nil? ? m = ["localhost", "27017"] : m = @options.mongodb.split(":")
     MongoMapper.connection = ::Mongo::Connection.new(m[0], m[1].to_i)
     MongoMapper.database = "Cartero"
-
   end
 
   def run
@@ -238,7 +236,6 @@ class AdminConsole < ::Cartero::Command
       end
     end
   end
-
 end
 end
 end

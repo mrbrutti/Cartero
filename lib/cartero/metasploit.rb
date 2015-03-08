@@ -137,13 +137,14 @@ class Metasploit
   end
 
   private
+
   def generate_datastore(payload, ds)
     datastore = {}
     ds.split(" ").each do |x|
       k,v = x.split('=', 2)
       datastore[k.upcase] = v.to_s
     end
-    if payload.to_s =~ /[\_\/]reverse/ and datastore['LHOST'].nil?
+    if payload.to_s =~ /[\_\/]reverse/ && datastore['LHOST'].nil?
       datastore['LHOST'] = local_ip
     end
     return datastore

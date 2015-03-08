@@ -7,7 +7,7 @@ class Beef < ::Cartero::Payload
           description: "The command will help us hook an already created cartero webserver" +
                        ", launch beef itself, and interact with it using its API.",
           author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type:"Payload",
+          type: "Payload",
           license: "LGPL",
           references: [
             "https://section9labs.github.io/Cartero",
@@ -70,7 +70,6 @@ class Beef < ::Cartero::Payload
   end
 
   def setup
-
     if @options.customwebserver.nil? && @options.command.nil?
       raise StandardError, "A webserver [--webserver /path/webserver ] must be provided"
     end
@@ -188,7 +187,6 @@ class Beef < ::Cartero::Payload
   end
 
   def running_kali(ssh)
-
     `#{ssh} uname -a` =~ /Kali/i
   end
 end

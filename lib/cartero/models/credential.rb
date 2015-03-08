@@ -19,5 +19,4 @@ class Credential
   key :password, 		String
 
   timestamps!
-
 end

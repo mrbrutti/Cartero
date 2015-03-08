@@ -7,9 +7,9 @@ class LinkedIn < ::Cartero::Command
   include CommandLineReporter
   def initialize
     super(name: "LinkedIn Automation Mass Sender",
-      description: "Using LinkedIn Network an attacker is able to use one or more accounts on an automated way to deliver messages, updates and group updates contaning simple messages, malicious payloads, etc.",
+      description: "Using LinkedIn Network an attacker is able to use one or more accounts on an automated way to deliver messages, updates && group updates contaning simple messages, malicious payloads, etc.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Social Delivery",
+      type: "Social Delivery",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
@@ -69,11 +69,11 @@ class LinkedIn < ::Cartero::Command
     require 'json'
     require 'multi_json'
 
-    if @options.data.nil? and @options.list.nil? and @options.send_type.to_s != "update"
+    if @options.data.nil? && @options.list.nil? && @options.send_type.to_s != "update"
       raise StandardError, "A data set [--data] must be provided"
     end
 
-    if @options.body.nil? and @options.list.nil?
+    if @options.body.nil? && @options.list.nil?
       raise StandardError, "A body [--body] must be provided"
     end
 
@@ -168,7 +168,7 @@ class LinkedIn < ::Cartero::Command
   def create_linkedin_message(entity, type)
     mail = {}
 
-    # set TO, FROM and Subject
+    # set TO, FROM && Subject
     mail[:to] 			= entity[:id]
     mail[:title]	= entity[:subject] 	|| subject
 

@@ -6,11 +6,10 @@ class Update < ::Cartero::Command
     super(name: "Cartero Git Update Command",
       description: "The command provides an automated way of keeping the tool updated with the official or another personal repository.",
       author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type:"Admin",
+      type: "Admin",
       license: "LGPL",
       references: ["https://section9labs.github.io/Cartero"]
       ) do |opts|
-
       opts.on("--update", "Update All") do
         @options.update = true
       end
@@ -63,7 +62,6 @@ class Update < ::Cartero::Command
   end
 
   def update_git(branch=nil)
-
     if branch
       r,b = branch.split("/")
       puts "[*] - Performing a diff against #{branch} Cartero git repository"

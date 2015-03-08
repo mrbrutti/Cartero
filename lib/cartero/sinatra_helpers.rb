@@ -9,7 +9,6 @@ module Cartero
 module SinatraHelpers
 
   def process_cred
-
     ua = Cartero::UserAgentParser.new(request.user_agent)
     ua.parse
 
