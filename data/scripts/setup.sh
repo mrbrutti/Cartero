@@ -2,7 +2,7 @@
 # Original source: https://github.com/darkoperator/MSF-Installer/blob/master/msf_install.sh
 # They were just too good not to be re-used.
 # It is important to notice that Cartero can run on any version of ruby,
-# but we will default to 1.9.3 given it is what metasploit uses.
+# but we will default to 2.1.5 . this might cause issues if it is not what metasploit uses.
 # Thanks :-)
 function print_good ()
 {
@@ -83,17 +83,17 @@ function install_ruby_rvm
 
         if [[ $OSTYPE =~ darwin ]]; then
             print_status "Installing Ruby"
-            ~/.rvm/bin/rvm install 1.9.3 --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
+            ~/.rvm/bin/rvm install 2.1.5 --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
         else
-            ~/.rvm/bin/rvm install 1.9.3 --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
+            ~/.rvm/bin/rvm install 2.1.5 --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
         fi
 
         if [[ $? -eq 0 ]]; then
-            print_good "Installation of Ruby 1.9.3 was successful"
+            print_good "Installation of Ruby 2.1.5 was successful"
 
-            ~/.rvm/bin/rvm use 1.9.3 --default >> $LOGFILE 2>&1
+            ~/.rvm/bin/rvm use 2.1.5 --default >> $LOGFILE 2>&1
             print_status "Installing base gems"
-            ~/.rvm/bin/rvm 1.9.3 do gem install bundler >> $LOGFILE 2>&1
+            ~/.rvm/bin/rvm 2.1.5 do gem install bundler >> $LOGFILE 2>&1
             if [[ $? -eq 0 ]]; then
                 print_good "Base gems in the RVM Ruby have been installed."
             else
@@ -101,13 +101,13 @@ function install_ruby_rvm
                 exit 1
             fi
         else
-            print_error "Was not able to install Ruby 1.9.3!"
+            print_error "Was not able to install Ruby 2.1.5!"
             exit 1
         fi
     else
         print_status "RVM is already installed"
-        if [[ "$( ls -1 ~/.rvm/rubies/)" =~ ruby-1.9.3-p... ]]; then
-            print_status "Ruby for Cartero is already installed. Using ruby-1.9.3"
+        if [[ "$( ls -1 ~/.rvm/rubies/)" =~ ruby-2.1.5-p... ]]; then
+            print_status "Ruby for Cartero is already installed. Using ruby-2.1.5"
         else
             PS1='$ '
             if [[ $OSTYPE =~ darwin ]]; then
@@ -116,14 +116,14 @@ function install_ruby_rvm
                 source ~/.bashrc
             fi
 
-            print_status "Installing Ruby 1.9.3"
-            ~/.rvm/bin/rvm install 1.9.3  --autolibs=4 --verify-downloads 1  >> $LOGFILE 2>&1
+            print_status "Installing Ruby 2.1.5"
+            ~/.rvm/bin/rvm install 2.1.5  --autolibs=4 --verify-downloads 1  >> $LOGFILE 2>&1
             if [[ $? -eq 0 ]]; then
-                print_good "Installation of Ruby 1.9.3 was successful"
+                print_good "Installation of Ruby 2.1.5 was successful"
 
-                ~/.rvm/bin/rvm use 1.9.3 --default >> $LOGFILE 2>&1
+                ~/.rvm/bin/rvm use 2.1.5 --default >> $LOGFILE 2>&1
                 print_status "Installing base gems"
-                ~/.rvm/bin/rvm 1.9.3 do gem install bundler >> $LOGFILE 2>&1
+                ~/.rvm/bin/rvm 2.1.5 do gem install bundler >> $LOGFILE 2>&1
                 if [[ $? -eq 0 ]]; then
                     print_good "Base gems in the RVM Ruby have been installed."
                 else
@@ -131,7 +131,7 @@ function install_ruby_rvm
                     exit 1
                 fi
             else
-                print_error "Was not able to install Ruby 1.9.3!"
+                print_error "Was not able to install Ruby 2.1.5!"
                 exit 1
             fi
         fi
@@ -140,14 +140,14 @@ function install_ruby_rvm
 
 function install_ruby_osx
 {
-    print_status "Checking if Ruby 1.9.3 is installed, if not installing it."
+    print_status "Checking if Ruby 2.1.5 is installed, if not installing it."
     if [ -d /usr/local/Cellar/ruby193 ] && [ -L /usr/local/bin/ruby ]; then
         print_good "Correct version of Ruby is installed."
     else
-        print_status "Installing Ruby 1.9.3"
+        print_status "Installing Ruby 2.1.5"
         brew tap homebrew/versions >> $LOGFILE 2>&1
-        brew install homebrew/versions/ruby193 >> $LOGFILE 2>&1
-        echo PATH=/usr/local/opt/ruby193/bin:$PATH >> ~/.bash_profile
+        brew install homebrew/versions/ruby21 >> $LOGFILE 2>&1
+        echo PATH=/usr/local/opt/ruby21/bin:$PATH >> ~/.bash_profile
         source  ~/.bash_profile
     fi
     print_status "Installing the bundler Gem"
