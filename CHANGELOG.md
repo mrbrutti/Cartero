@@ -25,3 +25,18 @@
 - Added --list-short-options to all commands.
 - Added beef logic to AdminWeb & AdminWebServer
 - Pushing version 0.4.1
+
+#### 2-28-15
+- CryptoBox AES support Implemented. ~/.cartero/config now has new option crypto which allows use to pick encryption methods.
+
+#### 3-1-15
+- Several Fixes for rubocop
+- Code refactoring.
+- Starting Code documentation. I need to remember how things work.
+
+#### 3-3-15
+- Commands::information for better understanding of commands.
+  + Data for now will be --but not limited to-- name, description, author, type, license & references
+  + Added option (--details) to commands that would correctly display information on commands.
+  + Although the system supports all type of information fields. We do limit it the types of objects to Arrays of Strings or Strings.
+- beef hook generation command

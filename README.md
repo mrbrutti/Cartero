@@ -155,7 +155,7 @@ Common options:
         --list-options               Show list of available options
 
 ```
-The WebServers support ssl keys and virtual hosts across multiple IP, Hostnames, and Ports. 
+The WebServers support ssl keys and virtual hosts across multiple IP, Hostnames, and Ports.
 
 #### Servers
 In order to send emails campaigns we need to setup email servers and this command allows Cartero to create, store and list servers. All data is stored in the ~/.cartero configuration directory.
@@ -184,7 +184,7 @@ Common options:
 ```
 
 #### Templates
-Just like Servers, email campaigns also need a pre-defined Template for sending content to the victims. This module allows the attacker to keep track, create, list, and edit templates being used in their campaign. 
+Just like Servers, email campaigns also need a pre-defined Template for sending content to the victims. This module allows the attacker to keep track, create, list, and edit templates being used in their campaign.
 
 Note: Setting templates here is not necessary and Mailer accepts a direct path to emails templates from the CLI.
 
@@ -393,7 +393,7 @@ Common options:
 ```
 
 #### AdminConsole
-The Admin Console is CLI tool that allows the attacker to retrieve People, Campaigns, Hits, and Credentials gathered.  
+The Admin Console is CLI tool that allows to list information about Persons, Campaigns, Hits and Credentials gathered.
 ```shell
 ❯❯❯ ./cartero AdminConsole
 Usage: Cartero AdminConsole [options]
@@ -421,7 +421,18 @@ module Cartero
 module Commands
 class CommandName < ::Cartero::Command
 	def initialize
-		super do |opts|
+		super(
+          name: "Long Command Name Here",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          author: ["Author Name <noname [©] cartero.com>"],
+          type:"General",
+          license: "LGPL",
+          references: [
+            "https://section9labs.github.io/Cartero",
+            "https://section9labs.github.io/Cartero"
+            ]
+
+    ) do |opts|
       #OptionsParser options available here.
 			opts.on("-x", "--xoption [DATA_FILE]", String,
     		"Description of command option") do |data|
@@ -455,9 +466,9 @@ end
 
 
 ### Mailer Templates
-Emails are simple txt files or limited HTML files, depending on the format being used. Cartero allows complex templating through the erb ruby library and a CLI interface to help build and template both formats. 
+Emails are simple txt files or limited HTML files, depending on the format being used. Cartero allows complex templating through the erb ruby library and a CLI interface to help build and template both formats.
 
-Files can be extensively customized for the campaign through erb which provides dynamic substitution and programmatic decisions at run time. 
+Files can be extensively customized for the campaign through erb which provides dynamic substitution and programmatic decisions at run time.
 
 Another important feature is the encrypted self[:payload] that should be added in each email template which allows Cartero to identify the source entity regardless of multiple forwards or clicks. This small payload is encrypted using a randomly generated key allowing attackers to keep their source data secure and away from detection.
 

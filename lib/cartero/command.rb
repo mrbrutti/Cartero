@@ -1,21 +1,17 @@
 require 'optparse'
 require 'ostruct'
 
-# Hack to Hash to we can use
-# the private binding() method on ERB.
-class Hash
-  def get_binding
-    binding()
-  end
-end
-
 module Cartero
+  # Documentation for Command
+  # Base Command class container with several shared methods definitions.
   class Command
     @@disable_override = false
     attr_accessor :options
     attr_accessor :args
+    attr_accessor :information
 
-    def initialize(&block)
+    def initialize(i={}, &block)
+      @information = i || {}
       @options = OpenStruct.new
       @options.verbose 		= false
       @options.debug 			= false
@@ -45,22 +41,31 @@ module Cartero
     def parse(&block)
       @parser = OptionParser.new do |opts|
         opts.banner = "Usage: Cartero #{name} [options]"
+
         block.call(opts)
 
         opts.separator ""
         opts.separator "Common options:"
 
-        opts.on_tail("-h", "--help", "Show this message") do
+        opts.on("-h", "--help", "Show this message") do
           puts @parser
           exit
         end
 
-        opts.on_tail("--list-options", "Show list of available options") do
+        opts.on("--details", "Show command details") do
+          unless information.empty?
+            require 'cartero/command_helpers'
+            CommandHelpers.new.generate_table(information, "#{self.class.name.gsub('::','/')}")
+          end
+          exit
+        end
+
+        opts.on("--list-options", "Show list of available options") do
           $stdout.puts "--" + @parser.send(:top).long.map {|x| x[0]}.join(" --")
           exit
         end
 
-        opts.on_tail("--list-short-options", "Show list of short available options") do
+        opts.on("--list-short-options", "Show list of short available options") do
           $stdout.puts @parser.send(:top).long.map {|x| x[1].short[0]}.join(" ")
           exit
         end
@@ -86,6 +91,10 @@ module Cartero
 end
 
 module Cartero
+  # Documentation for Command
+  # Base Payload class container. This is just a wrapper for Command.
+  # In the future we might spin the class as its own if Payloads
+  # differ a lot from  Command. For the time being it is just naming.
   class Payload < ::Cartero::Command
   end
 end

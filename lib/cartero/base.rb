@@ -1,3 +1,5 @@
+# Documentatino for Cartero
+# All static paths should be described here.
 module Cartero
   MetasploitPath = File.expand_path("/usr/local/share/metasploit-framework")
   HomeDir = File.expand_path("~/.cartero")
@@ -14,8 +16,10 @@ module Cartero
   TemplatesWebServerDir = ::Cartero::TemplatesDir + "/webserver"
   SecretMaterial = ::Cartero::HomeDir + "/.secret_material"
 
+  # Documentation for Base module.
+  # This module will contain several initialization methods
+  # that will help the tool load and setup the enviroment.
   module Base
-
     def self.load_config
       if File.exist? ::Cartero::HomeDir + "/config"
         require 'json'
@@ -24,7 +28,7 @@ module Cartero
           Cartero.send(:remove_const, :MetasploitPath)
           Cartero.const_set(:MetasploitPath, File.expand_path(::Cartero::GlobalConfig["metasploit"]["path"]))
         end
-        ENV["EDITOR"] = ::Cartero::GlobalConfig.fetch("editor") if ::Cartero::GlobalConfig["editor"]
+        ENV["EDITOR"] ||= ::Cartero::GlobalConfig.fetch("editor") if ::Cartero::GlobalConfig["editor"]
       end
     end
 
@@ -47,22 +51,33 @@ module Cartero
       Dir.mkdir ::Cartero::TemplatesWebServerDir unless File.directory? ::Cartero::TemplatesWebServerDir
       unless File.exist? ::Cartero::HomeDir + "/config"
         File.open(::Cartero::HomeDir + "/config", "w") do |config|
-          config << '{
-  "veilEvasion" : {
-    "host" : "127.0.0.1",
-    "port" : "4242",
-    "path" : "~/Veil-Evasion/Veil-Evasion.py",
-    "ssh" : true,
-    "ssh_user" :  "matt"
+          config << "{
+  \"editor\" : \"vim\",
+  \"crypto\" : \"aes\",
+  \"veilEvasion\" : {
+    \"host\" : \"127.0.0.1\",
+    \"port\" : \"4242\",
+    \"path\" : \"~/Veil-Evasion/Veil-Evasion.py\",
+    \"ssh\" : false,
+    \"ssh_user\" :  \"root\"
   },
-  "metasploit" : {
-    "host" : "127.0.0.1",
-    "port" : "4567",
-    "username" : "msf",
-    "password" : "msf",
-    "path" : "/usr/local/share/metasploit-framework"
-  }
-}'
+  \"metasploit\" : {
+    \"host\" : \"127.0.0.1\",
+    \"port\" : \"4567\",
+    \"username\" : \"msf\",
+    \"password\" : \"msf\",
+    \"path\" : \"/usr/local/share/metasploit-framework\"
+  },
+  \"beef\" : {
+    \"host\" : \"172.16.255.128\",
+    \"path\" : \"/usr/local/share/beef\",
+    \"port\" : \"3000\",
+    \"ssh\"  : false,
+    \"ssh_user\" : \"root\",
+    \"username\" : \"beef\",
+    \"password\" : \"beef\"
+   }
+}"
         end
       end
     end

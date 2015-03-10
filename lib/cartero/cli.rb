@@ -3,6 +3,7 @@ require 'ostruct'
 require 'cartero/crypto_box'
 
 module Cartero
+  # Documentation for CLI
   class CLI
     attr_reader :options
 
@@ -16,6 +17,8 @@ module Cartero
 
       initialize_payloads
 
+      # Setup Correct Crypto Box ( AES || RBNACL )
+      ::Cartero::CryptoBox.setup
       # Initialize Crypto Box
       ::Cartero::CryptoBox.init
     end
@@ -38,7 +41,6 @@ module Cartero
         opts.separator ""
         opts.separator "List of Payloads:\n    " + ::Cartero::PAYLOADS.keys.join(", ")
 
-
         opts.separator ""
         opts.separator "Global options:"
 
@@ -47,8 +49,8 @@ module Cartero
           @options.proxy = pry
           require 'socksify'
           url, port = pxy.split(":")
-          TCPSocket::socks_server = url
-          TCPSocket::socks_port = port.to_i
+          TCPSocket.socks_server = url
+          TCPSocket.socks_port = port.to_i
         end
 
         opts.on("-c", "--config [CONFIG_FILE]", String,
@@ -63,13 +65,11 @@ module Cartero
         opts.on("-p", "--ports [PORT_1,PORT_2,..,PORT_N]", String,
           "Global Flag to set Mailer and Webserver ports") do |p|
           @options.ports = p.split(",").map(&:to_i)
-
         end
 
         opts.on("-m", "--mongodb [HOST:PORT]", String,
           "Global flag to Set MongoDB bind_ip and port") do |p|
           @options.mongodb = p
-
         end
 
         opts.on("-d", "--debug", "Sets debug flag on/off") do
@@ -81,7 +81,6 @@ module Cartero
           # User something besides ENV["EDITOR"].
           ENV["EDITOR"] = name
         end
-
 
         opts.separator ""
         opts.separator "Common options:"
@@ -114,7 +113,7 @@ module Cartero
         end
 
         opts.on_tail("--version", "Shows cartero CLI version") do
-          puts ::Cartero::Version.join('.')
+          puts ::Cartero.version.join('.')
           exit
         end
       end
@@ -139,7 +138,7 @@ module Cartero
 
       while !ARGV.empty?
         cmd = ARGV.shift
-        if ::Cartero::COMMANDS.has_key?(cmd)
+        if ::Cartero::COMMANDS.key?(cmd)
           begin
             command = ::Cartero::COMMANDS[cmd].new
             if ARGV.empty?
@@ -156,7 +155,7 @@ module Cartero
             $stderr.puts e
             exit(1)
           end
-        elsif ::Cartero::PAYLOADS.has_key?(cmd)
+        elsif ::Cartero::PAYLOADS.key?(cmd)
           begin
             payload = ::Cartero::PAYLOADS[cmd].new
             if ARGV.empty?
@@ -195,6 +194,7 @@ module Cartero
     end
 
     private
+
     def initialize_commands
       # Initialize all avilable loaded Commands that are parto of
       # ::Cartero::Commands and are its supper class is << ::::Cartero::Command.
@@ -208,7 +208,7 @@ module Cartero
           const = Kernel.const_get("Cartero::Commands::#{klass}")
         end
         # Check if the plugin has a super class and if the type is Plugin
-        if const.respond_to?(:superclass) and const.superclass == ::Cartero::Command
+        if const.respond_to?(:superclass) && const.superclass == ::Cartero::Command
           ::Cartero::COMMANDS[klass.to_s] = const
         end
       end
@@ -227,11 +227,10 @@ module Cartero
           const = Kernel.const_get("Cartero::Payloads::#{klass}")
         end
         # Check if the plugin has a super class and if the type is Plugin
-        if const.respond_to?(:superclass) and const.superclass == ::Cartero::Payload
+        if const.respond_to?(:superclass) && const.superclass == ::Cartero::Payload
           ::Cartero::PAYLOADS[klass.to_s] = const
         end
       end
     end
-
   end
 end

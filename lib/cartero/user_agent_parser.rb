@@ -1,5 +1,6 @@
 module Cartero
-	class UserAgentParser
+  # Documentation for UserAgentParser
+  class UserAgentParser
     def initialize(ua)
       @ua = ua
     end
@@ -15,8 +16,8 @@ module Cartero
       true
     end
 
-
     private
+
     def parse_comp
       case @ua
       when /mozilla\/(\d+)[._](\d+)/i then "Mozilla #{$1}.#{$2}"
@@ -29,24 +30,24 @@ module Cartero
 
     def parse_os
       case @ua
-      when /windows nt 6\.3/i     then  "Windows 8.1"
-      when /windows nt 6\.2/i     then  "Windows 8"
-      when /windows nt 6\.0/i     then  "Windows Vista"
-      when /windows nt 6\.\d+/i   then  "Windows 7"
-      when /windows nt 5\.2/i     then  "Windows 2003"
-      when /windows nt 5\.1/i     then  "Windows XP"
-      when /windows nt 5\.0/i     then  "Windows 2000"
-      when /windows\-nt/i         then  "Windows"
-      when /os x (\d+)[._](\d+)[._]*(\d+)*/i      then  "OS X #{$1}.#{$2}#{if $3 !=nil; "." + $3; end}"
-      when /Android (\d+)[._](\d+)[._]*(\d+)*/i   then  "Android #{$1}.#{$2}#{if $3 !=nil; "." + $3; end}"
-      when /iphone OS (\d+)[._](\d+)[._]*(\d+)*/i then  "iPhone #{$1}.#{$2}#{if $3 !=nil; "." + $3; end}"
-      when /iPad; CPU OS (\d+)[._](\d+)[._]*(\d+)*/i then "iPad iOS #{$1}.#{$2}#{if $3 !=nil; "." + $3; end}"
-      when /wii/i                 then  "Wii"
-      when /playstation 3/i       then  "Playstation"
-      when /playstation portable/i then "Playstation"
-      when /linux/i               then  "Linux"
+      when /windows nt 6\.3/i     then  'Windows 8.1'
+      when /windows nt 6\.2/i     then  'Windows 8'
+      when /windows nt 6\.0/i     then  'Windows Vista'
+      when /windows nt 6\.\d+/i   then  'Windows 7'
+      when /windows nt 5\.2/i     then  'Windows 2003'
+      when /windows nt 5\.1/i     then  'Windows XP'
+      when /windows nt 5\.0/i     then  'Windows 2000'
+      when /windows\-nt/i         then  'Windows'
+      when /os x (\d+)[._](\d+)[._]*(\d+)*/i      then  "OS X #{$1}.#{$2}#{if $3 !=nil; '.' + $3; end}"
+      when /Android (\d+)[._](\d+)[._]*(\d+)*/i   then  "Android #{$1}.#{$2}#{if $3 !=nil; '.' + $3; end}"
+      when /iphone OS (\d+)[._](\d+)[._]*(\d+)*/i then  "iPhone #{$1}.#{$2}#{if $3 !=nil; '.' + $3; end}"
+      when /iPad; CPU OS (\d+)[._](\d+)[._]*(\d+)*/i then "iPad iOS #{$1}.#{$2}#{if $3 !=nil; '.' + $3; end}"
+      when /wii/i                 then  'Wii'
+      when /playstation 3/i       then  'Playstation'
+      when /playstation portable/i then 'Playstation'
+      when /linux/i               then  'Linux'
       else
-        "Unknown"
+        'Unknown'
       end
     end
 
@@ -66,7 +67,7 @@ module Cartero
       when /msoffice 14/              then "Microsoft_Word 14"
       when /blackberry/               then "Mango"
       else
-        "unknown"
+        'Unknown'
       end
     end
 
@@ -84,7 +85,7 @@ module Cartero
       when /playstation 3/i         then "Playstation"
       when /playstation portable/i  then "Playstation Portable"
       else
-        "unknown"
+        'Unknown'
       end
     end
 
@@ -95,7 +96,7 @@ module Cartero
       when /es-es/ then "Spanish - Spain"
       when /es-la/ then "Spanish - Latin America"
       else
-        "unknown"
+        'Unknown'
       end
     end
 
@@ -113,10 +114,10 @@ module Cartero
       when /msoffice 14/  then "Microsoft Outlook 2010"
       when /Thunderbird\/([\d\w\.\-]+)/i then "Thunderbird #{$1}"
       when /lotus\-notes\/(\d+)[._](\d+)[._]*(\d+)*/i then
-        "Lotus Notes #{$1}.#{$2}#{if $3 !=nil; "." + $3; end}"
+        "Lotus Notes #{$1}.#{$2}#{if $3 !=nil; '.' + $3; end}"
       else
-        "unknown"
+        'Unknown'
       end
     end
-	end
+  end
 end
