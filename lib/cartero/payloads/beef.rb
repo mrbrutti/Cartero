@@ -108,18 +108,17 @@ class Beef < ::Cartero::Payload
       @options.hook_all = true
     end
 
-    if !@options.hook_url.nil?
-      #  Connect to the Beef RESTful API
-      require 'cartero/beef_api'
-      @rest_client = ::Cartero::BeefApi.new(
-        :server => @options.hook_url,
-        :username => @options.username || ::Cartero::GlobalConfig["beef"]["username"]  || "beef",
-        :password => @options.password || ::Cartero::GlobalConfig["beef"]["password"]  || "beef"
-      )
-      @rest_client.login
-      # Time to see if we were able to login.
-      raise StandardError, "Something went wrong while connecting to Beef RESTful API" if @rest_client.token.nil?
-    end
+    return if @options.hook_url.nil?
+    #  Connect to the Beef RESTful API
+    require 'cartero/beef_api'
+    @rest_client = ::Cartero::BeefApi.new(
+      :server => @options.hook_url,
+      :username => @options.username || ::Cartero::GlobalConfig["beef"]["username"]  || "beef",
+      :password => @options.password || ::Cartero::GlobalConfig["beef"]["password"]  || "beef"
+    )
+    @rest_client.login
+    # Time to see if we were able to login.
+    raise StandardError, "Something went wrong while connecting to Beef RESTful API" if @rest_client.token.nil?
   end
 
   def run

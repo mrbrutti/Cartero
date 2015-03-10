@@ -87,7 +87,7 @@ class BeefApi
   def command(session, id, parameters)
     # RestApi Call to Beef Server
     process_rest_call do
-      client("/api/modules/#{session}/#{id}?#{token=@token}").post(
+      client("/api/modules/#{session}/#{id}?#{"token="+ @token}").post(
         parameters.to_json, :content_type => :json, :accept => :json
       )
     end
@@ -100,11 +100,11 @@ class BeefApi
     end
   end
 
-  def multi_command(id, paramters = {}, mod_ids = [])
+  def multi_command(hooked_ids = [], id=nil, paramters = {})
     # RestApi Call to Beef Server
     process_rest_call do
-      client("/api/modules/multi_browser?#{token=@token}").post(
-        {mod_id: id.to_i, mod_params: paramters, hb_ids: mod_ids}.to_json,
+      client("/api/modules/multi_browser?#{"token="+ @token}").post(
+        {mod_id: id.to_i, mod_params: paramters, hb_ids: hooked_ids}.to_json,
         :content_type => :json, :accept => :json
       )
     end
@@ -147,6 +147,8 @@ class BeefApi
       JSON.parse(resp)
     when 403
       raise UnAuthenticated, "Unauthorized: A valid token must be provided."
+    when 404
+      raise StandardError, "Resource not Found."
     else
       raise StandardError, "Unknown: Something went wrong."
     end
