@@ -1,9 +1,15 @@
 module Cartero
 module Commands
+# Documentation for Update < ::Cartero::Command
 class Update < ::Cartero::Command
   def initialize
-    super do |opts|
-
+    super(name: "Cartero Git Update Command",
+      description: "The command provides an automated way of keeping the tool updated with the official or another personal repository.",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type: "Admin",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("--update", "Update All") do
         @options.update = true
       end
@@ -35,21 +41,27 @@ class Update < ::Cartero::Command
   end
 
   def run
-    if @options.add
-      puts "[*] - Adding remote Cartero repository to local git repository"
-      system("git", "remote", "add", @options.repo_name, @options.repo_url)
-    end
-    if @options.update
-      Dir.chdir(@cartero_base_install) do
-        update_git(@options.branch)
-        update_bundle
-      end
-    end
+    run_add_repo
+    run_update_repo
   end
 
   private
-  def update_git(branch=nil)
 
+  def run_add_repo
+    return if @options.add.nil?
+    puts "[*] - Adding remote Cartero repository to local git repository"
+    system("git", "remote", "add", @options.repo_name, @options.repo_url)
+  end
+
+  def run_update_repo
+    return if @options.update.nil?
+    Dir.chdir(@cartero_base_install) do
+      update_git(@options.branch)
+      update_bundle
+    end
+  end
+
+  def update_git(branch=nil)
     if branch
       r,b = branch.split("/")
       puts "[*] - Performing a diff against #{branch} Cartero git repository"

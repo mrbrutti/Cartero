@@ -1,8 +1,15 @@
 module Cartero
 module Commands
+# Documentation for Mailer < ::Cartero::Commands
 class Mailer < Command
   def initialize
-    super do |opts|
+    super(name: "Customized Mass Email Command",
+      description: "Mailer is responsible for crafting and sending emails from a simple txt based email all the way to complicated email templates that can individualize each email as if it was being written by a person.",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type: "Delivery",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
@@ -157,7 +164,6 @@ class Mailer < Command
   end
 
   def create_email(entity)
-
     mail = {}
     # Set server configuration
     mail[:via] 				 = server[:type].to_sym

@@ -1,8 +1,18 @@
 module Cartero
 module Commands
+# Documentation for GoogleVoice < ::Cartero::Command
 class GoogleVoice < ::Cartero::Command
   def initialize
-    super do |opts|
+    super(name: "Google Voice SMS/MMS Text Messages Command",
+      description: "Using Google Voice as a delivery method, an attacker can send multiple individually crafted text messages.",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type: "Delivery",
+      license: "LGPL",
+      references: [
+        "https://section9labs.github.io/Cartero",
+        "http://voice.google.com"
+        ]
+      ) do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
@@ -81,10 +91,7 @@ class GoogleVoice < ::Cartero::Command
       end
     end
 
-    unless @options.message.nil?
-      @message = @options.message
-    end
-
+    @message = @options.message unless @options.message.nil?
   end
 
   attr_reader :data

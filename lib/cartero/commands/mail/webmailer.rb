@@ -1,9 +1,15 @@
 module Cartero
 module Commands
+# Documentation for WebMailer < ::Cartero::Command
 class WebMailer < ::Cartero::Command
   def initialize
-    super do |opts|
-
+    super(name: "Web Form Email Command",
+      description: "As the name states, it abuses(uses) open or vulnerable email forms available on the internet. This command is very useful when bypassing email filters during a penetration test. Since most webforms might be whitelisted.",
+      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+      type: "Delivery",
+      license: "LGPL",
+      references: ["https://section9labs.github.io/Cartero"]
+      ) do |opts|
       opts.on("-R", "--raw RAW_REQUEST_FILE", String,
         "Sets WebMail Raw Request") do |rawfile|
         @options.raw = rawfile
@@ -153,7 +159,6 @@ class WebMailer < ::Cartero::Command
   end
 
   def create_webemail(entity)
-
     entity[:from]	||= from
     entity[:reply_to] ||= reply_to
     entity[:subject] 	||= subject
@@ -169,7 +174,7 @@ class WebMailer < ::Cartero::Command
     else
       r = raw_webmail(entity)
     end
-    if !server[:confirmation].nil?
+    if !server[:confirmation].nil? # rubocop:disable Style/GuardClause
       unless r.scan(/#{server[:confirmation]}/).empty?
         $stdout.puts "WebMail request Confirmed."
       end
@@ -182,7 +187,7 @@ class WebMailer < ::Cartero::Command
       :url 			=> server[:options][:url] || url ,
       :payload 	=> ERB.new(body).result(entity.get_binding),
       :headers 	=> server[:options][:headers] || headers || {},
-      :cookies 	=> server[:options][:cookies] || cookies || {},
+      :cookies 	=> server[:options][:cookies] || cookies || {}
     )
   end
 

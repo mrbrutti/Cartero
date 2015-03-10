@@ -1,3 +1,4 @@
+# Documentation for Hit
 class Hit
   include MongoMapper::Document
 
@@ -18,5 +19,4 @@ class Hit
   timestamps!
 
   belongs_to :user
-
 end

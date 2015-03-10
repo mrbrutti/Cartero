@@ -1,22 +1,19 @@
-class String
-  def camelize
-    self.split("_").each {|s| s.capitalize! }.join("")
-  end
 
-  def underscore
-    self.gsub(/(.)([A-Z])/,'\1_\2').downcase
-  end
-end
-
+# Documentation for Cartero
+# Just for Versioning
 module Cartero
   COMMANDS = {}
   PAYLOADS = {}
-  Version = [0,4,1,"oscardelic"]
+
+  def self.version
+    [0,5,"bigbife"]
+  end
 end
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 
-require 'cartero/command'
+require 'cartero/base'
 require 'cartero/cli'
 require 'cartero/db'
-require 'cartero/base'
+require 'cartero/command'
+require 'cartero/cartero_patches'

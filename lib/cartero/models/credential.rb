@@ -1,3 +1,4 @@
+# Documentation for Credential
 class Credential
   include MongoMapper::Document
 
@@ -18,5 +19,4 @@ class Credential
   key :password, 		String
 
   timestamps!
-
 end
