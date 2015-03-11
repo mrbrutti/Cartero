@@ -1,3 +1,4 @@
+#encoding: utf-8
 require 'command_line_reporter'
 
 module Cartero

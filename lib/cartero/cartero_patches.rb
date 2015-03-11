@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Hack to Hash to we can use
 # the private binding() method on ERB.
 class Hash

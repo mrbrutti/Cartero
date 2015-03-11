@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Cartero
 module Commands
 # Documentation for GoogleVoice < ::Cartero::Command

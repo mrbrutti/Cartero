@@ -2,7 +2,7 @@
 # Original source: https://github.com/darkoperator/MSF-Installer/blob/master/msf_install.sh
 # They were just too good not to be re-used.
 # It is important to notice that Cartero can run on any version of ruby,
-# but we will default to 2.1.5 . this might cause issues if it is not what metasploit uses.
+# but we will default to 2.1.5 since it is what metasploit uses.
 # Thanks :-)
 function print_good ()
 {

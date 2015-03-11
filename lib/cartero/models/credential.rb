@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Documentation for Credential
 class Credential
   include MongoMapper::Document

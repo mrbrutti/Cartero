@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Cartero
 module Payloads
 # Documentation for MSFVenom < ::Cartero::Payload
