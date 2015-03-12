@@ -94,7 +94,7 @@ class AdminConsole < ::Cartero::Command
   private
 
   def run_persons
-    return display_persons(Person.sort(:updated_at.desc).limit(persons || 50).all.reverse) if filter
+    return display_persons(Person.sort(:updated_at.desc).limit(persons || 50).all.reverse) if !filter
     p_email    = Person.where(:email => /#{email}/).all if !email.nil?
     p_ip       = Person.all.select { |x| x.responded.to_s =~ /#{ip}/ } if !ip.nil?
     p_campaign = Person.all.select { |x| x.campaigns.to_s =~ /#{campaign}/i } if !campaign.nil?
@@ -107,7 +107,7 @@ class AdminConsole < ::Cartero::Command
   end
 
   def run_hits
-    return display_hits(Hit.sort(:created_at.desc).limit(hits || 100).all.reverse) if filter
+    return display_hits(Hit.sort(:created_at.desc).limit(hits || 100).all.reverse) if !filter
     h_email    = Hit.where.all.select {|x| x.data['email'] =~ /#{email}/i }if !email.nil?
     h_campaign = Hit.where.all.select {|x| x.data['subject'] =~ /#{campaign}/i } if !campaign.nil?
     h_ip       = Hit.where(:ip => /#{ip}/i).all if !ip.nil?
@@ -120,7 +120,7 @@ class AdminConsole < ::Cartero::Command
   end
 
   def run_credentials
-    return display_credentials(Credential.sort(:created_at.desc).limit(credentials || 50).all.reverse) if filter
+    return display_credentials(Credential.sort(:created_at.desc).limit(credentials || 50).all.reverse) if !filter
     c_email    = Credential.where(:username => /#{email}/i).all if !email.nil?
     c_campaign = Credential.where(:domain =~ /#{campaign}/i).all if !campaign.nil?
     c_ip       = Credential.where(:ip => /#{ip}/i).all if !ip.nil?
@@ -170,11 +170,12 @@ class AdminConsole < ::Cartero::Command
         column('IP', 			:width => 16)
         column('PORT', 		:width => 6)
         column('DOMAIN', 	:width => 30)
+        column('GEOLOCATION', 	:width => 30)
         column('PATH', 		:width => 20)
         column('OS', 			:width => 15)
         column('BROWSER', :width => 20)
         column('ENGINE', 	:width => 20)
-        column('PLATFORM',:width => 20)
+        column('PLATFORM',:width => 22)
         column('CREATED', :width => 20)
       end
       h.each_with_index do |hit,idx|
@@ -190,6 +191,7 @@ class AdminConsole < ::Cartero::Command
           column(hit.ip)
           column(hit.port)
           column(hit.domain)
+          column(hit.location['city'] + ' - ' + hit.location['country_name'])
           column(hit.path)
           column(hit.ua_os)
           column(hit.ua_browser)
@@ -212,11 +214,12 @@ class AdminConsole < ::Cartero::Command
         column('IP',			:width => 18)
         column('PORT', 		:width => 6)
         column('DOMAIN', 	:width => 20)
+        column('GEOLOCATION', 	:width => 30)
         column('PATH', 		:width => 20)
         column('OS', 			:width => 15)
         column('BROWSER', :width => 20)
         column('ENGINE', 	:width => 20)
-        column('PLATFORM',:width => 20)
+        column('PLATFORM',:width => 22)
         column('CREATED', :width => 20)
       end
       c.each_with_index do |cred,idx|
@@ -227,6 +230,7 @@ class AdminConsole < ::Cartero::Command
           column(cred.ip)
           column(cred.port)
           column(cred.domain)
+          column(cred.location['city'] + ' - ' + cred.location['country_name'])
           column(cred.path)
           column(cred.ua_os)
           column(cred.ua_browser)
