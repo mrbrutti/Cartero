@@ -15,6 +15,7 @@ module SinatraHelpers
 
     creds = Credential.new(
       :ip 				=> request.ip,
+      :location   => request.location.data,
       :port 			=> request.port,
       :domain			=> request.host,
       :path       => request.path_info,
@@ -43,12 +44,12 @@ module SinatraHelpers
         @data = JSON.parse(::Cartero::CryptoBox.decrypt(params[:key] || cookies["session_info"]),{:symbolize_names => true})
         cookies["session_info"] ||= params[:key]
       rescue RbNaCl::CryptoError
-        $stdout.puts "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
-        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+        $stdout.puts "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
         return
       rescue ArgumentError
-        $stdout.puts "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
-        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+        $stdout.puts "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
         return
       end
       # Save or Create a new person hitting the URL path.
@@ -57,9 +58,9 @@ module SinatraHelpers
       # if listener was started with metasploit RPC option
       process_metasploit
 
-      puts "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+      puts "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
     else
-      puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - USER_AGENT #{request.user_agent}"
+      puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
     end
   end
 
@@ -102,6 +103,7 @@ module SinatraHelpers
 
     person.hits << Hit.new(
       :ip 				=> request.ip,
+      :location   => request.location.data,
       :port 			=> request.port,
       :domain 		=> request.host,
       :path       => request.path_info,

@@ -4,6 +4,7 @@ class Credential
   include MongoMapper::Document
 
   key :ip, 					String
+  key :location,    Hash
   key :port, 				String
   key :domain,			String
   key :path,				String
