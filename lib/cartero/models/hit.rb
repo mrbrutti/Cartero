@@ -4,7 +4,7 @@ class Hit
   include MongoMapper::Document
 
   key :ip, 					String
-  key :coordinates, Array
+  key :location,    Hash
   key :port, 				String
   key :domain,			String
   key :path,				String
