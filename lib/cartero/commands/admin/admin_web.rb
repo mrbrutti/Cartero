@@ -143,6 +143,10 @@ class WebAdmin < Sinatra::Base
     erb :index
   end
 
+  get "/help" do
+    erb :help
+  end
+
   get "/stats/persons" do
     @persons = Person.all
     erb :stats
