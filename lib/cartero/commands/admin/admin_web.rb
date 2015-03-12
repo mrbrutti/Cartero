@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Documentation for Cartero
 module Cartero
 module Commands

@@ -1,3 +1,4 @@
+#encoding: utf-8
 # encoding: UTF-8
 # Documentation goes here.
 module Cartero
@@ -75,6 +76,7 @@ class Listener < ::Cartero::Command
     require 'cartero/user_agent_parser'
     require 'cartero/puma_cartero_cli'
     require 'cartero/sinatra_helpers'
+    require 'geocoder'
 
     if @options.ports.nil?
       raise StandardError, "No Port Provided [--ports]. Need to provide at least one binding port."

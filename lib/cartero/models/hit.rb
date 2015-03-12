@@ -1,8 +1,10 @@
+#encoding: utf-8
 # Documentation for Hit
 class Hit
   include MongoMapper::Document
 
   key :ip, 					String
+  key :coordinates, Array
   key :port, 				String
   key :domain,			String
   key :path,				String

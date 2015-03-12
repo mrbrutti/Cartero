@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Documentatino for Cartero
 # All static paths should be described here.
 module Cartero

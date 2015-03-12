@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Documentation for Person
 class Person
   include MongoMapper::Document

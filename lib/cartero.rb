@@ -1,3 +1,4 @@
+#encoding: utf-8
 
 # Documentation for Cartero
 # Just for Versioning

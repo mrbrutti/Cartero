@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Cartero
   # Documentation for module DB
   # Responsible for launching and stopping mongodb on Linux / MacOSX.

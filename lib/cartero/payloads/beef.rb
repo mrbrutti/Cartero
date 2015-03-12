@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Cartero
 module Payloads
 # Documentation for Beef < ::Cartero::Payload

@@ -1,3 +1,4 @@
+#encoding: utf-8
 require "base64"
 require "json"
 require "cgi"
@@ -13,8 +14,9 @@ module CryptoBox
       require 'digest'
       require 'cartero/crypto/aes'
     else
-      require "rbnacl/libsodium"
-      require "rbnacl"
+      require 'rbnacl/libsodium'
+      require 'rbnacl'
+      require 'cartero/crypto/rbnacl'
     end
   end
 end

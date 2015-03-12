@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Cartero
 # Documenation for SinatraHelpers
 # WebServer Sinatra Helpers that will be including by default on Cloned sites.

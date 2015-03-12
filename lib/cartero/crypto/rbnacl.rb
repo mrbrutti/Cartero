@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Cartero
   # Documentation for CryptoBox - RbNaCl Implementation
   module CryptoBox
