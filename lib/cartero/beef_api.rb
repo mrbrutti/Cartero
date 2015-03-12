@@ -26,8 +26,8 @@ class BeefApi
     RestClient::Resource.new(
       @options[:server] + path,
       {
-        :timeout => 36000,
-        :open_timeout => 36000
+        :timeout => 3,
+        :open_timeout => 3
       }.merge(opts)
     )
   end
