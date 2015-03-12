@@ -32,7 +32,16 @@ Sending victim3@company.com
 
 ### Installation
 
+##### Automated Installation
 
+Using brew 2.1.5 ruby as default ruby library
+```shell
+❯❯❯ curl -L https://raw.githubusercontent.com/Section9Labs/Cartero/master/data/scripts/setup.sh | bash
+```
+Using RVM 2.1.5 ruby installation
+```shell
+❯❯❯ curl -L https://raw.githubusercontent.com/Section9Labs/Cartero/master/data/scripts/setup.sh | bash -s -- -r
+```
 #### Dependencies
 ##### Ruby
 ```shell
@@ -57,7 +66,7 @@ On Arch Linux
 
 #### Framework
 ```shell
-❯❯❯ git clone github.com/section9labs/Cartero
+❯❯❯ git clone https://github.com/section9labs/Cartero
 ❯❯❯ cd Cartero
 ❯❯❯ gem install bundle
 ❯❯❯ bundle install
