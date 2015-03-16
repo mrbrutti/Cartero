@@ -38,13 +38,14 @@ module Cartero
     end
 
     def self.bundle_cartero
+      gemf = File.expand_path("../../../Gemfile", __FILE__)
       begin
         gem "bundler"
       rescue LoadError
         system("gem install bundler")
         Gem.clear_paths
       end
-      system("bundler install")
+      system("bundler install --gemfile=\"#{gemf}\"")
     end
 
     def self.create_structure
