@@ -18,6 +18,14 @@
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'cartero'
 
+# Check if this is the first time we running, if so:
+# - Create ~/.cartero structure
+# - Install all dependencies
+if ::Cartero::Base.first_run?
+  ::Cartero::Base.create_structure
+  ::Cartero::Base.bundle_cartero
+end
+
 # Loading Config file information.
 # Currently not used extensvely but we rely on it more & more.
 Cartero::Base.load_config
@@ -28,17 +36,9 @@ Cartero::Base.load_commands
 # Load all payloads
 Cartero::Base.load_payloads
 
-# Check if this is the first time we running, if so:
-# - Create ~/.cartero structure
-# - Install all dependencies
-if ::Cartero::Base.first_run?
-  ::Cartero::Base.create_structure
-  ::Cartero::Base.bundle_cartero
-end
-
 # Check if EDITOR is set. We need it for templating, etc.
 if ::Cartero::Base.check_editor
-  $stderr.puts "Error: Set $EDITOR on your shell."
+  $stderr.puts "Error: Set $EDITOR on your shell or ~/.cartero/config file"
   exit(1)
 end
 
