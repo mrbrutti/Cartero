@@ -123,11 +123,13 @@ end
 
 require 'rack'
 require 'sinatra'
+require 'sinatra/json'
 require 'csv'
 require 'rack/reverse_proxy'
 
 # Documentation for WebAdmin < Sinatra::Base
 class WebAdmin < Sinatra::Base
+  helpers Sinatra::JSON
   helpers do
     def h(text)
       Rack::Utils.escape_html(text)
@@ -207,6 +209,31 @@ class WebAdmin < Sinatra::Base
   get "/stats/person/:email" do
     @person = Person.where(:email => params[:email]).first
     erb :stats_person
+  end
+
+  #API Calls
+  get "/api/persons" do
+    json(Person.all, :encoder => :to_json, :content_type => :js)
+  end
+
+  get "/api/credentials" do
+    json(Credential.all, :encoder => :to_json, :content_type => :js)
+  end
+
+  get "/api/hits" do
+    json(Hit.all, :encoder => :to_json, :content_type => :js)
+  end
+
+  get "/api/hits/campaign/:subject" do
+    json(Hit.where.all.select {|x| x.data['subject'] =~ /#{params[:subject]}/i }, :encoder => :to_json, :content_type => :js)
+  end
+
+  get "/api/hits/email/:subject" do
+    json(Hit.where(:email => params[:email]).first, :encoder => :to_json, :content_type => :js)
+  end
+
+  get "/api/person/:email" do
+    json(Person.where(:email => params[:email]).first, :encoder => :to_json, :content_type => :js)
   end
 end
 end
