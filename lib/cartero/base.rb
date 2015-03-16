@@ -37,6 +37,16 @@ module Cartero
       !File.directory? ::Cartero::HomeDir
     end
 
+    def self.bundle_cartero
+      begin
+        gem "bundler"
+      rescue LoadError
+        system("gem install bundler")
+        Gem.clear_paths
+      end
+      system("bundler install")
+    end
+
     def self.create_structure
       Dir.mkdir ::Cartero::HomeDir unless File.directory? ::Cartero::HomeDir
       Dir.mkdir ::Cartero::LogsDir unless File.directory? ::Cartero::LogsDir

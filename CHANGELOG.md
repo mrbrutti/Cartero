@@ -40,3 +40,23 @@
   + Added option (--details) to commands that would correctly display information on commands.
   + Although the system supports all type of information fields. We do limit it the types of objects to Arrays of Strings or Strings.
 - beef hook generation command
+
+#### 3-10-15
+- Beef & BeefConsole
+- AES Implementation
+- Bug Fixes
+- Command & Payloads information sytem added. (--details)
+- Pushed 0.5 BigBife mayor version.
+
+#### 3-11-15
+- Reducing timeouts on BeefApi
+- Bug Fixes
+- GeoCoder on WebServers by default
+
+#### 3-12-15
+- Adding GeoLocation to AdminWeb
+- GeoLocation to AdminConsole
+- AdminWeb & README.md
+
+#### 3-15-15
+- Adding First Run auto bundler

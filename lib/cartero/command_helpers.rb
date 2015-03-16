@@ -2,6 +2,9 @@
 require 'command_line_reporter'
 
 module Cartero
+# Documentation:
+# Class used to store helper methods used on Command
+# that I do not want to include on Commands class.
 class CommandHelpers
   include CommandLineReporter
 
