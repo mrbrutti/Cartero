@@ -28,9 +28,12 @@ Cartero::Base.load_commands
 # Load all payloads
 Cartero::Base.load_payloads
 
-# Check if this is the first time we running if so create ~/.cartero structure.
+# Check if this is the first time we running, if so:
+# - Create ~/.cartero structure
+# - Install all dependencies
 if ::Cartero::Base.first_run?
   ::Cartero::Base.create_structure
+  ::Cartero::Base.bundle_cartero
 end
 
 # Check if EDITOR is set. We need it for templating, etc.
