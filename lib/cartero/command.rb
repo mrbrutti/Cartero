@@ -14,8 +14,6 @@ module Cartero
     def initialize(i={}, &block)
       @information = i || {}
       @options = OpenStruct.new
-      @options.verbose 		= false
-      @options.debug 			= false
       @options.commands 		= []
 
       parse(&block)

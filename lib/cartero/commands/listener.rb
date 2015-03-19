@@ -119,6 +119,10 @@ class Listener < ::Cartero::Command
       ::MongoMapper.database = "Cartero"
     end
 
+    # set webserver verbosity and/or debug state
+    @web_server.set :verbose, @options.verbose
+    @web_server.set :debug, @options.debug
+
     # Allow to pass a Views Render Folder Path
     unless @options.views.nil?
       if File.directory?(File.expand_path(@options.views))

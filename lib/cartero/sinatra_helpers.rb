@@ -10,6 +10,7 @@ module Cartero
 # - return_img
 module SinatraHelpers
   def process_cred
+    log "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s
     ua = Cartero::UserAgentParser.new(request.user_agent)
     ua.parse
 
@@ -47,12 +48,12 @@ module SinatraHelpers
         @data = JSON.parse(::Cartero::CryptoBox.decrypt(params[:key] || cookies["session_info"]),{:symbolize_names => true})
         cookies["session_info"] ||= params[:key]
       rescue RbNaCl::CryptoError
-        $stdout.puts "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
-        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
         return
       rescue ArgumentError
-        $stdout.puts "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
-        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
         return
       end
       # Save or Create a new person hitting the URL path.
@@ -61,9 +62,9 @@ module SinatraHelpers
       # if listener was started with metasploit RPC option
       process_metasploit
 
-      puts "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+      log "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
     else
-      puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+      log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
     end
   end
 
@@ -76,6 +77,14 @@ module SinatraHelpers
       :filename => "white.jpg",
       :type => :jpg,
       :disposition => :inline)
+  end
+
+  def log(message)
+    $stdout.puts message if settings.verbose
+  end
+
+  def log_debug(message)
+    $stdout.puts message if settings.debug
   end
 
   private
@@ -196,7 +205,7 @@ module SinatraHelpers
     wspace = settings.metasploit.get_workspace()
     if params[:key].nil?
       # Adding hosts if it does not exists
-      puts "[*] - Adding host #{request.ip} to metasploit"
+      log "[*] - Adding host #{request.ip} to metasploit"
       settings.metasploit.add_host({
         :workspace => wspace["name"],
         :host => request.ip,
@@ -208,7 +217,7 @@ module SinatraHelpers
         :name => "#{request.ip}_#{ua.os.gsub(' ', '_')}",
         :purpose=> "client"
       })
-      puts "[*] - Adding client #{ua.browser.split(' ')[0]} to metasploit"
+      log "[*] - Adding client #{ua.browser.split(' ')[0]} to metasploit"
       # Adding Web Client if it does not exists and link it to hosts.
       settings.metasploit.add_client({
         :ua_string => request.user_agent,
@@ -218,7 +227,7 @@ module SinatraHelpers
       })
     end
     # Add Credentials :-)
-    puts "[*] - Adding client #{params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]} to metasploit"
+    log "[*] - Adding client #{params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]} to metasploit"
     # {origin_type: :service, address: '192.168.19.1', port: 9090, service_name: 'http', protocol: 'tcp',
     # module_fullname: 'auxiliary/scanner/http/cartero', workspace_id: 1,
     # private_data: 'password1', private_type: :password, username: 'Administrator', last_attempted_at: Time.now.to_s, status: "Successful"}
