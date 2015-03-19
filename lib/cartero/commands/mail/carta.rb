@@ -192,11 +192,12 @@ class Mailer < Command
 
     unless ports.empty?
       entity[:ports] = ports
-      entity[:subject] ||= subject
-      entity[:from] ||= from
-      entity[:payload] = ::Cartero::CryptoBox.encrypt(entity.to_json)
     end
 
+		entity[:subject] ||= subject
+    entity[:from] ||= from
+    entity[:payload] = ::Cartero::CryptoBox.encrypt(entity.to_json)
+ 
     # Add Text body if was provided.
     unless body.nil?
       mail[:body] = ERB.new(body).result(entity.get_binding)
