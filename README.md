@@ -49,6 +49,8 @@ Using RVM 2.1.5 ruby installation
 ```
 
 ##### MongoDB
+Cartero makes use of MongoDB to store data on the Listener and Admin side of things. Because of the version of MongoMapper being used, MongoDB 3.0 is recommended/required.
+
 On OSX:
 ```shell
 ❯❯❯ brew install mongodb
