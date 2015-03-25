@@ -7,7 +7,7 @@ module Cartero
   PAYLOADS = {}
 
   def self.version
-    [0,5,"bigbife"]
+    [0,5,1,"farfullero"]
   end
 end
 
