@@ -1,0 +1,10 @@
+{
+    "name": "<%= @name %>",
+    "type": "<%= @type %>",
+    "options": {
+        "address": "<%= @url %>",
+        "port": 5222,
+        "jid": "user",
+        "password": "password"
+    }
+}

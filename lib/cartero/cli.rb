@@ -11,6 +11,7 @@ module Cartero
     def initialize(args)
       @args = args
       @options = OpenStruct.new
+      @options.verbose = true
       @options.commands = []
       @options.payloads = []
 
@@ -59,8 +60,8 @@ module Cartero
           @options.config_file = config
         end
 
-        opts.on("-v", "--[no-]verbose", "Run verbosely") do
-          @options.verbose = true
+        opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+          @options.verbose = v
         end
 
         opts.on("-p", "--ports [PORT_1,PORT_2,..,PORT_N]", String,

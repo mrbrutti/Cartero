@@ -6,6 +6,7 @@ module CryptoBox
   @@key = nil
   @@iv = nil
   @@secret_box = nil
+  @@nonce = nil
 
   def self.init
     if !key.nil? && !iv.nil? && !secret_box.nil?
@@ -64,7 +65,7 @@ module CryptoBox
     end
 
     def iv
-      @@nonce
+      @@iv
     end
 
     def nonce
@@ -85,6 +86,7 @@ module CryptoBox
 
     def nonce=(n)
       @@iv = n
+			@@nonce = n
     end
 
     def secret_box=(s)

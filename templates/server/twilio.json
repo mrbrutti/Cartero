@@ -3,6 +3,6 @@
     "type": "<%= @type %>",
     "options": {
       "sid": "<%= @api_access %>",
-      "token": "<%= @api_secret %>",
+      "token": "<%= @api_secret %>"
     }
 }
