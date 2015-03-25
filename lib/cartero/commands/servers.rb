@@ -127,7 +127,9 @@ class Servers < ::Cartero::Command
      "#{File.dirname(__FILE__)}/../../../templates/server/gvoice.json"
    when /twilio/
      "#{File.dirname(__FILE__)}/../../../templates/server/twilio.json"
-    else
+	when /jabber/
+	   "#{File.dirname(__FILE__)}/../../../templates/server/jabber.json"	
+	 else
       "#{File.dirname(__FILE__)}/../../../templates/server/server.json"
     end
   end

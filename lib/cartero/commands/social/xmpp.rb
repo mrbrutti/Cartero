@@ -24,11 +24,6 @@ class Xmpp < ::Cartero::Command
         @options.server = server
       end
 
-      opts.on("-s", "--subject MESG_SUBJECT", String,
-        "Sets message subject") do |subject|
-        @options.subject = subject
-      end
-
 			opts.on("-B", "--body FILENAME", String,
         "Sets message subject") do |b|
         @options.body = b
@@ -61,11 +56,7 @@ class Xmpp < ::Cartero::Command
 
   def setup
 	  require 'xmpp4r'
-		
-		if @options.subject.nil?
-			$stdout.puts "No subject provided. Your data set should have a subject field." 
-		end
-
+	
     if @options.data.nil?
 			raise StandardError, "A data set [--data] must be provided"
 		elsif !File.exist?(File.expand_path(@options.data))
