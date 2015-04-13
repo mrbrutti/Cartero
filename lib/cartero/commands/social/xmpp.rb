@@ -1,3 +1,4 @@
+#encoding: utf-8 
 module Cartero
 module Commands
 class Xmpp < ::Cartero::Command
@@ -33,7 +34,7 @@ class Xmpp < ::Cartero::Command
         "Sets message subject") do |m|
         @options.message = m
       end
-	
+
 			opts.on("-U", "--username JID", String,
     		"Optional way of setting up jabber username") do |u|
       	@options.jid = u
@@ -56,7 +57,7 @@ class Xmpp < ::Cartero::Command
 
   def setup
 	  require 'xmpp4r'
-	
+
     if @options.data.nil?
 			raise StandardError, "A data set [--data] must be provided"
 		elsif !File.exist?(File.expand_path(@options.data))
@@ -64,16 +65,16 @@ class Xmpp < ::Cartero::Command
 		else
 			@options.data = JSON.parse(File.read(File.expand_path(@options.data)),{:symbolize_names => true})
 		end
-		
-		# Check for Server config			
+
+		# Check for Server config
     if @options.server.nil? && @options.address && options.port
       @options.server = {
-				:name => "default", 
-				:type => :jabber, 
-				:options => { 
-					:address => @options.address, 
+				:name => "default",
+				:type => :jabber,
+				:options => {
+					:address => @options.address,
 					:port => @options.port
-				} 
+				}
 			}
     elsif !Cartero::Commands::Servers.exists?(@options.server)
       raise StandardError, "Server with name #{@options.server} does not exist."
@@ -82,8 +83,8 @@ class Xmpp < ::Cartero::Command
       @options.server = JSON.parse(File.read(s),{:symbolize_names => true})
     end
 		# Check if JID / Password provided
-		
-		# else require JID 
+
+		# else require JID
 		if @options.jid.nil? && @options.server[:options][:jid].nil?
 			raise StandardError, "Missing JabberID --username and/or a --server with proper configuration needed."
 		end
@@ -93,7 +94,7 @@ class Xmpp < ::Cartero::Command
 			raise StandardError, "Missing password --password and/or a --server with proper configuration needed."
 		end
 
-		# Check if body is provided. We need a message. 
+		# Check if body is provided. We need a message.
     if !@options.body.nil?
       if ::Cartero::Commands::Templates.exists?(@options.body)
         @options.body = File.read("#{Cartero::TemplatesDir}/#{@options.body}.erb")
@@ -121,8 +122,8 @@ class Xmpp < ::Cartero::Command
 		# Send messages
 		@options.data.each do |receiver|
 			unless receiver[:email].nil?
-			  # This is added, so things will work. I guess if you send stuff to quick your messages won't be sent. 	
-			  add_user(receiver[:email])	
+			  # This is added, so things will work. I guess if you send stuff to quick your messages won't be sent.
+			  add_user(receiver[:email])
 				sleep(1)
 				send_message(receiver)
 				#TODO: send_attachment(receiver) if receiver[:attachments] || @options.attachments
@@ -134,10 +135,10 @@ class Xmpp < ::Cartero::Command
 		@client.close
   end
 
-	private 
+	private
 
 	def add_user(e)
-		 s_request = Jabber::Presence.new.set_type(:subscribe) 
+		 s_request = Jabber::Presence.new.set_type(:subscribe)
 		 s_request.to = Jabber::JID.new(e)
 		 @client.send(s_request)
 	end
@@ -151,11 +152,12 @@ class Xmpp < ::Cartero::Command
     m = Jabber::Message.new(r[:email],b).set_type(:chat)
 		# Send actual message
 		@client.send(m)
-		
+
 		$stdout.puts "Sending message to #{r[:email]}"
 	end
 
 	def send_attachment(r)
+		# Send attachment.
 	end
 end
 end

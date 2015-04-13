@@ -59,4 +59,36 @@
 - AdminWeb & README.md
 
 #### 3-15-15
-- Adding First Run auto bundler
+- Adding first-run auto bundler installer and bundler requirements.
+- Rubocop minor fixes
+- CHANGELOG & TODO updates.
+- Error on first run only due to lack of proper execution order of first-run methods.
+- Fixing first-run auto-bundler to correctly contemplate Gemfile
+- Bug Fixes & first-setup enhancements.
+
+#### 3-16-15
+- Adding API /api/* to AdminWeb
+
+#### 3-18-15
+- Testing Slack Notifications
+
+#### 3-19-15
+- default is to be verbose
+- Added simple log() & log_debug() methods :-)
+- Fixed templates and sinatra_helpers to reflect changes.
+- Updating jquery to 2.1.3
+- Updating bootstrap to 3.3.4
+
+#### 3-23-15
+- Adding some text surrounding MongoDB. This fixed #38 since we realized MongoMapper does require an updated version of MongoDB.
+
+#### 3-24-15
+- XMPP Commands
+- Adding jabber server option.
+- fixing a few bugs found on JSON templates :=)
+- removed subject option from xmpp since it makes no sense any longer to have it.
+- First Alpha version of Xmpp Command time to play with it.
+- It subscribes users and sends them a template message.
+- Follows same delivery methodology as any other sender.
+- Fixing a few things that were wrong with the AES implementation to be fully backward compatible with old crypto model
+- Changed version - 0.5.1 farfullero

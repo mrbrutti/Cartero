@@ -9,6 +9,9 @@
 - [x]  - Part two Full API integration.
 - [x]    + beef_api.rb
 - [x]    + BeefAdmin command
+- [ ]- XMPP Command
+- [x]    + send message
+- [ ]    + send Attachments
 - [ ]- Add user agent strings. possibly reimplement our own very bad class.
 - [ ]- msfvenon user-agent based dynamic shell payloads to Cloner
 - [ ]- Evaluate/Add tracking methods available to people.
@@ -18,7 +21,7 @@
 - [ ]- Migrate SSH commands to Net::SSH
 
 ##### Testing
-- [ ]- Implement RuboCop and pass most tests - [IN PROGRESS]
+- [x]- Implement RuboCop and pass most tests - [IN PROGRESS]
 - [ ]- Implement Testing Framework for commands & Options.
 
 ##### Wiki Documentation:
