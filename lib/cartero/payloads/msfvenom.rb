@@ -82,13 +82,13 @@ class MSFVenom < ::Cartero::Payload
       end
 
       opts.on("--host HOST", String,
-        "Sets address for RPC client/server") do |encoder|
-        @options.msfencoder = encoder
+        "Sets address for RPC client/server") do |host|
+        @options.host = host
       end
 
       opts.on("--port PORT", String,
-        "Sets port for RPC client/server") do |arch|
-        @options.msfarch = arch
+        "Sets port for RPC client/server") do |port|
+        @options.port = port
       end
 
       opts.on("--username USERNAME", String,

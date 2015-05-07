@@ -195,6 +195,8 @@ class Listener < ::Cartero::Command
       end
     end
     @puma.options[:binds] = binds
+
+    Geocoder.configure(:timeout => 6)
   end
 
   attr_accessor :ip
