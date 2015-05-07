@@ -74,14 +74,25 @@ module Cartero
     \"ssh_user\" :  \"root\"
   },
   \"metasploit\" : {
-    \"host\" : \"127.0.0.1\",
-    \"port\" : \"4567\",
-    \"username\" : \"msf\",
-    \"password\" : \"msf\",
-    \"path\" : \"/usr/local/share/metasploit-framework\"
-  },
+  		\"host\" : \"localhost\",
+  		\"port\" : \"4567\",
+  		\"username\" : \"msf\",
+  		\"password\" : \"msf\",
+  		\"db_name\" : \"msf\",
+  		\"db_user\" : \"msf\",
+  		\"db_pwd\" : \"\",
+  		\"path\" : \"/opt/metasploit/app\",
+  		\"ssh\" : true,
+  		\"ssh_user\" :  \"root\"
+  	},
+  	\"smbtrap\" : {
+  		\"host\" : \"localhost\",
+  		\"path\" : \"~/SMBTrap/smbtrap/\",
+  		\"ssh\" : true,
+  		\"ssh_user\" :  \"root\"
+  	},
   \"beef\" : {
-    \"host\" : \"172.16.255.128\",
+    \"host\" : \"localhost\",
     \"path\" : \"/usr/local/share/beef\",
     \"port\" : \"3000\",
     \"ssh\"  : false,

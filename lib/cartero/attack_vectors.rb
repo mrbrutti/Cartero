@@ -3,7 +3,6 @@ module Cartero
 # Documentation for AttackVectors
 class AttackVectors
   def initialize(options, payload=nil)
-    p options
     @options = options
     @options.payload = payload
     @options.webserver = File.basename(@options.customwebserver).split('.')[0..-2].join('.').camelize

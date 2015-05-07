@@ -95,6 +95,10 @@ class Metasploit
     call("module.info", type, name)
   end
 
+  def execute(type, name, opts={})
+    call("module.execute", type, name, opts)
+  end
+
   def generate_payload(name, options={})
     file_path = options["filepath"]
     options.delete("filepath")
