@@ -164,6 +164,10 @@ function install_mongodb {
 				brew install mongodb
 			fi
 			;;
+    *Ubuntu*)
+			print_status "Installing mongodb"
+			sudo apt-get install mongodb
+			;;
 		*Debian*)
 			print_status "Installing mongodb"
 			sudo apt-get install mongodb
