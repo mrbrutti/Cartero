@@ -273,8 +273,8 @@ else
     sudo chmod +x /usr/local/bin/cartero
 fi
 
-if [ -e /usr/local/data/scripts/CarteroComplete.sh ]; then
-	source /usr/local/data/scripts/CarteroComplete.sh
+if [ -e /usr/local/share/Cartero/data/scripts/CarteroComplete.sh ]; then
+	source /usr/local/share/Cartero/data/scripts/CarteroComplete.sh
   sh -c 'echo "[[ -s /usr/local/share/Cartero/data/scripts/CarteroComplete.sh ]] && source /usr/local/share/Cartero/data/scripts/CarteroComplete.sh" >> ~/.bash_profile'
 fi
 
