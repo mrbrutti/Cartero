@@ -110,6 +110,7 @@ class VeilEvasion < ::Cartero::Payload
   attr_accessor :webserver
   attr_accessor :attack_type
   attr_accessor :request_path
+  attr_accessor :local_payload_name
 
   def setup
     if @options.payload.nil? && !@options.list_payloads.nil? && !@options.payload_options.nil?
@@ -183,16 +184,17 @@ class VeilEvasion < ::Cartero::Payload
   end
 
   def run_payload
-    args = ["payload=#{payload}", "outputbase=#{output}",'overwrite=true'] + msfoptions.split(' ')
+    msfoptions.nil? ? mopt = [] : mopt = msfoptions.split(' ')
+    args = ["payload=#{payload}", "outputbase=#{output}",'overwrite=true'] + mopt #msfoptions.split(' ')
     remote_payload = veil_client("generate", *args)
     remote_handler = remote_payload.split('/')[0..-3].join('/') + '/handlers/' + output + '_handler.rc'
 
     if path
       Dir.mkdir path + '/payload' unless File.directory? path + '/payload'
-      local_payload_name = path  + '/payload/' + remote_payload.split('/')[-1]
+      @local_payload_name = path  + '/payload/' + remote_payload.split('/')[-1]
       local_handler_name = path  + "/payload/#{output}_handler.rc"
     else
-      local_payload_name = remote_payload.split('/')[-1]
+      @local_payload_name = remote_payload.split('/')[-1]
       local_handler_name = "#{output}_handler.rc"
     end
 
