@@ -5,14 +5,15 @@ class AttackVectors
   def initialize(options, payload=nil)
     @options = options
     @options.payload = payload
+    @payload = payload
     @options.webserver = File.basename(@options.customwebserver).split('.')[0..-2].join('.').camelize
     case options.attack_type
     when "hta"
-      raise StandardError, "Missing Payload for hta attack" if @payload.nil?
+      raise StandardError, "Missing Payload for hta attack" if @options.payload.nil?
       $stdout.puts "Generating obfuscated hta payload on #{options.request_path || '/warning.hta'}"
       create_hta_payload
     when "download"
-      raise StandardError, "Missing Payload for hta attack" if @payload.nil?
+      raise StandardError, "Missing Payload for hta attack" if @options.payload.nil?
       $stdout.puts "Generating #{options.request_path || '/download'}"
       create_download_payload
     when "beef"
@@ -23,6 +24,7 @@ class AttackVectors
     end
   end
   attr_accessor :options
+  attr_accessor :payload
 
   def create_hta_payload
     require 'jsobfu'
