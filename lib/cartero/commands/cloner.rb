@@ -213,11 +213,9 @@ class Cloner < ::Cartero::Command
       form.value = path
     end
 
-    content_type = page.header["content-type"].split("=")[-1]
-
     f = File.new(@options.path + '/' + webserver.underscore + '/views/index.erb', "w")
-    if content_type != ""
-      f << page.parser.to_s.force_encoding(content_type).encode('utf-8')
+    if page.encoding != ""
+      f << page.parser.to_s.force_encoding(page.encoding).encode('utf-8')
     else
       f << page.parser.to_s
     end
