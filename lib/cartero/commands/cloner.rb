@@ -174,11 +174,18 @@ class Cloner < ::Cartero::Command
 
   def proccess_urls(page,zurl,regexp)
     page.search(regexp).each do |href|
-      link = URI.parse(href.value)
-      if link.host.nil? && link.scheme != 'mailto' && link.scheme != 'javascript'
-        link.host = zurl.host
-        link.scheme = zurl.scheme
-        href.value = link.to_s
+      begin
+        link = URI.parse(href.value)
+        if link.host.nil? && link.scheme != 'mailto' && link.scheme != 'javascript'
+          link.host = zurl.host
+          link.scheme = zurl.scheme
+          if link.path[-1] != "/"
+            link.path = "/" + link.path
+          end
+          href.value = link.to_s
+        end
+      rescue URI::InvalidURIError
+        $stdout.puts "Cloner was unable to handle URL (#{href.value}), leaving as it is"
       end
     end
   end
@@ -213,11 +220,9 @@ class Cloner < ::Cartero::Command
       form.value = path
     end
 
-    content_type = page.header["content-type"].split("=")[-1]
-
     f = File.new(@options.path + '/' + webserver.underscore + '/views/index.erb', "w")
-    if content_type != ""
-      f << page.parser.to_s.force_encoding(content_type).encode('utf-8')
+    if page.encoding != ""
+      f << page.parser.to_s.force_encoding(page.encoding).encode('utf-8')
     else
       f << page.parser.to_s
     end
