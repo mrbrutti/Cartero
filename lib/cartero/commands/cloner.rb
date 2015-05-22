@@ -45,6 +45,10 @@ class Cloner < ::Cartero::Command
         @options.apache = true
       end
 
+      opts.on("--ssl-verify-none", "Forces Cloner not to verify certificates") do
+        @options.ssl_verify_none = true
+      end
+
       opts.on("--reverse-proxy", "Generates clone reverse proxing original links") do
         @options.reverse_proxy = true
       end
@@ -119,12 +123,31 @@ class Cloner < ::Cartero::Command
     Dir.mkdir path + "/"  + name + "/views" unless File.directory? path + "/"  + name + "/views"
   end
 
+  def delete_structure
+    name = webserver.underscore
+    Dir.rmdir path + "/"  + name + "/static" if File.directory? path + "/"  + name + "/static"
+    Dir.rmdir path + "/"  + name + "/views" if File.directory? path + "/"  + name + "/views"
+    Dir.rmdir path + "/"  + name if File.directory?(path + "/"  + name)
+
+  end
+
+
   def clone
     require 'mechanize'
     require 'uri'
     mechanize = Mechanize.new
     mechanize.user_agent = useragent
-    page = mechanize.get(url)
+    mechanize.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE if @options.ssl_verify_none == true
+    begin
+      page = mechanize.get(url)
+    rescue Net::HTTPForbidden
+      $stdout.puts "Unauthorized Response - We'll still clone the site."
+    rescue OpenSSL::SSL::SSLError
+      $stdout.puts "Invalid Certificate - If you still want to clone use --ssl-verify-none flag."
+      delete_structure
+      exit(1)
+    end
+
 
     forms_routes = page.forms.map {|x| [x.method.downcase , URI.parse(x.action).path ] }
 
