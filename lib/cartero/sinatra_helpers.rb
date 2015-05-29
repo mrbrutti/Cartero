@@ -63,7 +63,7 @@ module SinatraHelpers
       # if listener was started with metasploit RPC option
       process_metasploit
 
-      log "#{Time.now} - PERSON #{person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
+      log "#{Time.now} - PERSON #{@person.email} - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
     else
       log "#{Time.now} - PERSON noname@cartero.com - IP #{request.ip} PORT #{request.port} PATH #{request.path_info} - GEO #{geo_loc} - USER_AGENT #{request.user_agent}"
     end
@@ -119,21 +119,21 @@ module SinatraHelpers
 	end
 
 	def save_create_person
-    person = Person.where(:email => @data[:email]).first
+    @person = Person.where(:email => @data[:email]).first
 
-    if person.nil?
+    if @person.nil?
       begin
-        person = Person.new(:email => @data[:email])
-        person.save!
+        @person = Person.new(:email => @data[:email])
+        @person.save!
       rescue MongoMapper::DocumentNotValid
-        person = Person.where(:email => @data[:email]).first
+        @person = Person.where(:email => @data[:email]).first
       end
     end
 
-    person.campaigns << @data[:subject] unless person.campaigns.include?(@data[:subject])
-    person.responded << "#{request.ip}:#{request.port}" unless person.responded.include?("#{request.ip}:#{request.port}")
+    @person.campaigns << @data[:subject] unless @person.campaigns.include?(@data[:subject])
+    @person.responded << "#{request.ip}:#{request.port}" unless @person.responded.include?("#{request.ip}:#{request.port}")
     if params[:username] || params[:password]
-      person.credentials << {
+      @person.credentials << {
         :username		=> params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]],
         :password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]]
       }
@@ -142,7 +142,7 @@ module SinatraHelpers
     ua = ::Cartero::UserAgentParser.new(request.user_agent)
     ua.parse
 
-    person.hits << Hit.new(
+    @person.hits << Hit.new(
       :ip 				=> request.ip,
       :location   => request.location.data,
       :port 			=> request.port,
@@ -152,7 +152,7 @@ module SinatraHelpers
       :time 			=> Time.now,
       :user_agent => request.user_agent,
       :forwarded 	=> request.forwarded?,
-      :data 			=> data,
+      :data 			=> @data,
       :ua_comp		=> ua.comp,
       :ua_os 			=> ua.os,
       :ua_browser => ua.browser,
@@ -161,7 +161,7 @@ module SinatraHelpers
       :ua_lang		=> ua.lang
     )
 
-    person.save!
+    @person.save!
   end
 
   def process_metasploit
