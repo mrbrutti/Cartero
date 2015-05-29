@@ -12,6 +12,8 @@ module CryptoBox
     if ::Cartero::GlobalConfig["crypto"] =~ /AES/i
       require 'openssl'
       require 'digest'
+      require 'rbnacl/libsodium'
+      require 'rbnacl'
       require 'cartero/crypto/aes'
     else
       require 'rbnacl/libsodium'

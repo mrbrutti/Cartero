@@ -92,7 +92,7 @@ module SinatraHelpers
 
 	def	slack_notification
     if ::Cartero::GlobalConfig["slack"]
-      @slack ||= Slack::Notifier.new ::Cartero::GlobalConfig["slack"]["webhook"],
+      @slack ||= ::Slack::Notifier.new ::Cartero::GlobalConfig["slack"]["webhook"],
         username: ::Cartero::GlobalConfig["slack"]["username"],
         channel: ::Cartero::GlobalConfig["slack"]["channel"]
       geo_loc = "#{request.location.city}/#{request.location.country}" if request.location != nil

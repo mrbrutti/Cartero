@@ -161,7 +161,7 @@ function install_ruby_nix
     print_good "Correct version of Ruby is installed"
   else
     print_status "Installing Linux dependencies"
-    sudo apt-get install ruby2.1 ruby2.1-dev build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
+    sudo apt-get -y install ruby2.1 ruby2.1-dev build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
     print_status "Installing the bundler Gem"
     gem install bundler >> $LOGFILE 2>&1
   fi
@@ -179,11 +179,11 @@ function install_mongodb {
 			;;
     *Ubuntu*)
 			print_status "Installing mongodb"
-			sudo apt-get install mongodb
+			sudo apt-get -y install mongodb
 			;;
 		*Debian*)
 			print_status "Installing mongodb"
-			sudo apt-get install mongodb
+			sudo apt-get -y install mongodb
 			;;
 		*Arch*)
 			print_status "Installing mongodb"
