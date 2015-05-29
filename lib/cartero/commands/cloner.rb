@@ -197,6 +197,7 @@ class Cloner < ::Cartero::Command
 
   def proccess_urls(page,zurl,regexp)
     page.search(regexp).each do |href|
+      next if href.to_s.index("#") == 0
       begin
         link = URI.parse(href.value)
         if link.host.nil? && link.scheme != 'mailto' && link.scheme != 'javascript'
