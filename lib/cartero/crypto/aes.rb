@@ -19,8 +19,16 @@ module CryptoBox
       self.nonce 			= Base64.decode64(m[:nonce]).strip
     else
       @@secret_box = OpenSSL::Cipher::Cipher.new(ALGORITHM)
-      @@key = Digest::SHA512.hexdigest(@@secret_box.random_key)
+      @@key = Digest::SHA256.hexdigest(@@secret_box.random_key)
       @@iv=  @@secret_box.random_iv
+      # Storing keys on file.
+      f = File.new(::Cartero::SecretMaterial, "w+")
+      f.puts({
+        :key => Base64.strict_encode64(@@key).strip,
+        :nonce => Base64.strict_encode64(@@iv).strip
+        }.to_json
+      )
+      f.close
     end
     true
   end
@@ -36,7 +44,8 @@ module CryptoBox
     secret_box.iv = iv
     e = secret_box.update(m)
     e << secret_box.final
-    Base64.strict_encode64(e).strip.gsub("+","-").gsub("/","_")
+    x = Base64.urlsafe_encode64(Base64.strict_encode64(e).strip).strip#.gsub("+","-").gsub("/","_")
+    x
   end
 
   def self.decrypt(e)
@@ -45,10 +54,11 @@ module CryptoBox
     secret_box.iv = iv
     d = secret_box.update(
       Base64.strict_decode64(
-        e.gsub("-","+").gsub("_","/")
+        Base64.urlsafe_decode64(e)#.gsub("-","+").gsub("_","/")
       ).strip
     )
     d << secret_box.final
+    d
   end
 
   def self.close
