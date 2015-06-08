@@ -180,7 +180,6 @@ class Listener < ::Cartero::Command
     else
       @ports = @options.ports || [443]
       raise StandardError, "WebServer on SSL mode needs a cert path [ --sslcert ]." if @options.sslcert.nil?
-      p @options.sslcert
       @ssl_cert_path = File.expand_path(@options.sslcert)
       raise StandardError, "WebServer on SSL mode needs a key path.[ --sslkey ]" if @options.sslkey.nil?
       @ssl_key_path = File.expand_path(@options.sslkey)
