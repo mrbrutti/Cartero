@@ -28,13 +28,13 @@ class Listener < ::Cartero::Command
       end
 
       opts.on("-C", "--sslcert CERT_PATH", String,
-        "Sets Email Payload Ports to scan") do |cert|
-        @options.sslcert = cert.split(",")
+        "Sets SSL cert to use for Listener") do |cert|
+        @options.sslcert = cert
       end
 
       opts.on("-K", "--sslkey KEY_PATH", String,
         "Sets SSL key to use for Listener.") do |key|
-        @options.sslkey = key.split(",")
+        @options.sslkey = key
       end
 
       opts.on("-V", "--views VIEWS_FOLDER", String,
@@ -179,10 +179,11 @@ class Listener < ::Cartero::Command
       @ports = @options.ports || [80]
     else
       @ports = @options.ports || [443]
-      raise StandardError, "WebServer on SSL mode needs a cert path [ --sslcert ]." if @options.ssl_cert.nil?
-      @ssl_cert_path = option.ssl_cert
-      raise StandardError, "WebServer on SSL mode needs a key path.[ --sslkey ]" if @options.ssl_key.nil?
-      @ssl_key_path = option.ssl_key
+      raise StandardError, "WebServer on SSL mode needs a cert path [ --sslcert ]." if @options.sslcert.nil?
+      p @options.sslcert
+      @ssl_cert_path = File.expand_path(@options.sslcert)
+      raise StandardError, "WebServer on SSL mode needs a key path.[ --sslkey ]" if @options.sslkey.nil?
+      @ssl_key_path = File.expand_path(@options.sslkey)
     end
 
     # Generating Bind/s for each provided port.
