@@ -17,17 +17,17 @@ class DNSServer < ::Cartero::Command
 
     ) do |opts|
 			opts.on("-I", "--ip [IP_ADDRESS]", String,
-    		"Description of command option") do |ip|
+    		"IP address of domain to hook") do |ip|
       	@options.ip = ip
     	end
 
       opts.on("-D", "--dns [DOMAIN_NAME]", String,
-        "Description of command option") do |dns|
+        "Domain to hook") do |dns|
         @options.dns = dns
       end
 
       opts.on("-F", "--file [FILENAME]", String,
-        "Description of command option") do |f|
+        "List of domains to hook.") do |f|
         @options.file = f
       end
 
