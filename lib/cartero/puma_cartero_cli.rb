@@ -12,6 +12,10 @@ module Puma
       ::Cartero::DB.start
       super(argv)
     end
+    
+    def options
+      @cli_options
+    end
 
     def stop
       #Cartero::DB.stop
