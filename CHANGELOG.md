@@ -92,3 +92,7 @@
 - Follows same delivery methodology as any other sender.
 - Fixing a few things that were wrong with the AES implementation to be fully backward compatible with old crypto model
 - Changed version - 0.5.1 farfullero
+
+#### 10-9-15
+- smbrelayx.py support allowing remote shell attacks and replay attacks using new French Kiss Attack.
+-
