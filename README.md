@@ -29,6 +29,8 @@ Sending victim2@company.com
 Sending victim3@company.com
 
 ```
+### Community 
+Join our Slack Community on https://carteroslack.herokuapp.com/
 
 ### Installation
 
