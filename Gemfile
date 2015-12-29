@@ -26,3 +26,5 @@ gem "msfrpc-client"
 gem "geocoder"
 gem "slack-notifier"
 gem "xmpp4r"
+gem "acme-client"
+
