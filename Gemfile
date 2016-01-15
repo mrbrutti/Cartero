@@ -16,7 +16,7 @@ gem "ipaddress"
 gem "linkedin" # LinkedIn Command
 gem "json"
 gem "rest-client"
-gem "googlevoiceapi" # Google Voice Command
+#gem "googlevoiceapi" # Google Voice Command
 gem "twilio-ruby" # Twilio Command
 gem "command_line_reporter"
 gem "mechanize"
@@ -27,4 +27,3 @@ gem "geocoder"
 gem "slack-notifier"
 gem "xmpp4r"
 gem "acme-client"
-
