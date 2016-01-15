@@ -47,6 +47,8 @@ class GoogleVoice < ::Cartero::Command
   end
 
   def setup
+    Puts "[!] - Temporareily disabled until a new ruby gem is found. googlevoiceapi no longer exists."
+    exit(1)
     require 'erb'
     require 'googlevoiceapi'
 
