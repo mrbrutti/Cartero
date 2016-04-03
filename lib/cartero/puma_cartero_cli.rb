@@ -14,7 +14,7 @@ module Puma
     end
     
     def options
-      @cli_options
+			@conf.options
     end
 
     def stop
