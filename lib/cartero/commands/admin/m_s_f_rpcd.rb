@@ -3,14 +3,18 @@ module Cartero
 module Commands
 # Documentation for MSFRpcd < ::Cartero::Commands
 class MSFRpcd < ::Cartero::Command
-   def initialize
-    super(name: "Metasploit MSFRPCd Interface",
-      description: "This command is a simple control for metasploit's RPC protocol. ",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Admin",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+
+  description(
+    name: "Metasploit MSFRPCd Interface",
+    description: "This command is a simple control for metasploit's RPC protocol. ",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Admin",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
+  def initialize
+    super do |opts|
 
       opts.on("-S", "--start", "Starts background RPC Server.") do
         @options.command = "start_rpc"

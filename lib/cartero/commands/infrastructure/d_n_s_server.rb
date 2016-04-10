@@ -1,21 +1,22 @@
 module Cartero
 module Commands
 class DNSServer < ::Cartero::Command
-	def initialize
-		super(
-          name: "Malicious DNS Server",
-					description: "Using the power of RubyDNS we counstracted a malicious" +
-                       " DNS server that allows your to arbitrarely redirect specific " +
-                       "domains and upstream others to a non-malicious DNS for normal resolution.",
-					author: ["Matias Brutti <matias [©] section9labs.com>"],
-          type:"Infrastructure",
-          license: "LGPL",
-          references: [
-            "https://section9labs.github.io/Cartero",
-            "https://github.com/ioquatix/rubydns"
-            ]
 
-    ) do |opts|
+	description(
+		name: "Malicious DNS Server",
+		description: "Using the power of RubyDNS we counstracted a malicious" +
+								 " DNS server that allows your to arbitrarely redirect specific " +
+								 "domains and upstream others to a non-malicious DNS for normal resolution.",
+		author: ["Matias Brutti <matias [©] section9labs.com>"],
+		type:"Infrastructure",
+		license: "LGPL",
+		references: [
+			"https://section9labs.github.io/Cartero",
+			"https://github.com/ioquatix/rubydns"
+			]
+	)
+	def initialize
+		super do |opts|
 			opts.on("-I", "--ip [IP_ADDRESS]", String,
     		"IP address of domain to hook") do |ip|
       	@options.ip = ip

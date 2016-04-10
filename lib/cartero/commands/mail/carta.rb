@@ -3,14 +3,18 @@ module Cartero
 module Commands
 # Documentation for Mailer < ::Cartero::Commands
 class Mailer < Command
+
+  description(
+    name: "Customized Mass Email Command",
+    description: "Mailer is responsible for crafting and sending emails from a simple txt based email all the way to complicated email templates that can individualize each email as if it was being written by a person.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Delivery",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
   def initialize
-    super(name: "Customized Mass Email Command",
-      description: "Mailer is responsible for crafting and sending emails from a simple txt based email all the way to complicated email templates that can individualize each email as if it was being written by a person.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Delivery",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
@@ -197,7 +201,7 @@ class Mailer < Command
 		entity[:subject] ||= subject
     entity[:from] ||= from
     entity[:payload] = ::Cartero::CryptoBox.encrypt(entity.to_json)
- 
+
     # Add Text body if was provided.
     unless body.nil?
       mail[:body] = ERB.new(body).result(entity.get_binding)

@@ -3,18 +3,22 @@ module Cartero
 module Payloads
 # Documentation for Beef < ::Cartero::Payload
 class Beef < ::Cartero::Payload
+
+  description(
+    name: "Browser Exploitation Framework Plugin",
+    description: "The command will help us hook an already created cartero webserver" +
+                 ", launch beef itself, and interact with it using its API.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Payload",
+    license: "LGPL",
+    references: [
+      "https://section9labs.github.io/Cartero",
+      "http://beefproject.com"
+    ]
+  )
+  
   def initialize
-    super(name: "Browser Exploitation Framework Plugin",
-          description: "The command will help us hook an already created cartero webserver" +
-                       ", launch beef itself, and interact with it using its API.",
-          author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type: "Payload",
-          license: "LGPL",
-          references: [
-            "https://section9labs.github.io/Cartero",
-            "http://beefproject.com"
-          ]
-          ) do |opts|
+    super do |opts|
       opts.on("-W", "--webserver WEBSERVER_FOLDER", String,
         "Sets the sinatra WebServer full path for payload creation") do |path|
         @options.path = path

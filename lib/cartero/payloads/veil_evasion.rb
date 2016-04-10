@@ -5,14 +5,19 @@ module Payloads
 # Documentation for VeilEvasion < ::Cartero::Payload
 class VeilEvasion < ::Cartero::Payload
   include CommandLineReporter
+
+  description(
+    name: "Veil Evasion Payload RPC Builder",
+    description: "Cartero's Veil Evasion RPC client to create local and remote " +
+                 "paylods making use of the amazing and undetectable VeilEvasion paylods.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Payload",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+
   def initialize
-    super(name: "Veil Evasion Payload RPC Builder",
-      description: "Cartero's Veil Evasion RPC client to create local and remote paylods making use of the amazing and undetectable VeilEvasion paylods.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Payload",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("-W", "--webserver WEBSERVER_FOLDER", String,
         "Sets the sinatra WebServer full path for payload creation") do |path|
         @options.path = path

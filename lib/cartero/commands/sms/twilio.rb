@@ -3,14 +3,18 @@ module Cartero
 module Commands
 # Documentatin for Twilio < ::Cartero::Command
 class Twilio < ::Cartero::Command
+
+  description(
+    name: "Twilio SMS/MMS Mass Messenger",
+    description: "Using Twilio as a delivery method, an attacker can send multiple individually crafted text messages. This method requires to have an active (paid) account with Twilio.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Delivery",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
   def initialize
-    super(name: "Twilio SMS/MMS Mass Messenger",
-      description: "Using Twilio as a delivery method, an attacker can send multiple individually crafted text messages. This method requires to have an active (paid) account with Twilio.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Delivery",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data

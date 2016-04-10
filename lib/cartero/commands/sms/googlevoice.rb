@@ -3,17 +3,21 @@ module Cartero
 module Commands
 # Documentation for GoogleVoice < ::Cartero::Command
 class GoogleVoice < ::Cartero::Command
+
+  description(
+    name: "Google Voice SMS/MMS Text Messages Command",
+    description: "Using Google Voice as a delivery method, an attacker can send multiple individually crafted text messages.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Delivery",
+    license: "LGPL",
+    references: [
+      "https://section9labs.github.io/Cartero",
+      "http://voice.google.com"
+      ]
+  )
+  
   def initialize
-    super(name: "Google Voice SMS/MMS Text Messages Command",
-      description: "Using Google Voice as a delivery method, an attacker can send multiple individually crafted text messages.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Delivery",
-      license: "LGPL",
-      references: [
-        "https://section9labs.github.io/Cartero",
-        "http://voice.google.com"
-        ]
-      ) do |opts|
+    super do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data

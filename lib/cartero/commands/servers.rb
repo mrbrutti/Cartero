@@ -7,14 +7,18 @@ module Cartero
 module Commands
 # Documentatation for ::Cartero::Command
 class Servers < ::Cartero::Command
+
+  description(
+    name: "Server Template Manager",
+    description: "Servers keeps email servers templates. It allows uses to easily craft servers configuration files for emails servers, Linkedin, Twilio, Google Voice, WebMailer, etc.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Infrastructure",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
   def initialize
-    super(name: "Server Template Manager",
-      description: "Servers keeps email servers templates. It allows uses to easily craft servers configuration files for emails servers, Linkedin, Twilio, Google Voice, WebMailer, etc.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Infrastructure",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("-a","--add NAME", String,
         "Add Server") do |name|
         @options.name = name
@@ -128,7 +132,7 @@ class Servers < ::Cartero::Command
    when /twilio/
      "#{File.dirname(__FILE__)}/../../../templates/server/twilio.json"
 	when /jabber/
-	   "#{File.dirname(__FILE__)}/../../../templates/server/jabber.json"	
+	   "#{File.dirname(__FILE__)}/../../../templates/server/jabber.json"
 	 else
       "#{File.dirname(__FILE__)}/../../../templates/server/server.json"
     end

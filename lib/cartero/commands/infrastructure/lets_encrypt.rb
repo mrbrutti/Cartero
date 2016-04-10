@@ -1,19 +1,20 @@
 module Cartero
 module Commands
 class LetsEncrypt < ::Cartero::Command
-    def initialize
-        super(
-          name: "Lets Encrypt",
-          description: "LetsEncrypt Command capable of generating a key and a cert for one of more domains.",
-          author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type:"Infrastructure",
-          license: "LGPL",
-          references: [
-            "https://section9labs.github.io/Cartero",
-            "https://github.com/unixcharles/acme-client"
-            ]
 
-    ) do |opts|
+  description(
+    name: "Lets Encrypt",
+    description: "LetsEncrypt Command capable of generating a key and a cert for one of more domains.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type:"Infrastructure",
+    license: "LGPL",
+    references: [
+      "https://section9labs.github.io/Cartero",
+      "https://github.com/unixcharles/acme-client"
+      ]
+  )
+  def initialize
+    super do |opts|
       opts.on("-W", "--webserver WEBSERVER_FOLDER", String,
         "Sets the sinatra WebServer full path for payload creation") do |path|
         @options.path = path

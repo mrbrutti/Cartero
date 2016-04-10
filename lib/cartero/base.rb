@@ -118,6 +118,7 @@ module Cartero
         load t
       end
     end
+
     def self.load_payloads
       Dir[File.dirname(__FILE__) + "/payloads/**/*.rb"].each do |t|
         load t
@@ -125,6 +126,44 @@ module Cartero
 
       Dir[ENV["HOME"] + "/.cartero/payloads/**/*.rb"].each do |t|
         load t
+      end
+    end
+
+    def self.initialize_commands
+      # Initialize all avilable loaded Commands that are parto of
+      # ::Cartero::Commands and are its supper class is << ::::Cartero::Command.
+      ::Cartero::Commands.constants.each do |klass|
+        if RUBY_VERSION =~ /1.9.3/
+          # get the constant from Object Concatenation on ruby 1.9.3
+          # Kernel.const_get does not work using strings as a value.
+          const = ::Object.const_get("Cartero").const_get("Commands").const_get(klass)
+        else
+          # Get the constant from the Kernel using the symbol
+          const = Kernel.const_get("Cartero::Commands::#{klass}")
+        end
+        # Check if the plugin has a super class and if the type is Plugin
+        if const.respond_to?(:superclass) && const.superclass == ::Cartero::Command
+          ::Cartero::COMMANDS[klass.to_s] = const
+        end
+      end
+    end
+
+    def self.initialize_payloads
+      # Initialize all avilable loaded Commands that are parto of
+      # ::Cartero::Commands and are its supper class is << ::Cartero::Command.
+      ::Cartero::Payloads.constants.each do |klass|
+        if RUBY_VERSION =~ /1.9.3/
+          # get the constant from Object Concatenation on ruby 1.9.3
+          # Kernel.const_get does not work using strings as a value.
+          const = ::Object.const_get("Cartero").const_get("Payloads").const_get(klass)
+        else
+          # Get the constant from the Kernel using the symbol
+          const = Kernel.const_get("Cartero::Payloads::#{klass}")
+        end
+        # Check if the plugin has a super class and if the type is Plugin
+        if const.respond_to?(:superclass) && const.superclass == ::Cartero::Payload
+          ::Cartero::PAYLOADS[klass.to_s] = const
+        end
       end
     end
   end
