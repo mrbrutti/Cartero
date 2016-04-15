@@ -6,14 +6,18 @@ module Commands
 # Documentation for AdminConsole < ::Cartero::Command
 class AdminConsole < ::Cartero::Command
   include CommandLineReporter
+
+  description(
+    name: "Administration Console",
+    description: "Cartero Console based Admnistration Interface. It allows users to interact with the captured data (i.e. hits, persons, credentials.)",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Admin",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
   def initialize
-    super(name: "Administration Console",
-          description: "Cartero Console based Admnistration Interface. It allows users to interact with the captured data (i.e. hits, persons, credentials.)",
-          author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type: "Admin",
-          license: "LGPL",
-          references: ["https://section9labs.github.io/Cartero"]
-          ) do |opts|
+    super do |opts|
       opts.on("-p", "--persons [LATEST_N]", Integer,
         "Display the list of persons that responded") do |n|
         @options.persons = n || 50

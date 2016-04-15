@@ -3,17 +3,21 @@ module Cartero
 module Payloads
 # Documentation for SMBRedirect < ::Cartero::Payload
 class SMBRedirect < ::Cartero::Payload
-   def initialize
-    super(name: "SMBRedirect Attack Reborned",
-      description: %q{This attack is an old attack vector recently 'rediscoreved' that affects windows platforms. Attacker could force a redirec of an http link to a file:// or a \\server\file server resulting on the server leaking its credentials when trying to authenticate.},
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Payload",
-      license: "LGPL",
-      references: [
-				"http://blog.cylance.com/redirect-to-smb",
-				"https://section9labs.github.io/Cartero"
-			]
-      ) do |opts|
+
+  description(
+    name: "SMBRedirect Attack Reborned",
+    description: %q{This attack is an old attack vector recently 'rediscoreved' that affects windows platforms. Attacker could force a redirec of an http link to a file:// or a \\server\file server resulting on the server leaking its credentials when trying to authenticate.},
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Payload",
+    license: "LGPL",
+    references: [
+      "http://blog.cylance.com/redirect-to-smb",
+      "https://section9labs.github.io/Cartero"
+    ]
+  )
+
+  def initialize
+    super do |opts|
       opts.on("-W", "--webserver WEBSERVER_FOLDER", String,
         "Sets the sinatra WebServer full path for payload creation") do |path|
         @options.path = path

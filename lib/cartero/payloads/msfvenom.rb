@@ -3,15 +3,19 @@ module Cartero
 module Payloads
 # Documentation for MSFVenom < ::Cartero::Payload
 class MSFVenom < ::Cartero::Payload
-   def initialize
-    super(name: "Metasploit MSFVenon RPC Interface",
-      description: "This command is a home-made implementation of metasploit's msfvenon over metasploit's RPC protocol. " +
-                   "This allows us to generate and serve msf payloads, even from remote metasploit instances.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Payload",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+
+  description(
+    name: "Metasploit MSFVenon RPC Interface",
+    description: "This command is a home-made implementation of metasploit's msfvenon over metasploit's RPC protocol. " +
+                 "This allows us to generate and serve msf payloads, even from remote metasploit instances.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Payload",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
+  def initialize
+    super do |opts|
       opts.on("-W", "--webserver WEBSERVER_FOLDER", String,
         "Sets the sinatra WebServer full path for payload creation") do |path|
         @options.path = path

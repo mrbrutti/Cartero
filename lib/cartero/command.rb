@@ -11,10 +11,9 @@ module Cartero
     attr_accessor :args
     attr_accessor :information
 
-    def initialize(i={}, &block)
-      @information = i || {}
-      @options = OpenStruct.new
-      @options.commands 		= []
+    def initialize(&block)
+      @options ||= OpenStruct.new
+      @options.commands = []
 
       parse(&block)
     end
@@ -33,10 +32,6 @@ module Cartero
       @parser.order!
     end
 
-    def name
-      self.class.name.split("::")[-1]
-    end
-
     def parse(&block)
       @parser = OptionParser.new do |opts|
         opts.banner = "Usage: Cartero #{name} [options]"
@@ -52,22 +47,51 @@ module Cartero
         end
 
         opts.on("--details", "Show command details") do
-          unless information.empty?
+          unless description.empty?
             require 'cartero/command_helpers'
-            CommandHelpers.new.generate_table(information, "#{self.class.name.gsub('::','/')}")
+            CommandHelpers.new.generate_table(description, "#{self.class.name.gsub('::','/')}")
           end
           exit
         end
 
         opts.on("--list-options", "Show list of available options") do
-          $stdout.puts "--" + @parser.send(:top).long.map {|x| x[0]}.join(" --")
+          $stdout.puts "--" + list_options.join(" --")
           exit
         end
 
         opts.on("--list-short-options", "Show list of short available options") do
-          $stdout.puts @parser.send(:top).long.map {|x| x[1].short[0]}.join(" ")
+          $stdout.puts list_short_options.join(" ")
           exit
         end
+      end
+    end
+
+    def list_options
+      @parser.send(:top).long.map {|x| x[0]}
+    end
+
+    def list_short_options
+      @parser.send(:top).long.map {|x| x[1].short[0]}
+    end
+
+    def name
+      self.class.name.split("::")[-1]
+    end
+
+    def self.method_missing(name, *args, &block)
+      if name == :description
+        class_eval <<-RUBY
+          def self.description
+            #{args.first}
+          end
+
+          def description
+            #{args.first}
+          end
+        RUBY
+        send(:description)
+      else
+        super
       end
     end
 

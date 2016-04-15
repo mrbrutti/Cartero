@@ -4,14 +4,18 @@ module Cartero
 module Commands
 # Documentation for AdminWeb < ::Cartero::Command
 class AdminWeb < ::Cartero::Command
+
+  description(
+    name: "Cartero Administration Web Application",
+    description: "Cartero WebApp based Admnistration Interface. It allows users to interact with the captured data (i.e. hits, persons, credentials.) using a friendly Web Application.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Admin",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
   def initialize
-    super(name: "Cartero Administration Web Application",
-      description: "Cartero WebApp based Admnistration Interface. It allows users to interact with the captured data (i.e. hits, persons, credentials.) using a friendly Web Application.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Admin",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("-i", "--ip 1.1.1.1", String,
         "Sets IP interface, default is 0.0.0.0") do |ip|
         @options.ip = ip

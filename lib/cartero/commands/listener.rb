@@ -1,18 +1,22 @@
 #encoding: utf-8
-# encoding: UTF-8
 # Documentation goes here.
 module Cartero
 module Commands
 # Documentation for Listener < ::Cartero::Command
 class Listener < ::Cartero::Command
+
+  description(
+    name: "Cartero Customizeable Web Server",
+    description: "Listener is the command that serves our customized WebServers " +
+                 "hosting pages on one or more ports at any given time.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Infrastructure",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+
   def initialize
-    super(name: "Cartero Customizeable Web Server",
-      description: "Listener is the command that serves our customized WebServers hosting pages on one or more ports at any given time.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Infrastructure",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("-i", "--ip 1.1.1.1", String,
         "Sets IP interface, default is 0.0.0.0") do |ip|
         @options.ip = ip
@@ -83,7 +87,7 @@ class Listener < ::Cartero::Command
     end
 
     @puma = Puma::CarteroCLI.new([])
-    @puma.options[:environment] = 'production'
+		@puma.options[:environment] = 'production'
     @puma.options[:min_threads] = 4
     @puma.options[:max_threads] = 16
     @puma.options[:quiet] = true

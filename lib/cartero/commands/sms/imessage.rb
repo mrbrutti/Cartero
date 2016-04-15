@@ -3,14 +3,18 @@ module Cartero
 module Commands
 # Documentation for IMessage < ::Cartero::Command
 class IMessage < ::Cartero::Command
+
+  description(
+    name: "Apple Messages Command",
+    description: "The commands wraps AppleScripts to send customized messages to emails or phone numbers using Messages infrastructure.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Delivery",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+   
   def initialize
-    super(name: "Apple Messages Command",
-      description: "The commands wraps AppleScripts to send customized messages to emails or phone numbers using Messages infrastructure.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Delivery",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.separator "IMPORTANT: This command only works on OSX"
       opts.separator ""
 

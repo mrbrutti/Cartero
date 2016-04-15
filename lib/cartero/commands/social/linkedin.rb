@@ -6,14 +6,18 @@ module Commands
 # Documentation for LinkedIn < ::Cartero::Command
 class LinkedIn < ::Cartero::Command
   include CommandLineReporter
+
+  description(
+    name: "LinkedIn Automation Mass Sender",
+    description: "Using LinkedIn Network an attacker is able to use one or more accounts on an automated way to deliver messages, updates && group updates contaning simple messages, malicious payloads, etc.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Social Delivery",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
+  
   def initialize
-    super(name: "LinkedIn Automation Mass Sender",
-      description: "Using LinkedIn Network an attacker is able to use one or more accounts on an automated way to deliver messages, updates && group updates contaning simple messages, malicious payloads, etc.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Social Delivery",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data

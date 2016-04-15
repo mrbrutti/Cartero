@@ -4,19 +4,23 @@ module Cartero
 module Commands
 # Documentation for Cloner < ::Cartero::Command
 class Cloner < ::Cartero::Command
+
+  description(
+    name: "Web Application Cloner",
+    description: "This command allows a user to clone a site using Cartero's webservers." +
+                 "Additionally, it will automatically edit forms, catch traffic, block bots, and redirect" +
+                 "to the original site, among many other things.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Infrastructure",
+    license: "LGPL",
+    references: [
+      "https://section9labs.github.io/Cartero",
+      "https://section9labs.github.io/Cartero"
+      ]
+  )
+
   def initialize
-    super(name: "Web Application Cloner",
-          description: "This command allows a user to clone a site using Cartero's webservers." +
-                       "Additionally, it will automatically edit forms, catch traffic, block bots, and redirect" +
-                       "to the original site, among many other things.",
-          author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type: "Infrastructure",
-          license: "LGPL",
-          references: [
-            "https://section9labs.github.io/Cartero",
-            "https://section9labs.github.io/Cartero"
-            ]
-          ) do |opts|
+    super do |opts|
       opts.on("-U", "--url URL_PATH", String,
         "Full Path of site to clone") do |url|
         @options.url = url
@@ -59,6 +63,7 @@ class Cloner < ::Cartero::Command
       end
     end
   end
+
   attr_accessor :url
   attr_accessor :url_route
   attr_accessor :path

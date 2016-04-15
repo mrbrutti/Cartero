@@ -167,6 +167,13 @@ function install_ruby_nix
   fi
 }
 
+function install_ruby_bash_win
+{
+  print_status "Installing Linux dependencies"
+  sudo apt-get -y install ruby ruby-dev ruby2.0 ruby2.0-dev build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
+  print_status "Installing the bundler Gem"
+  gem install bundler >> $LOGFILE 2>&1
+}
 function install_mongodb {
 	case $(uname -a) in
 		*Darwin*)
@@ -190,7 +197,12 @@ function install_mongodb {
 			sudo pacman -Syu mongodb
 			;;
 		*)
-			print_status "OS not supported. Install mongodb manually"
+      if [[ $(cat /proc/version) =~ Microsoft ]]; then
+        print_status "Installing mongodb on Bash for Windows"
+      	sudo apt-get -y install mongodb
+      else
+        print_status "OS not supported. Install mongodb manually"
+      fi
 			;;
 	esac
 }
@@ -242,7 +254,12 @@ else
     gem install bundler >> $LOGFILE 2>&1
     ;;
   *)
-    print_status "OS not supported. Install ruby manually"
+    if [[ $(cat /proc/version) =~ Microsoft ]]; then
+      print_status "Installing ruby on Bash for Windows"
+      install_ruby_bash_win
+    else
+      print_status "OS not supported. Install ruby dependencies manually"
+    fi
     ;;
   esac
 fi

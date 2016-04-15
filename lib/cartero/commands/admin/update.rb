@@ -3,14 +3,16 @@ module Cartero
 module Commands
 # Documentation for Update < ::Cartero::Command
 class Update < ::Cartero::Command
+  description(
+    name: "Cartero Git Update Command",
+    description: "The command provides an automated way of keeping the tool updated with the official or another personal repository.",
+    author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+    type: "Admin",
+    license: "LGPL",
+    references: ["https://section9labs.github.io/Cartero"]
+  )
   def initialize
-    super(name: "Cartero Git Update Command",
-      description: "The command provides an automated way of keeping the tool updated with the official or another personal repository.",
-      author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-      type: "Admin",
-      license: "LGPL",
-      references: ["https://section9labs.github.io/Cartero"]
-      ) do |opts|
+    super do |opts|
       opts.on("--update", "Update All") do
         @options.update = true
       end

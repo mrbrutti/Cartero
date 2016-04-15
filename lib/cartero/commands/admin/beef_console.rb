@@ -6,17 +6,20 @@ module Commands
 # Documentation for AdminConsole < ::Cartero::Command
 class BeefConsole < ::Cartero::Command
   include CommandLineReporter
+
+  description(
+    name: " Beef Administration Console",
+    description: "Cartero Console based Admnistration Interface for Beef API. It allows users to interact with the captured data (i.e. hooks, logs, modules, commands, dns, etc.)",
+    author: ['Matias P. Brutti <matias [©] section9labs.com>'],
+    type: "Admin",
+    license: "LGPL",
+    references: [
+                'https://section9labs.github.io/Cartero',
+                'http://beefproject.com'
+                ]
+  )
   def initialize
-    super(name: " Beef Administration Console",
-          description: "Cartero Console based Admnistration Interface for Beef API. It allows users to interact with the captured data (i.e. hooks, logs, modules, commands, dns, etc.)",
-          author: ['Matias P. Brutti <matias [©] section9labs.com>'],
-          type: "Admin",
-          license: "LGPL",
-          references: [
-                      'https://section9labs.github.io/Cartero',
-                      'http://beefproject.com'
-                      ]
-          ) do |opts|
+    super do |opts|
       opts.separator ""
       opts.separator "Beef Commands:"
 

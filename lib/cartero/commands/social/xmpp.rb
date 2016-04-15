@@ -1,20 +1,21 @@
-#encoding: utf-8 
+#encoding: utf-8
 module Cartero
 module Commands
 class Xmpp < ::Cartero::Command
-	def initialize
-		super(
-          name: "Mass XMPP Messenger",
-          description: "A simple XMPP Client capable of sending templated messages to multiple users.",
-          author: ["Matias P. Brutti <matias [©] section9labs.com>"],
-          type:"Social",
-          license: "LGPL",
-          references: [
-            "https://section9labs.github.io/Cartero",
-            "https://github.com/xmpp4r/xmpp4r"
-            ]
 
-    ) do |opts|
+	description(
+		name: "Mass XMPP Messenger",
+		description: "A simple XMPP Client capable of sending templated messages to multiple users.",
+		author: ["Matias P. Brutti <matias [©] section9labs.com>"],
+		type:"Social",
+		license: "LGPL",
+		references: [
+			"https://section9labs.github.io/Cartero",
+			"https://github.com/xmpp4r/xmpp4r"
+			]
+	)
+	def initialize
+		super do |opts|
 			opts.on("-D", "--data DATA_FILE", String,
         "File containing template data sets") do |data|
         @options.data = data
