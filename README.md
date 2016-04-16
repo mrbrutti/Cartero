@@ -1,6 +1,9 @@
 ![Mail](http://icons.iconarchive.com/icons/simiographics/mixed/128/MailBox-icon.png)
 # Cartero
 
+### URL
+http://section9labs.github.io/Cartero/
+
 ### Description
 A simple Phishing Framework Library with a CLI tool. The project was born out of necessity on projects. Even though there are many projects out there, we were not able to find a suitable solution that gave us both easy of use and customizability.
 
@@ -29,7 +32,7 @@ Sending victim2@company.com
 Sending victim3@company.com
 
 ```
-### Community 
+### Community
 Join our Slack Community on https://carteroslack.herokuapp.com/
 
 ### Installation
@@ -426,19 +429,21 @@ Commands have a fairly easy infrastructure. Default Framework commands are store
 module Cartero
 module Commands
 class CommandName < ::Cartero::Command
-	def initialize
-		super(
-          name: "Long Command Name Here",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          author: ["Author Name <noname [©] cartero.com>"],
-          type:"General",
-          license: "LGPL",
-          references: [
-            "https://section9labs.github.io/Cartero",
-            "https://section9labs.github.io/Cartero"
-            ]
 
-    ) do |opts|
+  description(
+    name: "Long Command Name Here",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    author: ["Author Name <noname [©] cartero.com>"],
+    type:"General",
+    license: "LGPL",
+    references: [
+      "https://section9labs.github.io/Cartero",
+      "https://section9labs.github.io/Cartero"
+      ]
+  )
+
+  def initialize
+		super do |opts|
       #OptionsParser options available here.
 			opts.on("-x", "--xoption [DATA_FILE]", String,
     		"Description of command option") do |data|
