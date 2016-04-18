@@ -9,7 +9,7 @@ class CommandHelpers
   include CommandLineReporter
 
   def generate_table(p, name)
-    cols = Integer(`tput co`) - 20
+    cols = Integer(`tput cols`) - 20
     table do
       row(:color => 'red') do
         column("Command:", :width => 16, :bold => true)
