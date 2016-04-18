@@ -99,8 +99,24 @@ module Cartero
           $stdout.puts ::Cartero::COMMANDS.keys.join(" ")
         end
 
+        opts.on("--commands-table", "Prints list of commands details") do
+          require 'cartero/command_helpers'
+          CommandHelpers.new.generate_table(
+            ::Cartero::COMMANDS.map {|k,v| [k, v.description[:name]] },
+            "Description"
+          )
+        end
+
         opts.on("--list-payloads", "Prints list of payloads for bash completion") do
           $stdout.puts ::Cartero::PAYLOADS.keys.join(" ")
+        end
+
+        opts.on("--payloads-table", "Prints list of payloads details") do
+          require 'cartero/command_helpers'
+          CommandHelpers.new.generate_table(
+            ::Cartero::PAYLOADS.map {|k,v| [k, v.description[:name]] },
+            "Description"
+          )
         end
 
         opts.on_tail("--list-options", "Show list of long available options") do
