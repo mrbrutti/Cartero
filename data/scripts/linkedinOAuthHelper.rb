@@ -44,5 +44,7 @@ serverConfig = {"name"=> "linkedin","type"=> "linkedin","options"=> {
 	
 puts serverConfig.to_json
 puts "\n\nwrote the above data to the linkedin JSON file\n\n"
-File.write('/root/.cartero/servers/linkedin.json', serverConfig.to_json)
+
+# user-independent file location
+File.write(File.join(Dir.home, ".cartero", "servers/linkedin.json"), serverConfig.to_json)
 
