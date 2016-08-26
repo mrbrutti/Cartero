@@ -161,15 +161,8 @@ function install_ruby_osx
 
 function install_ruby_nix
 {
-  print_status "Checking if Ruby is installed, inf not installing it."
-  if [ -a /usr/bin/ruby2.1 ] && [ -L /usr/bin/ruby ]; then
-    print_good "Correct version of Ruby is installed"
-  else
-    print_status "Installing Linux dependencies"
-    sudo apt-get -y install ruby2.1 ruby2.1-dev build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
-    print_status "Installing the bundler Gem"
-    gem install bundler >> $LOGFILE 2>&1
-  fi
+  print_status "Installing Linux dependencies"
+  sudo apt-get -y install git-core build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
 }
 
 function install_ruby_bash_win
@@ -250,9 +243,11 @@ else
     install_ruby_rvm
     ;;
   *Ubuntu*)
+    install_ruby_nix
     install_ruby_rvm
     ;;
   *Debian*)
+    install_ruby_nix
     install_ruby_rvm
     ;;
   *Arch*)
@@ -265,6 +260,7 @@ else
     if [[ $(cat /proc/version) =~ Microsoft ]]; then
       print_status "Installing ruby on Bash for Windows"
       install_ruby_bash_win
+      install_ruby_rvm
     else
       print_status "OS not supported. Install ruby dependencies manually"
     fi
