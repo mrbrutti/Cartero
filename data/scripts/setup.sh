@@ -71,7 +71,8 @@ function install_ruby_rvm
 {
     if [[ ! -e ~/.rvm/scripts/rvm ]]; then
         print_status "Installing RVM"
-        gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 >> $LOGFILE 2>&1
+        gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+        curl -sSL https://rvm.io/mpapis.asc | gpg --import -
         curl -sSL https://get.rvm.io | bash
 
         PS1='$ '
@@ -140,11 +141,11 @@ function install_ruby_rvm
 
 function install_ruby_osx
 {
-    print_status "Checking if Ruby 2.1.5 is installed, if not installing it."
+    print_status "Checking if Ruby $RUBY_VERSION is installed, if not installing it."
     if [ -d /usr/local/Cellar/ruby193 ] && [ -L /usr/local/bin/ruby ]; then
         print_good "Correct version of Ruby is installed."
     else
-        print_status "Installing Ruby 2.1.5"
+        print_status "Installing Ruby $RUBY_VERSION"
         brew tap homebrew/versions >> $LOGFILE 2>&1
         brew install homebrew/versions/ruby21 >> $LOGFILE 2>&1
         echo PATH=/usr/local/opt/ruby21/bin:$PATH >> ~/.bash_profile
