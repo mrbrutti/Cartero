@@ -1,4 +1,6 @@
 #encoding: utf-8
+require 'active_model/serializers'
+
 begin
   require 'mongo_mapper'
 rescue
