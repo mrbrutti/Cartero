@@ -77,24 +77,26 @@ function install_ruby_rvm
 
         PS1='$ '
         if [[ $OSTYPE =~ darwin ]]; then
+            source /etc/profile.d/rvm.sh
             source ~/.bash_profile
         else
+            source /etc/profile.d/rvm.sh
             source ~/.bashrc
         fi
 
         if [[ $OSTYPE =~ darwin ]]; then
             print_status "Installing Ruby"
-            ~/.rvm/bin/rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
+            rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
         else
-            ~/.rvm/bin/rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
+            rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
         fi
 
         if [[ $? -eq 0 ]]; then
             print_good "Installation of Ruby $RUBY_VERSION was successful"
 
-            ~/.rvm/bin/rvm use $RUBY_VERSION --default >> $LOGFILE 2>&1
+            rvm use $RUBY_VERSION --default >> $LOGFILE 2>&1
             print_status "Installing base gems"
-            ~/.rvm/bin/rvm $RUBY_VERSION do gem install bundler >> $LOGFILE 2>&1
+            rvm $RUBY_VERSION do gem install bundler >> $LOGFILE 2>&1
             if [[ $? -eq 0 ]]; then
                 print_good "Base gems in the RVM Ruby have been installed."
             else
@@ -112,19 +114,21 @@ function install_ruby_rvm
         else
             PS1='$ '
             if [[ $OSTYPE =~ darwin ]]; then
+                source /etc/profile.d/rvm.sh
                 source ~/.bash_profile
             else
+                source /etc/profile.d/rvm.sh
                 source ~/.bashrc
             fi
 
             print_status "Installing Ruby $RUBY_VERSION"
-            ~/.rvm/bin/rvm install $RUBY_VERSION  --autolibs=4 --verify-downloads 1  >> $LOGFILE 2>&1
+            rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1  >> $LOGFILE 2>&1
             if [[ $? -eq 0 ]]; then
                 print_good "Installation of Ruby $RUBY_VERSION was successful"
 
-                ~/.rvm/bin/rvm use $RUBY_VERSION --default >> $LOGFILE 2>&1
+                rvm use $RUBY_VERSION --default >> $LOGFILE 2>&1
                 print_status "Installing base gems"
-                ~/.rvm/bin/rvm $RUBY_VERSION do gem install bundler >> $LOGFILE 2>&1
+                rvm $RUBY_VERSION do gem install bundler >> $LOGFILE 2>&1
                 if [[ $? -eq 0 ]]; then
                     print_good "Base gems in the RVM Ruby have been installed."
                 else
