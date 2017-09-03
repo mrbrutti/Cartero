@@ -2,7 +2,7 @@
 # Original source: https://github.com/darkoperator/MSF-Installer/blob/master/msf_install.sh
 # They were just too good not to be re-used.
 # It is important to notice that Cartero can run on any version of ruby,
-# but we will default to 2.1.5 since it is what metasploit uses.
+# but we will default to 2.3.1 since it is what metasploit uses.
 # Thanks :-)
 function print_good ()
 {
@@ -25,7 +25,7 @@ function usage ()
 {
     echo "Cartero Framework Installer"
     echo "Matias P. Brutti - @S9Labs"
-    echo "Ver 0.1"
+    echo "Ver 0.2"
     echo ""
     echo "-r                :Installs Ruby using Ruby Version Manager."
     echo "-h                :This help message"
@@ -69,31 +69,34 @@ function check_for_brew_osx
 
 function install_ruby_rvm
 {
-
     if [[ ! -e ~/.rvm/scripts/rvm ]]; then
         print_status "Installing RVM"
+        gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+        curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+        curl -sSL https://get.rvm.io | bash
 
-        bash < <(curl -sk https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer) >> $LOGFILE 2>&1
         PS1='$ '
         if [[ $OSTYPE =~ darwin ]]; then
+            source /etc/profile.d/rvm.sh
             source ~/.bash_profile
         else
+            source /etc/profile.d/rvm.sh
             source ~/.bashrc
         fi
 
         if [[ $OSTYPE =~ darwin ]]; then
             print_status "Installing Ruby"
-            ~/.rvm/bin/rvm install 2.1.5 --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
+            rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
         else
-            ~/.rvm/bin/rvm install 2.1.5 --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
+            rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1 >> $LOGFILE 2>&1
         fi
 
         if [[ $? -eq 0 ]]; then
-            print_good "Installation of Ruby 2.1.5 was successful"
+            print_good "Installation of Ruby $RUBY_VERSION was successful"
 
-            ~/.rvm/bin/rvm use 2.1.5 --default >> $LOGFILE 2>&1
+            rvm use $RUBY_VERSION --default >> $LOGFILE 2>&1
             print_status "Installing base gems"
-            ~/.rvm/bin/rvm 2.1.5 do gem install bundler >> $LOGFILE 2>&1
+            rvm $RUBY_VERSION do gem install bundler >> $LOGFILE 2>&1
             if [[ $? -eq 0 ]]; then
                 print_good "Base gems in the RVM Ruby have been installed."
             else
@@ -101,29 +104,31 @@ function install_ruby_rvm
                 exit 1
             fi
         else
-            print_error "Was not able to install Ruby 2.1.5!"
+            print_error "Was not able to install Ruby $RUBY_VERSION!"
             exit 1
         fi
     else
         print_status "RVM is already installed"
-        if [[ "$( ls -1 ~/.rvm/rubies/)" =~ ruby-2.1.5-p... ]]; then
-            print_status "Ruby for Cartero is already installed. Using ruby-2.1.5"
+        if [[ "$( ls -1 ~/.rvm/rubies/)" =~ ruby-$RUBY_VERSION ]]; then
+            print_status "Ruby for Cartero is already installed. Using ruby-$RUBY_VERSION"
         else
             PS1='$ '
             if [[ $OSTYPE =~ darwin ]]; then
+                source /etc/profile.d/rvm.sh
                 source ~/.bash_profile
             else
+                source /etc/profile.d/rvm.sh
                 source ~/.bashrc
             fi
 
-            print_status "Installing Ruby 2.1.5"
-            ~/.rvm/bin/rvm install 2.1.5  --autolibs=4 --verify-downloads 1  >> $LOGFILE 2>&1
+            print_status "Installing Ruby $RUBY_VERSION"
+            rvm install $RUBY_VERSION --autolibs=4 --verify-downloads 1  >> $LOGFILE 2>&1
             if [[ $? -eq 0 ]]; then
-                print_good "Installation of Ruby 2.1.5 was successful"
+                print_good "Installation of Ruby $RUBY_VERSION was successful"
 
-                ~/.rvm/bin/rvm use 2.1.5 --default >> $LOGFILE 2>&1
+                rvm use $RUBY_VERSION --default >> $LOGFILE 2>&1
                 print_status "Installing base gems"
-                ~/.rvm/bin/rvm 2.1.5 do gem install bundler >> $LOGFILE 2>&1
+                rvm $RUBY_VERSION do gem install bundler >> $LOGFILE 2>&1
                 if [[ $? -eq 0 ]]; then
                     print_good "Base gems in the RVM Ruby have been installed."
                 else
@@ -131,7 +136,7 @@ function install_ruby_rvm
                     exit 1
                 fi
             else
-                print_error "Was not able to install Ruby 2.1.5!"
+                print_error "Was not able to install Ruby $RUBY_VERSION!"
                 exit 1
             fi
         fi
@@ -140,11 +145,11 @@ function install_ruby_rvm
 
 function install_ruby_osx
 {
-    print_status "Checking if Ruby 2.1.5 is installed, if not installing it."
+    print_status "Checking if Ruby $RUBY_VERSION is installed, if not installing it."
     if [ -d /usr/local/Cellar/ruby193 ] && [ -L /usr/local/bin/ruby ]; then
         print_good "Correct version of Ruby is installed."
     else
-        print_status "Installing Ruby 2.1.5"
+        print_status "Installing Ruby $RUBY_VERSION"
         brew tap homebrew/versions >> $LOGFILE 2>&1
         brew install homebrew/versions/ruby21 >> $LOGFILE 2>&1
         echo PATH=/usr/local/opt/ruby21/bin:$PATH >> ~/.bash_profile
@@ -156,15 +161,8 @@ function install_ruby_osx
 
 function install_ruby_nix
 {
-  print_status "Checking if Ruby is installed, inf not installing it."
-  if [ -a /usr/bin/ruby2.1 ] && [ -L /usr/bin/ruby ]; then
-    print_good "Correct version of Ruby is installed"
-  else
-    print_status "Installing Linux dependencies"
-    sudo apt-get -y install ruby2.1 ruby2.1-dev build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
-    print_status "Installing the bundler Gem"
-    gem install bundler >> $LOGFILE 2>&1
-  fi
+  print_status "Installing Linux dependencies"
+  sudo apt-get -y install git-core build-essential zlib1g-dev libxslt-dev libxml2-dev zlib1g zlib1g-dev libxml2 libxml2-dev libxslt-dev locate libreadline6-dev libcurl4-openssl-dev git-core libssl-dev libyaml-dev openssl autoconf libtool ncurses-dev bison curl wget xsel libapr1 libaprutil1 libsvn1 libpcap-dev
 }
 
 function install_ruby_bash_win
@@ -174,6 +172,7 @@ function install_ruby_bash_win
   print_status "Installing the bundler Gem"
   gem install bundler >> $LOGFILE 2>&1
 }
+
 function install_mongodb {
 	case $(uname -a) in
 		*Darwin*)
@@ -213,6 +212,7 @@ function github_clone_cartero {
 
 NOW=$(date +"-%b-%d-%y-%H%M%S")
 LOGFILE="/tmp/cartero-setup$NOW.log"
+RUBY_VERSION="2.3.1"
 
 while getopts "r2:h" options; do
     case $options in
@@ -240,23 +240,27 @@ if [[ $RVM -eq 1 ]]; then
 else
   case $(uname -a) in
   *Darwin*)
-    install_ruby_osx
+    install_ruby_rvm
     ;;
   *Ubuntu*)
     install_ruby_nix
+    install_ruby_rvm
     ;;
   *Debian*)
     install_ruby_nix
+    install_ruby_rvm
     ;;
   *Arch*)
     sudo pacman -Syu ruby
     print_status "Installing the bundler Gem"
     gem install bundler >> $LOGFILE 2>&1
+    install_ruby_rvm
     ;;
   *)
     if [[ $(cat /proc/version) =~ Microsoft ]]; then
       print_status "Installing ruby on Bash for Windows"
       install_ruby_bash_win
+      install_ruby_rvm
     else
       print_status "OS not supported. Install ruby dependencies manually"
     fi

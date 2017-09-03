@@ -7,7 +7,13 @@ gem "puma"
 gem "rack"
 gem "mongo"
 gem "mongoid"
+# mongo_mapper new requirements
+gem 'activemodel-serializers-xml'
+gem 'active_model_serializers'
+# 
 gem "bson_ext"
+gem "mongo"
+
 gem "pony" # Carta (Mailer) Command
 gem "socksify"
 gem "rbnacl-libsodium"
