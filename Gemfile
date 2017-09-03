@@ -6,7 +6,7 @@ gem "rack-reverse-proxy"
 gem "puma"
 gem "rack"
 gem "mongo"
-gem "mongo_mapper"
+gem "mongoid"
 gem "bson_ext"
 gem "pony" # Carta (Mailer) Command
 gem "socksify"
